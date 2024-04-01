@@ -12,6 +12,7 @@ class WasteController extends \App\Http\Controllers\Main\WasteController
 {
 	public function shoePage()
 	{
+		// waste 
 		$wasteEntries = WasteEntry::latest()->paginate(20);
 		$factoryCount = $wasteEntries->where('entries_type', 'factory')->count();
 		$retailstoreCount = $wasteEntries->where('entries_type', 'retail_store')->count();
