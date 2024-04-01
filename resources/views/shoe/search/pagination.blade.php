@@ -1,0 +1,1 @@
+{{ $shoes->links('pagination.search-form', ['form_id' => 'search-form']) }}
