@@ -6,6 +6,7 @@ use App\Models\WasteEntry;
 use App\Models\GiftTransaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Inventory;
 
 class WasteController extends Controller
 {
@@ -15,7 +16,8 @@ class WasteController extends Controller
 		$wasteEntry->entries_id =0;
 		$wasteEntry->entries_type ='other';
     	$wasteEntry->save();
-
+		$inventory  =Inventory::find($request->shoe_id);
+		$inventory->decrement('count', $request->count);
     	return $wasteEntry;
     }
 

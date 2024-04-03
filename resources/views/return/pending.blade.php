@@ -27,7 +27,9 @@
 			<td colspan="6" class="text-left">{{ $returnEntry->shoe_id }}</td>
 			@else
 			<td><a href="{{ route('shoe.show', ['shoe' => $returnEntry->shoe->id]) }}">{{ $returnEntry->shoe->id }}</a></td>
-			<td class="text-left">{{ $returnEntry->accountBook->account->name ?? '??' }}</td>
+			<td class="text-left">{{ $returnEntry->accountBook->account->name ?? '??' }}<br>
+				{{ $returnEntry->accountBook->account->address ?? '??' }}
+			</td>
 			<td>{{ $returnEntry->shoe->category->full_name }}</td>
 			<td>{{ $returnEntry->shoe->color->name }}</td>
 			<td>{{ $returnEntry->shoe->retail_price }}</td>
@@ -60,13 +62,14 @@
 		<tr>
 			<th>#</th>
 			<th width="5%">আইডি</th>
-			<th width="20%" class="text-left">পার্টি</th>
-			<th width="10%">টাইপ</th>
-			<th width="10%">রং</th>
-			<th width="10%">গায়ের দাম</th>
-			<th width="10%">ডজন দাম</th>
+			<th width="12%" class="text-left">পার্টি</th>
+			<th width="15%" class="text-left">মহাজন </th>
+			<th width="7%">টাইপ</th>
+			<th width="7%">রং</th>
+			<th width="7%">গায়ের দাম</th>
+			<th width="7%">ডজন দাম</th>
 			<th width="5%">জোড়া</th>
-			<th width="30%"></th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -77,7 +80,13 @@
 			<td colspan="6" class="text-left">{{ $returnEntry->shoe_id }}</td>
 			@else
 			<td><a href="{{ route('shoe.show', ['shoe' => $returnEntry->shoe->id]) }}">{{ $returnEntry->shoe->id }}</a></td>
-			<td class="text-left">{{ $returnEntry->accountBook->account->name ?? '??' }}</td>
+			<td class="text-left">{{ $returnEntry->accountBook->retailAccount->shop_name ?? '??' }}<br>
+				{{ $returnEntry->accountBook->retailAccount->address ?? '??' }}<br>
+			</td>
+			<td class="text-left">{{ $returnEntry->shoe->factory->name}}<br>
+				{{ $returnEntry->shoe->factory->address}}
+			
+			</td>
 			<td>{{ $returnEntry->shoe->category->full_name }}</td>
 			<td>{{ $returnEntry->shoe->color->name }}</td>
 			<td>{{ $returnEntry->shoe->retail_price }}</td>

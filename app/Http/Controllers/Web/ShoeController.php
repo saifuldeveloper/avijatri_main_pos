@@ -146,46 +146,99 @@ class ShoeController extends \App\Http\Controllers\Main\ShoeController
 
 
 
-    public function download(Request $request)
-    {
+    // public function download(Request $request)
+    // {
 
 
-        $imagePaths = Shoe::whereIn('id', $request->id)->pluck('image')->toArray();
-        if($imagePaths == null){
+    //     $imagePaths = Shoe::whereIn('id', $request->id)->pluck('image')->toArray();
+    //     if($imagePaths == null){
            
-            return response()->json(['success' => false, 'error' => 'জুতা সিলেক্ট  করা হয় নাই '], 500);
+    //         return response()->json(['success' => false, 'error' => 'জুতা সিলেক্ট  করা হয় নাই '], 500);
  
-        }
+    //     }
 
 
-        $zipFileName = 'images.zip';
-        $zipFilePath =public_path('zip/' . $zipFileName);
-        $publicZipFilePath = 'zip/' . $zipFileName;
+    //     $zipFileName = 'images.zip';
+    //     $zipFilePath =public_path('zip/' . $zipFileName);
+    //     $publicZipFilePath = 'zip/' . $zipFileName;
     
-        $zip = new ZipArchive;
-        if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
-            foreach ($imagePaths as $imagePath) {
-                $filePath = public_path('images/small-thumbnail/' . $imagePath);
-                if (file_exists($filePath)) {
-                    $zip->addFile($filePath, basename($filePath));
-                }
-            }
-            $zip->close();
-            exec("unlink $zipFilePath > /dev/null 2>&1 &");
-            session(['zip_file_path' => $zipFilePath]);
+    //     $zip = new ZipArchive;
+    //     if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+    //         foreach ($imagePaths as $imagePath) {
+    //             $filePath = public_path('images/small-thumbnail/' . $imagePath);
+    //             if (file_exists($filePath)) {
+    //                 $zip->addFile($filePath, basename($filePath));
+    //             }
+    //         }
+    //         $zip->close();
+    //         // exec("unlink $zipFilePath > /dev/null 2>&1 &");
+    //         session(['zip_file_path' => $zipFilePath]);
 
 
-            return response()->json([
-                'success' => true,
-                'file_url' => $zipFilePath,
-                'file_name' => asset($publicZipFilePath),
-            ]);
+    //         return response()->json([
+    //             'success' => true,
+    //             'file_url' => $zipFilePath,
+    //             'file_name' => asset($publicZipFilePath),
+    //         ]);
 
              
-        } else {
-            return response()->json(['success' => false, 'error' => 'Unable to create zip archive'], 500);
-        }
+    //     } else {
+    //         return response()->json(['success' => false, 'error' => 'Unable to create zip archive'], 500);
+    //     }
+    // }
+
+    public function download(Request $request)
+{
+    // Retrieve image paths based on provided shoe IDs
+    $imagePaths = Shoe::whereIn('id', $request->id)->pluck('image')->toArray();
+
+    // If no image paths are found, return an error response
+    if(empty($imagePaths)) {
+        return response()->json(['success' => false, 'error' => 'জুতা সিলেক্ট  করা হয় নাই '], 500);
     }
+
+    // Define the name and path of the zip file to be created
+    $zipFileName = 'images.zip';
+    $zipDirectory = public_path('zip');
+    $zipFilePath = $zipDirectory . '/' . $zipFileName;
+    $publicZipFilePath = 'zip/' . $zipFileName;
+
+    // Create the directory if it does not exist
+    if (!file_exists($zipDirectory)) {
+        mkdir($zipDirectory, 0755, true);
+    }
+
+    // Create a new ZipArchive instance
+    $zip = new ZipArchive;
+    // Attempt to open the zip file for writing
+    if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+        // Loop through each image path
+        foreach ($imagePaths as $imagePath) {
+            // Construct the full file path of the image
+            $filePath = public_path('images/small-thumbnail/' . $imagePath);
+            // If the image file exists, add it to the zip archive
+            if (file_exists($filePath)) {
+                $zip->addFile($filePath, basename($filePath));
+            }
+        }
+        // Close the zip archive
+        $zip->close();
+
+        // Store the path to the zip file in the session
+        session(['zip_file_path' => $zipFilePath]);
+
+        // Return a JSON response indicating success along with file URL and name
+        return response()->json([
+            'success' => true,
+            'file_url' => $zipFilePath,
+            'file_name' => asset($publicZipFilePath),
+        ]);
+    } else {
+        // If unable to create the zip archive, return an error response
+        return response()->json(['success' => false, 'error' => 'Unable to create zip archive'], 500);
+    }
+}
+
     
 
     public function downloadDeleted(Request $request) {

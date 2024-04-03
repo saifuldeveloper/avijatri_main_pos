@@ -32,14 +32,15 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th></th>
-                <th style="width:13%" class="text-center">তারিখ</th>
-                <th style="width:8%" class="text-center">আইডি</th>
+                <th style="width:8%"></th>
+                <th style="width:7%" class="text-center">তারিখ</th>
+                <th style="width:7%" class="text-center">আইডি</th>
                 <th style="width:8%" class="text-center">টাইপ</th>
                 <th style="width:8%" class="text-center">রং</th>
                 <th style="width:10%" class="text-center">গায়ের দাম</th>
-                <th style="width:43%">বিবরণ</th>
+                <th style="width:20%">বিবরণ</th>
                 <th style="width:15%">পার্টি </th>
+                <th style="width:15%">মহাজন </th>
                 <th style="width:8%" class="text-center">জোড়া</th>
             </tr>
         </thead>
@@ -62,8 +63,9 @@
                             @php
                                 $retailStore = \App\Models\RetailStore::find($wasteEntry->entries_id);
                             @endphp
-                            {{ $retailStore->shop_name }}
+                            {{ $retailStore->shop_name }}-{{ $retailStore->address }}
                         </td>
+                        <td>{{ $wasteEntry->shoe->factory->name }}-{{ $wasteEntry->shoe->factory->address }}</td>
                         </td>
                         <td class="text-center">{{ $wasteEntry->count }}</td>
                     </tr>
@@ -109,7 +111,7 @@
 							@php
 							$factory = \App\Models\Factory::find($wasteEntry->entries_id);
 						@endphp
-						{{ $factory->name }}
+						{{ $factory->name }}-{{$factory->address }}
 						</td>
                         <td class="text-center">{{ $wasteEntry->count }}</td>
                     </tr>
@@ -125,12 +127,13 @@
         <thead>
             <tr>
                 <th></th>
-                <th style="width:13%" class="text-center">তারিখ</th>
+                <th style="width:7%" class="text-center">তারিখ</th>
                 <th style="width:8%" class="text-center">আইডি</th>
                 <th style="width:8%" class="text-center">টাইপ</th>
                 <th style="width:8%" class="text-center">রং</th>
                 <th style="width:10%" class="text-center">গায়ের দাম</th>
-                <th style="width:35%">বিবরণ</th>
+                <th style="width:20%">বিবরণ</th>
+                <th style="width:15%">মহাজন </th>
                 <th style="width:8%" class="text-center">জোড়া</th>
             </tr>
         </thead>
@@ -149,6 +152,7 @@
                         <td class="text-center">{{ $wasteEntry->shoe->color->name }}</td>
                         <td class="text-center">{{ toFixed($wasteEntry->shoe->retail_price) }}</td>
                         <td>{{ $wasteEntry->description }}</td>
+                        <td>{{ $wasteEntry->shoe->factory->name }}-{{$wasteEntry->shoe->factory->address}}</td>
                         <td class="text-center">{{ $wasteEntry->count }}</td>
                     </tr>
                 @endif

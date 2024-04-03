@@ -6,6 +6,7 @@ use App\Models\Factory;
 use App\Models\BankAccount;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\AccountBook;
 use App\Models\Purchase;
 use App\Models\PurchaseEntry;
 use App\Models\ReturnToFactory;
@@ -63,7 +64,8 @@ class FactoryController extends \App\Http\Controllers\Main\FactoryController
     public function show($id)
     {
         $factory = parent::show($id);
-        $purchases = Purchase::with('purchaseEntries.shoe')->where('account_book_id', $factory->id)->get();
+        $account_book =AccountBook::where('account_id',$factory->id)->where('account_type','factory')->latest()->first();
+        $purchases = Purchase::with('purchaseEntries.shoe')->where('account_book_id', $account_book->id)->get();
         $qty = 0;
         $purchases_amount = 0;
         $qty = $purchases->flatMap(function ($item) {

@@ -36,10 +36,9 @@ class ReturnController extends \App\Http\Controllers\Main\ReturnController
         $return = parent::retailStore($request);
         return redirect()->route('home')->with('success-alert', 'জুতা ফেরত সম্পন্ন হয়েছে।');
     }
-
     public function pendingPage() {
-        $returnToFactoryEntries = ReturnToFactoryEntry::where('status', 'pending')->with('shoe', 'accountBook.account')->get();
-        $returnFromRetailEntries = ReturnFromRetailEntry::where('status', 'pending')->with('shoe', 'accountBook.account')->get();
+        $returnToFactoryEntries = ReturnToFactoryEntry::where('status', 'pending')->with('shoe', 'accountBook.account')->orderBy('id','desc')->get();
+        $returnFromRetailEntries = ReturnFromRetailEntry::where('status', 'pending')->with('shoe', 'accountBook.retailAccount')->orderBy('id','desc')->get();
         return view('return.pending', compact('returnToFactoryEntries', 'returnFromRetailEntries'));
     }
 

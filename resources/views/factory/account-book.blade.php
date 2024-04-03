@@ -135,7 +135,7 @@
                         <td>
                             @php
                                 $purchase_price = $entry->purchase->purchaseEntries->sum(function ($item) {
-                                    return $item->shoe->retail_price;
+                                    return $item->shoe->purchase_price;
                                 });
                             @endphp
                             {{ toFixed($purchase_price) }}</td>

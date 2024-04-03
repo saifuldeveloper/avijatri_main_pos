@@ -21,6 +21,12 @@ class AccountBook extends Model
     {
         return $this->belongsTo(Factory::class);
     }
+    public function retailAccount()
+    {
+        return $this->belongsTo(RetailStore::class, 'account_id', 'id');
+    }
+
+
 
     public function retailStoreExpenses() {
     	if($this->account_type !== 'retail-store') {

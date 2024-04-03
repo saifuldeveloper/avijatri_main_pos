@@ -238,3 +238,7 @@ function toBangla($string)
         $string
     );
 }
+
+
+
+
