@@ -31,6 +31,11 @@ class BankAccountController extends Controller
         $bankAccount->fill($request->all());
         $bankAccount->save();
 
+        $accountBook =new AccountBook;
+        $accountBook->account_id =$bankAccount->id;
+        $accountBook->account_type ='bank-account';
+        $accountBook->save();
+
         // $bankAccount->accountBooks()->save(new AccountBook());
 
         return $bankAccount;

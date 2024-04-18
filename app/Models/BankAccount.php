@@ -27,6 +27,7 @@ class BankAccount extends Model
 
     public function getCurrentAccountBook()
     {
+    
         return $this->accountBooks()->latest()->first();
     }
 

@@ -37,6 +37,7 @@ class Transaction extends Model
 
 	public static function createTransaction($accountType, $account, $type, $bankAccount, $amount, $description = '', $attachment = null, $closing = null) {
 		$bankAccount = BankAccount::where('id',$bankAccount)->first();
+
 		switch($accountType) {
 			case 'account-book':
 			break;
@@ -72,7 +73,12 @@ class Transaction extends Model
 			} else {
 				$from_account_id = $account->getCurrentAccountBook()->id;
 			}
-			$to_account_id =     $bankAccount->getCurrentAccountBook()->id;
+			// $to_account_id =     $bankAccount->getCurrentAccountBook()->id;
+			$to_account_id = AccountBook::where('account_id', $bankAccount->id)
+				->where('account_type', 'bank-account')
+				->first()
+				->latest()
+				->value('id');
 			break;
 			case 'expense':
 			if($accountType == 'account-book') {
@@ -94,9 +100,7 @@ class Transaction extends Model
 		}
 		$transaction->save();
 
-		
-
-
+	
 
 		return $transaction;
 	}

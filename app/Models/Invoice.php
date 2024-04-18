@@ -103,11 +103,11 @@ class Invoice extends Model
         return $this->account_book_balance - $this->total_receivable + $this->total_payment;
     }
 
-    public function getAccountBookBalanceAttribute() {
-        $accountBook = $this->accountBook()->first();
-        $accountEntry = $accountBook->entriesQuery()->where('invoice_id', $this->id)->first();
-        return $accountEntry->balance;
-    }
+    // public function getAccountBookBalanceAttribute() {
+    //     $accountBook = $this->accountBook()->first();
+    //     $accountEntry = $accountBook->entriesQuery()->where('invoice_id', $this->id)->first();
+    //     return $accountEntry->balance;
+    // }
 
     protected $appends = ['total_pairs', 'total_amount', 'total_commission', 'commission_deducted',
                           'return_count', 'return_amount', 'return_deducted',

@@ -11,6 +11,8 @@ use App\Models\BankAccount;
 use App\Models\Gift;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
 
 class InvoiceController extends \App\Http\Controllers\Main\InvoiceController
 {
@@ -36,8 +38,16 @@ class InvoiceController extends \App\Http\Controllers\Main\InvoiceController
     public function create()
     {
         $memoNo = Invoice::getNextId();
-        $bankAccounts = BankAccount::all();
         $gifts = Gift::all();
+        $bankAccount = BankAccount::all();
+        $bankAccounts = new Collection();
+        foreach ($bankAccount as $item) {
+            $bankAccounts->push((object) [
+                'id' => $item->id,
+                'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
+            ]);
+        }
+        $bankAccounts->push((object) ['id' => 'cheque', 'name' => 'চেক']);
         return view('invoice.form', compact('memoNo', 'bankAccounts', 'gifts'));
     }
 
@@ -49,6 +59,7 @@ class InvoiceController extends \App\Http\Controllers\Main\InvoiceController
      */
     public function store(Request $request)
     {
+
         if($request->has('submit') && $request->input('submit') === 'preview') {
             $retailStore = RetailStore::find($request->input('retail_store_id'));
             $sales = $request->input('sales');
@@ -201,7 +212,15 @@ class InvoiceController extends \App\Http\Controllers\Main\InvoiceController
         } else {
             $index = 0;
         }
-        $bankAccounts = BankAccount::all();
+        $bankAccount = BankAccount::all();
+        $bankAccounts = new Collection();
+        foreach ($bankAccount as $item) {
+            $bankAccounts->push((object) [
+                'id' => $item->id,
+                'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
+            ]);
+        }
+        $bankAccounts->push((object) ['id' => 'cheque', 'name' => 'চেক']);
         return view('invoice.payment-tr', compact('index', 'bankAccounts'));
     }
 }

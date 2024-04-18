@@ -38,7 +38,7 @@
 			<th style="width:10%"><a  href="{{ orderUrl('stock', $orderby, $order) }}">স্টক</a></th>
 		</tr>
 		<tr>
-			<th><input type="checkbox" name="check_all" id="check_all"  style="height:35px;width:30px"></th>
+			<th><input type="checkbox" name="check_all" id="check_all"></th>
 			<th><input type="text" name="id" class="form-control text-center search-id" value="{{ request()->input('id') }}" form="search-form"></th>
 			<th><input type="text" name="factory" class="form-control text-center search-factory" value="{{ request()->input('factory') }}" form="search-form" data-datalist="{{ route('datalist.factory') }}"></th>
 			<th><input type="text" name="category" class="form-control text-center search-category" value="{{ request()->input('category') }}" form="search-form" data-datalist="{{ route('datalist.category') }}"></th>

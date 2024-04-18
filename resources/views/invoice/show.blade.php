@@ -22,7 +22,7 @@ if(!isset($preview)) $preview = false;
 				<div class="d-print-none">
 				@if(!$preview)
 				<a href="{{ route('invoice.show', ['invoice' => $invoice, 'view' => 'id']) }}" class="btn btn-success btn-sm">আইডিসহ দেখুন</a>
-				@include('layouts.crud-buttons', ['model' => 'invoice', 'object' => $invoice, 'http' => false])
+				@include('layouts.crud-buttons',    ['model' => 'invoice',  'parameter' =>'invoice', 'object' => $invoice, 'http' => false])
 				@endif
 				</div>
 			</td>
@@ -159,7 +159,7 @@ if(!isset($preview)) $preview = false;
 		<tr>
 			<td colspan="3"></td>
 			<td class="text-center"><strong>মোট বাকী</strong></td>
-			<td class="text-right"><strong>{{ toFixed($invoice->account_book_balance ?? $total_due) }}</strong></td>
+			{{-- <td class="text-right"><strong>{{ toFixed($invoice->account_book_balance ?? $total_due) }}</strong></td> --}}
 		</tr>
 	</tfoot>
 </table>

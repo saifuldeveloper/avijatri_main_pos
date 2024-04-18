@@ -23,10 +23,10 @@ $(document).ready(function() {
 		var row = $(this).parents('.tr-main');
 		var url = $(this).attr('data-shoe-details').replace('#', $(this).val());
 
-		console.log(url);
+	
 
 		$.get(url, [], function(data) {
-			 console.log(data);
+			 
 			// if(data.available == 0) {
 			// 	alert('এই জুতাটি ইনভেন্টরিতে নেই।');
 			// 	me.val('');
@@ -53,7 +53,10 @@ $(document).ready(function() {
 	});
 
 	$(document).on('change', '.input-payment-method', function(e) {
+	
+
 		var row = $(this).parents('.tr-main');
+		console.log(row);
 		row.find('.input-cheque-no').prop('disabled', $(this).find('option:selected').html() == 'ক্যাশ');
 	});
 
