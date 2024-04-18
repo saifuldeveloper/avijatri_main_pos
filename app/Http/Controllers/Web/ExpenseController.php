@@ -8,9 +8,9 @@ use App\Http\Controllers\Controller;
 
 class ExpenseController extends \App\Http\Controllers\Main\ExpenseController
 {
-    public function __construct() {
-        $this->middleware(['permission:manage expenses'])->except(['datalist']);
-    }
+    // public function __construct() {
+    //     $this->middleware(['permission:manage expenses'])->except(['datalist']);
+    // }
 
     /**
      * Display a listing of the resource.

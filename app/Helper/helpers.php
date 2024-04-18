@@ -240,5 +240,20 @@ function toBangla($string)
 }
 
 
+// number Bangla show
+
+if (!function_exists('englishToBanglaNumber')) {
+    function englishToBanglaNumber($number) {
+        $banglaDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+
+        $englishDigits = range(0, 9);
+
+        $convertedNumber = str_replace($englishDigits, $banglaDigits, $number);
+
+        return $convertedNumber;
+    }
+}
+
+
 
 

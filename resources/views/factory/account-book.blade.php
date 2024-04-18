@@ -148,7 +148,7 @@
                             {{ toFixed($sumprice) }}
                         </td>
                         <td>-</td>
-                        <td>{{ toFixed($sumprice) }}</td>
+                        <td>{{   (toFixed($sumprice)) }}</td>
 					
                     @elseif($entry->entry_type == 1)
                         <td>-</td>
@@ -198,7 +198,7 @@
                                 return ($entry->shoe->purchase_price * $entry->count) / 12;
                             });
                           @endphp
-                            {{ toFixed($sumprice -$entry->purchase->payment_amount) }}
+                            {{ toFixed($sumprice - $entry->purchase->payment_amount) }}
                         </td>
 
                     @else

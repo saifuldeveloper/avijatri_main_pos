@@ -8,6 +8,7 @@ use App\Views\TransactionReportEntry;
 use App\Exports\MonthlyTransactionReport;
 use App\Exports\YearlyTransactionReport;
 use Illuminate\Http\Request;
+use App\Models\BankAccount;
 use App\Http\Controllers\Controller;
 
 class ReportController extends Controller
@@ -32,7 +33,7 @@ class ReportController extends Controller
     	if($request->has('to')) $to = $request->input('to');
 
     	$vars = [
-    		'previous_cash' => \App\Models\BankAccount::getCashAccount()->getCurrentAccountBook()->getBalanceBefore($from),
+    		'previous_cash' =>BankAccount::getCashAccount()->getCurrentAccountBook()->getBalanceBefore($from),
     		'total_sale' => \App\Models\Transaction::whereBetween('created_at', [$from, $to])
 	    		->whereHas('fromAccount', function($query) {
 	    			$query->where('account_type', 'retail-store');

@@ -11,6 +11,7 @@
 	<td class="text-center">{{ toFixed($shoe->retail_price) }}</td>
 	<td class="text-center">{{ $shoe->purchase_price > 0 ? toFixed($shoe->purchase_price) : 'পেন্ডিং' }}</td>
 	<td class="text-center">{{ $shoe->count }}</td>
+	<td></td>
 	<td>
 		{{-- @include('layouts.crud-buttons', ['model' => 'shoe', 'parameter' => 'shoe',    'object' => $shoe]) --}}
 		<a href="{{ route("shoe.edit", $shoe->id) }}" class="btn btn-primary btn-sm{{ isset($http) ? '' : ' btn-edit' }}"<?php if(!isset($http)): ?> data-toggle="modal" data-target="#shoe-form"<?php endif; ?>>এডিট</a>

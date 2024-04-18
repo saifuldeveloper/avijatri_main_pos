@@ -22,6 +22,7 @@ class ShoeController extends \App\Http\Controllers\Main\ShoeController
      */
     public function index(Request $request)
     {
+
         $data =Shoe::where('id',$request->id)->first();
         /*$stock = \App\Views\InventoryEntry::totalStock();
         $stock_purchase_price = \App\Views\InventoryEntry::totalStockPurchasePrice();*/

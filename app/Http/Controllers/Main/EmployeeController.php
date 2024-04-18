@@ -6,7 +6,8 @@ use App\Models\Employee;
 use App\Models\AccountBook;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class EmployeeController extends Controller
 {
@@ -30,16 +31,18 @@ class EmployeeController extends Controller
     {
 
 
-    
-
-
-
         $employee = new Employee;
         $employee->fill($request->all());
         if($request->hasFile('image')) {
-            $filename = randomImageFileName();
-            Image::make($request->file('image'))->save(imagePath($filename));
-            $employee->image = $filename;
+                $image     = $request->file("image");
+                $extension = $image->getClientOriginalExtension();
+                $imageName = uniqid() . '.' . $extension;
+                $manager   = new ImageManager(new Driver());
+                $image     = $manager->read($image);
+                // $image->resize(300, 200);
+                $image->save('images/staff-image/' . $imageName);
+                $employee->image= $imageName;
+            
         }
         $employee->save();
 

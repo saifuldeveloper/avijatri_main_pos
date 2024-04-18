@@ -7,7 +7,7 @@
 		<tr>
 			@if(!empty($employee->image))
 			<td>
-				<img src="{{ imageRoute($employee->image, 'thumbnail') }}">
+				<img src="{{ asset('images/staff-image/' . $employee->image) }} " style="height: 100px;">
 			</td>
 			@endif
 			<td style="width:70%">

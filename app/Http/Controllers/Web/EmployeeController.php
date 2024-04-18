@@ -8,9 +8,9 @@ use App\Http\Controllers\Controller;
 
 class EmployeeController extends \App\Http\Controllers\Main\EmployeeController
 {
-    public function __construct() {
-        $this->middleware(['permission:manage employees'])->except(['datalist']);
-    }
+    // public function __construct() {
+    //     $this->middleware(['permission:manage employees'])->except(['datalist']);
+    // }
 
     /**
      * Display a listing of the resource.

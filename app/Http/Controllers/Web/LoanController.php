@@ -8,9 +8,9 @@ use App\Http\Controllers\Controller;
 
 class LoanController extends \App\Http\Controllers\Main\LoanController
 {
-    public function __construct() {
-        $this->middleware(['permission:manage loans'])->except(['datalist']);
-    }
+    // public function __construct() {
+    //     $this->middleware(['permission:manage loans'])->except(['datalist']);
+    // }
 
     /**
      * Display a listing of the resource.

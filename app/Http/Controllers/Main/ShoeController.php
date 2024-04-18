@@ -56,6 +56,10 @@ class ShoeController extends Controller
         if($request->filled('count')) {
             $query = $query->where('count', intval($request->input('count')));
         }
+        if($request->filled('stock')) {
+          
+            $query->where('count', '>', 0);
+        }
         return (object)[
             'shoes' => $query->paginate(20),
             'count' => $query->sum('count'),

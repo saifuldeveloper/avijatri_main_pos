@@ -34,10 +34,11 @@
 			<th class="text-center" style="width:12.5%"><a href="{{ orderUrl('retail_price', $orderby, $order) }}">গায়ের দাম {{ orderArrow('retail_price', $orderby, $order) }}</a></th>
 			<th class="text-center" style="width:12.5%"><a href="{{ orderUrl('purchase_price', $orderby, $order) }}">ডজন দাম {{ orderArrow('purchase_price', $orderby, $order) }}</a></th>
 			<th class="text-center" style="width:10%"><a href="{{ orderUrl('count', $orderby, $order) }}">জোড়া {{ orderArrow('count', $orderby, $order) }}</a></th>
-			<th style="width:20%"><a href="{{ route('show.download') }}" id="download-images-btn">ডাউনলোড</a></th>
+			<th style="width:10%"><a href="{{ route('show.download') }}" id="download-images-btn">ডাউনলোড</a></th>
+			<th style="width:10%"><a  href="{{ orderUrl('stock', $orderby, $order) }}">স্টক</a></th>
 		</tr>
 		<tr>
-			<th><input type="checkbox" name="check_all" id="check_all"></th>
+			<th><input type="checkbox" name="check_all" id="check_all"  style="height:35px;width:30px"></th>
 			<th><input type="text" name="id" class="form-control text-center search-id" value="{{ request()->input('id') }}" form="search-form"></th>
 			<th><input type="text" name="factory" class="form-control text-center search-factory" value="{{ request()->input('factory') }}" form="search-form" data-datalist="{{ route('datalist.factory') }}"></th>
 			<th><input type="text" name="category" class="form-control text-center search-category" value="{{ request()->input('category') }}" form="search-form" data-datalist="{{ route('datalist.category') }}"></th>
@@ -46,6 +47,8 @@
 			<th><input type="text" name="retail_price" class="form-control text-center search-retail-price number" value="{{ request()->input('retail_price') }}" form="search-form"></th>
 			<th><input type="text" name="purchase_price" class="form-control text-center search-purchase-price number" value="{{ request()->input('purchase_price') }}" form="search-form"></th>
 			<th><input type="text" name="count" class="form-control text-center search-count number" value="{{ request()->input('count') }}" form="search-form"></th>
+			<th></th>
+			<th><input type="checkbox" class="search-count " name="stock" id="stock" form="search-form" style="height:35px;width:30px"></th>
 			<th>
 				<!--<button type="submit" class="btn btn-primary form-control" form="search-form">খোঁজ করুন</button>-->
 				<input type="hidden" name="orderby" value="{{ $orderby }}" form="search-form">
@@ -67,10 +70,12 @@
 			<td class="text-center">{{ toFixed($shoe->retail_price) }}</td>
 			<td class="text-center">{{ $shoe->purchase_price > 0 ? toFixed($shoe->purchase_price) : 'পেন্ডিং' }}</td>
 			<td class="text-center">{{ $shoe->count }}</td>
+			<td></td>
 			<td>
 				<a href="{{ route("shoe.edit", $shoe->id) }}" class="btn btn-primary btn-sm{{ isset($http) ? '' : ' btn-edit' }}"<?php if(!isset($http)): ?> data-toggle="modal" data-target="#shoe-form"<?php endif; ?>>এডিট</a>
 				{{-- @include('layouts.crud-buttons', ['model' => 'shoe', 'parameter' => 'shoe',   'object' => $shoe]) --}}
 			</td>
+			
 		</tr>
 		@endforeach
 	</tbody>

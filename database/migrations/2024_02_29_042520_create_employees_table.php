@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('mobile_no');
             $table->string('image')->nullable();
-            $table->double('limit');
+            $table->double('limit')->nullable();
             $table->timestamps();
         });
     }
