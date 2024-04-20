@@ -6,8 +6,8 @@
 	<tbody>
 		<tr>
 			<td style="width:40%">
-				<p>নাম: <strong>{{ $accountBook->account->name }}</strong><br>
-				মোবাইল নং: <strong>{{ $accountBook->account->mobile_no }}</strong></p>
+				<p>নাম: <strong>{{ $accountBook->retailAccount->shop_name }}</strong><br>
+				মোবাইল নং: <strong>{{ $accountBook->retailAccount->mobile_no }}</strong></p>
 				তারিখ: <strong>{{ $accountBook->description }}</strong><br>
 			</td>
 			<td style="width:45%">

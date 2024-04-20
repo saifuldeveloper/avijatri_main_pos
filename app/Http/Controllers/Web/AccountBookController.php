@@ -54,10 +54,6 @@ class AccountBookController extends \App\Http\Controllers\Main\AccountBookContro
     {
 
         $accountBook = parent::show($accountBook);
-       
-  
-
-      
 
         $purchases = Purchase::with('purchaseEntries.shoe')->where('account_book_id', $accountBook->id)->orderBy('created_at', 'desc')->get();
         $qty = 0;

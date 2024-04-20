@@ -43,7 +43,8 @@ class AccountBookController extends Controller
     {
       
         $accountBook->load('account',
-                           'closingTransactions',
+                            'retailAccount',
+                            'closingTransactions',
                             'transactionsTo',
                             'factoryentries.purchase.purchaseEntries.shoe',
                             'factoryentries.returnshoe.returnentries.shoe');
