@@ -25,6 +25,12 @@ class AccountBook extends Model
     {
         return $this->belongsTo(RetailStore::class, 'account_id', 'id');
     }
+    public function giftSupplierAccount()
+    {
+        return $this->belongsTo(GiftSupplier::class, 'account_id', 'id');
+    }
+
+
 
 
 

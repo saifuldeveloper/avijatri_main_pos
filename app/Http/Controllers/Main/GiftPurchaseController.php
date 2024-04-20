@@ -60,7 +60,7 @@ class GiftPurchaseController extends Controller
      */
     public function show(GiftPurchase $giftPurchase)
     {
-        $giftPurchase->load('accountBook.account', 'giftTransactions.gift');
+        $giftPurchase->load('accountBook.giftSupplierAccount', 'giftTransactions.gift');
         return $giftPurchase;
     }
 

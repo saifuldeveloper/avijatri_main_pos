@@ -25,10 +25,11 @@ $(document).ready(function() {
 		var datalistId = '#' + $(this).attr('data-datalist-id');
 		var option = $(datalistId + ' option[value="' + $(this).val() + '"]');
 		if(option.length == 0) {
-			alert('এই নামে কোন মহাজন নেই।');
-			// Swal.fire({
-			// 	text: "এই নামে কোন মহাজন নেই।",
-			// });
+			 if(datalistId =='#factory-list'){
+				alert('এই নামে কোন মহাজন নেই।');
+			 }else{
+				alert('এই নামে কোন পার্টি নেই।');
+			 }
 			$(this).val($(this).data('oldval'));
 			$(this).focus();
 			return;

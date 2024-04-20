@@ -17,7 +17,7 @@
 			<td>
 				<div class="d-print-none">
 				<a href="{{ route('invoice.show', ['invoice' => $invoice]) }}" class="btn btn-success btn-sm">আইডি ছাড়া দেখুন</a>
-				@include('layouts.crud-buttons', ['model' => 'invoice', 'object' => $invoice, 'http' => false])
+				@include('layouts.crud-buttons', ['model' => 'invoice', 'parameter' =>'invoice',  'object' => $invoice, 'http' => false])
 				</div>
 			</td>
 		</tr>
@@ -129,7 +129,7 @@
 		<tr>
 			<td colspan="5"></td>
 			<td class="text-center"><strong>মোট বাকী</strong></td>
-			<td class="text-right"><strong>{{ toFixed($invoice->account_book_balance ?? $total_due) }}</strong></td>
+			{{-- <td class="text-right"><strong>{{ toFixed($invoice->account_book_balance ?? $total_due) }}</strong></td> --}}
 		</tr>
 	</tfoot>
 </table>

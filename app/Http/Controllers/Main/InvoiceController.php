@@ -10,6 +10,7 @@ use App\Models\Transaction;
 use App\Models\GiftTransaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Inventory;
 
 class InvoiceController extends Controller
 {
@@ -31,6 +32,7 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
+
         $retailStore = RetailStore::find($request->input('retail_store_id'));
         $accountBook = $retailStore->getCurrentAccountBook();
 
@@ -50,6 +52,10 @@ class InvoiceController extends Controller
             $invoice->invoiceEntries()->save($invoiceEntry);
 
             $shoe = Shoe::find($row['shoe_id']);
+
+            $inventory =Inventory::find($shoe->id);
+            $inventory->decrement('count', $row['count']);
+
             $boxSale = new GiftTransaction;
             $boxSale->fill([
                 'gift_id' => $shoe->box_id,
@@ -100,6 +106,10 @@ class InvoiceController extends Controller
             $giftSale->type = 'sale';
             $invoice->giftTransactions()->save($giftSale);
         }
+        
+       
+
+
         $invoice->load('accountBook.account', 'invoiceItems', 'transactions');
         return $invoice;
     }
@@ -114,9 +124,9 @@ class InvoiceController extends Controller
     public function show(Request $request, Invoice $invoice)
     {
         if($request->input('view') == 'id') {
-            $invoice->load('accountBook.account', 'invoiceEntries', 'giftTransactions');
+            $invoice->load('accountBook.retailAccount', 'invoiceEntries', 'giftTransactions');
         } else {
-            $invoice->load('accountBook.account', 'invoiceItems', 'giftTransactions');
+            $invoice->load('accountBook.retailAccount', 'invoiceItems', 'giftTransactions');
         }
         return $invoice;
     }
@@ -130,6 +140,8 @@ class InvoiceController extends Controller
      */
     public function update(Request $request, Invoice $invoice)
     {
+
+ 
         $invoice->load('accountBook.account');
         $survived = [];
 
@@ -149,6 +161,12 @@ class InvoiceController extends Controller
                 $shoeTransaction->commission = $request->input('commission');
                 $shoeTransaction->save();*/
                 $invoiceEntry = InvoiceEntry::find($row['id']);
+
+                $difference   =$row['count'] -$invoiceEntry->count;
+                $inventory =Inventory::find($invoiceEntry->shoe_id);
+                $inventory->count = max(0, $inventory->count + $difference);
+                $inventory->save();
+
                 $invoiceEntry->fill($row);
                 $invoiceEntry->save();
             } else if(empty($row['shoe_id'])) {

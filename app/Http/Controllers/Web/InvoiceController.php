@@ -135,6 +135,11 @@ class InvoiceController extends \App\Http\Controllers\Main\InvoiceController
     public function show(Request $request, Invoice $invoice)
     {
         $invoice = parent::show($request, $invoice);
+
+
+        
+
+  
         
         if($request->input('view') == 'id') {
             return view('invoice.id-view', compact('invoice'));

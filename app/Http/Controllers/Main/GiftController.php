@@ -16,7 +16,7 @@ class GiftController extends Controller
      */
     public function index()
     {
-        return Gift::with('giftType')->get();
+        return Gift::with('giftType','giftTransactions')->get();
     }
 
     /**

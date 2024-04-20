@@ -10,9 +10,9 @@
 		</tr>
 		<tr>
 			<td>
-				নাম: <strong>{{ $giftPurchase->accountBook->account->name }}</strong><br>
-				ঠিকানা: <strong>{{ $giftPurchase->accountBook->account->address }}</strong><br>
-				মোবাইল নং: <strong>{{ $giftPurchase->accountBook->account->mobile_no }}</strong>
+				নাম: <strong>{{ $giftPurchase->accountBook->giftSupplierAccount->name }}</strong><br>
+				ঠিকানা: <strong>{{ $giftPurchase->accountBook->giftSupplierAccount->address }}</strong><br>
+				মোবাইল নং: <strong>{{ $giftPurchase->accountBook->giftSupplierAccount->mobile_no }}</strong>
 			</td>
 			<td>
 				<div class="d-print-none">
