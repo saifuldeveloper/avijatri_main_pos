@@ -79,13 +79,10 @@ class PurchaseController extends \App\Http\Controllers\Main\PurchaseController
             foreach ($purchases as $i => $purchase) {
                 if (isset($purchase['category_id'])) {
                     $purchases[$i]['total_price'] = doubleval($purchase['purchase_price']) * intval($purchase['count']) / 12;
-                    // $filename = randomImageFileName();
-                    // Image::make($request->file("purchases.{$i}.image"))->save(tempImagePath($filename));
-                    // $purchases[$i]['image_url'] = imageRoute($filename, 'small-thumbnail');
-                    // $purchases[$i]['preview_url'] = imageRoute($filename, 'preview');
                     if ($request->file("purchases.{$i}.image")) {
                         $image = $request->file("purchases.{$i}.image");
-                        $imageName = time() . '.' . $image->getClientOriginalExtension();
+                        $extension = $image->getClientOriginalExtension();
+                        $imageName = $purchase['shoe_id'] . '_' . uniqid() . '.' . $extension;
                         $manager = new ImageManager(new Driver());
                         $image = $manager->read($image);
                         $image->resize(300, 200);
@@ -98,9 +95,7 @@ class PurchaseController extends \App\Http\Controllers\Main\PurchaseController
                 }
                 $total_payable += $purchases[$i]['total_price'];
             }
-
             $preview = true;
-
             return view('purchase.show', compact('factory', 'purchases', 'purchase_id', 'total_payable', 'preview', 'payment_amount'));
         } else {
 

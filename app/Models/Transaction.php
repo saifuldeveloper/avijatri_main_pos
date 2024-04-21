@@ -105,105 +105,105 @@ class Transaction extends Model
 		return $transaction;
 	}
 
-	public static function getIncomesOn($date) {
-		return self::queryIncomesOn($date)->get();
-	}
+	// public static function getIncomesOn($date) {
+	// 	return self::queryIncomesOn($date)->get();
+	// }
 
-	public static function sumIncomesOn($date) {
-		$query = self::queryIncomesOn($date);
-		$sql = $query->toSql();
-		return DB::table(DB::raw("({$sql}) as query_table"))->mergeBindings($query->getQuery())->sum('amount');
-	}
+	// public static function sumIncomesOn($date) {
+	// 	$query = self::queryIncomesOn($date);
+	// 	$sql = $query->toSql();
+	// 	return DB::table(DB::raw("({$sql}) as query_table"))->mergeBindings($query->getQuery())->sum('amount');
+	// }
 
-	public static function sumIncomesWithPreviousBalanceOn($date) {
-		$previousCashBalance = BankAccount::getCashAccount()->getCurrentAccountBook()->getBalanceBefore($date);
-		$incomeSum = self::sumIncomesOn($date);
+	// public static function sumIncomesWithPreviousBalanceOn($date) {
+	// 	$previousCashBalance = BankAccount::getCashAccount()->getCurrentAccountBook()->getBalanceBefore($date);
+	// 	$incomeSum = self::sumIncomesOn($date);
 
-		return $previousCashBalance + $incomeSum;
-	}
+	// 	return $previousCashBalance + $incomeSum;
+	// }
 
-	public static function getExpensesOn($date) {
-		return self::queryExpensesOn($date)->get();
-	}
+	// public static function getExpensesOn($date) {
+	// 	return self::queryExpensesOn($date)->get();
+	// }
 
-	public static function sumExpensesOn($date) {
-		$query = self::queryExpensesOn($date);
-		$sql = $query->toSql();
-		return DB::table(DB::raw("({$sql}) as query_table"))->mergeBindings($query->getQuery())->sum('amount');
-	}
+	// public static function sumExpensesOn($date) {
+	// 	$query = self::queryExpensesOn($date);
+	// 	$sql = $query->toSql();
+	// 	return DB::table(DB::raw("({$sql}) as query_table"))->mergeBindings($query->getQuery())->sum('amount');
+	// }
 
 	// Private static functions
-	private static function queryIncomesOn($date) {
-		$current = new \Carbon\CarbonImmutable($date);
-		$next = $current->addDay();
+	// private static function queryIncomesOn($date) {
+	// 	$current = new \Carbon\CarbonImmutable($date);
+	// 	$next = $current->addDay();
 
-		return self::where('created_at', '>=', $current)->where('created_at', '<', $next)
-			->whereHas('toAccount', function($query) {
-				$query->whereHasMorph('account', 'App\Models\BankAccount');
-			})->whereDoesntHave('fromAccount', function($query) {
-				$query->whereHasMorph('account', 'App\Models\BankAccount');
-			})->groupBy('from_account_id')->selectRaw('0 id, 0 bank_withdrawal, from_account_id, null to_account_id, sum(amount) amount')
-			->union(self::where('created_at', '>=', $current)->where('created_at', '<', $next)
-				->where(function($query) {
-					$query->where(function($query) {
-						$query->whereHas('toAccount', function($query) {
-							$query->whereHasMorph('account', 'App\Models\BankAccount', function($query) {
-								$query->where('account_no', 'cash');
-							});
-						})->whereHas('fromAccount', function($query) {
-							$query->whereHasMorph('account', 'App\Models\BankAccount', function($query) {
-								$query->where('account_no', '<>', 'cash');
-							});
-						});
-					})->orWhere(function($query) {
-						$query->whereHas('fromAccount', function($query) {
-							$query->whereHasMorph('account', 'App\Models\BankAccount', function($query) {
-								$query->where('account_no', '<>', 'cash');
-							});
-						})->whereDoesntHave('toAccount', function($query) {
-							$query->whereHasMorph('account', 'App\Models\BankAccount');
-						});
-					});
-				})->groupBy('from_account_id')
-				->selectRaw('0 id, 1 bank_withdrawal, from_account_id, null to_account_id, sum(amount) amount')
-			);
-	}
+	// 	return self::where('created_at', '>=', $current)->where('created_at', '<', $next)
+	// 		->whereHas('toAccount', function($query) {
+	// 			$query->whereHasMorph('account', 'App\Models\BankAccount');
+	// 		})->whereDoesntHave('fromAccount', function($query) {
+	// 			$query->whereHasMorph('account', 'App\Models\BankAccount');
+	// 		})->groupBy('from_account_id')->selectRaw('0 id, 0 bank_withdrawal, from_account_id, null to_account_id, sum(amount) amount')
+	// 		->union(self::where('created_at', '>=', $current)->where('created_at', '<', $next)
+	// 			->where(function($query) {
+	// 				$query->where(function($query) {
+	// 					$query->whereHas('toAccount', function($query) {
+	// 						$query->whereHasMorph('account', 'App\Models\BankAccount', function($query) {
+	// 							$query->where('account_no', 'cash');
+	// 						});
+	// 					})->whereHas('fromAccount', function($query) {
+	// 						$query->whereHasMorph('account', 'App\Models\BankAccount', function($query) {
+	// 							$query->where('account_no', '<>', 'cash');
+	// 						});
+	// 					});
+	// 				})->orWhere(function($query) {
+	// 					$query->whereHas('fromAccount', function($query) {
+	// 						$query->whereHasMorph('account', 'App\Models\BankAccount', function($query) {
+	// 							$query->where('account_no', '<>', 'cash');
+	// 						});
+	// 					})->whereDoesntHave('toAccount', function($query) {
+	// 						$query->whereHasMorph('account', 'App\Models\BankAccount');
+	// 					});
+	// 				});
+	// 			})->groupBy('from_account_id')
+	// 			->selectRaw('0 id, 1 bank_withdrawal, from_account_id, null to_account_id, sum(amount) amount')
+	// 		);
+	// }
 
-	private static function queryExpensesOn($date) {
-		$current = new \Carbon\CarbonImmutable($date);
-		$next = $current->addDay();
+	// private static function queryExpensesOn($date) {
+	// 	$current = new \Carbon\CarbonImmutable($date);
+	// 	$next = $current->addDay();
 
-		return self::where('created_at', '>=', $current)->where('created_at', '<', $next)
-			->whereHas('fromAccount', function($query) {
-				$query->whereHasMorph('account', 'App\Models\BankAccount');
-			})->whereDoesntHave('toAccount', function($query) {
-				$query->whereHasMorph('account', 'App\Models\BankAccount');
-			})->groupBy('to_account_id')->selectRaw('0 id, 0 bank_deposit, null from_account_id, to_account_id, sum(amount) amount')
-			->union(self::where('created_at', '>=', $current)->where('created_at', '<', $next)
-				->where(function($query) {
-					$query->where(function($query) {
-						$query->whereHas('fromAccount', function($query) {
-							$query->whereHasMorph('account', 'App\Models\BankAccount', function($query) {
-								$query->where('account_no', 'cash');
-							});
-						})->whereHas('toAccount', function($query) {
-							$query->whereHasMorph('account', 'App\Models\BankAccount', function($query) {
-								$query->where('account_no', '<>', 'cash');
-							});
-						});
-					})->orWhere(function($query) {
-						$query->whereHas('toAccount', function($query) {
-							$query->whereHasMorph('account', 'App\Models\BankAccount', function($query) {
-								$query->where('account_no', '<>', 'cash');
-							});
-						})->whereDoesntHave('fromAccount', function($query) {
-							$query->whereHasMorph('account', 'App\Models\BankAccount');
-						});
-					});
-				})->groupBy('to_account_id')
-				->selectRaw('0 id, 1 bank_deposit, null from_account_id, to_account_id, sum(amount) amount')
-			);
-	}
+	// 	return self::where('created_at', '>=', $current)->where('created_at', '<', $next)
+	// 		->whereHas('fromAccount', function($query) {
+	// 			$query->whereHasMorph('account', 'App\Models\BankAccount');
+	// 		})->whereDoesntHave('toAccount', function($query) {
+	// 			$query->whereHasMorph('account', 'App\Models\BankAccount');
+	// 		})->groupBy('to_account_id')->selectRaw('0 id, 0 bank_deposit, null from_account_id, to_account_id, sum(amount) amount')
+	// 		->union(self::where('created_at', '>=', $current)->where('created_at', '<', $next)
+	// 			->where(function($query) {
+	// 				$query->where(function($query) {
+	// 					$query->whereHas('fromAccount', function($query) {
+	// 						$query->whereHasMorph('account', 'App\Models\BankAccount', function($query) {
+	// 							$query->where('account_no', 'cash');
+	// 						});
+	// 					})->whereHas('toAccount', function($query) {
+	// 						$query->whereHasMorph('account', 'App\Models\BankAccount', function($query) {
+	// 							$query->where('account_no', '<>', 'cash');
+	// 						});
+	// 					});
+	// 				})->orWhere(function($query) {
+	// 					$query->whereHas('toAccount', function($query) {
+	// 						$query->whereHasMorph('account', 'App\Models\BankAccount', function($query) {
+	// 							$query->where('account_no', '<>', 'cash');
+	// 						});
+	// 					})->whereDoesntHave('fromAccount', function($query) {
+	// 						$query->whereHasMorph('account', 'App\Models\BankAccount');
+	// 					});
+	// 				});
+	// 			})->groupBy('to_account_id')
+	// 			->selectRaw('0 id, 1 bank_deposit, null from_account_id, to_account_id, sum(amount) amount')
+	// 		);
+	// }
 
 	// Relationships
 	public function fromAccount() {

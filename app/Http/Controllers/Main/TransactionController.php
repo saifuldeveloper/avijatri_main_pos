@@ -28,14 +28,13 @@ class TransactionController extends Controller
 
         $purchases = PurchaseEntry::getPurchasesOn($date);
         $purchaseSummary = PurchaseEntry::getPurchaseSummaryOn($date);
-        $incomes = Transaction::getIncomesOn($date);
-        $expenses = Transaction::getExpensesOn($date);
-        $incomesSum = Transaction::sumIncomesWithPreviousBalanceOn($date);
-        $expensesSum = Transaction::sumExpensesOn($date);
-        $initialCashBalance = BankAccount::getCashAccount()->getCurrentAccountBook()->getBalanceBefore($date);
-        $finalCashBalance = BankAccount::getCashAccount()->getCurrentAccountBook()->getBalanceBefore($date->addDay());
-        return (object)compact('purchases', 'purchaseSummary', 'incomes', 'expenses',
-            'incomesSum', 'expensesSum', 'initialCashBalance', 'finalCashBalance');
+        // $incomes = Transaction::getIncomesOn($date);
+        // $expenses = Transaction::getExpensesOn($date);
+        // $incomesSum = Transaction::sumIncomesWithPreviousBalanceOn($date);
+        // $expensesSum = Transaction::sumExpensesOn($date);
+        // $initialCashBalance = BankAccount::getCashAccount()->getCurrentAccountBook()->getBalanceBefore($date);
+        // $finalCashBalance = BankAccount::getCashAccount()->getCurrentAccountBook()->getBalanceBefore($date->addDay());
+        return (object)compact('purchases', 'purchaseSummary');
     }
 
     /**

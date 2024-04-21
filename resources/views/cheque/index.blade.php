@@ -35,7 +35,7 @@
 			<td>{{ dateFormat($cheque->due_date, 'd/m/Y', 'Y-m-d') }}</td>
 			<td class="p-0">
 				<table class="table m-0">
-					{{-- <tbody>
+					<tbody>
 						@php
 							$size = $cheque->current_book->entries->count();
 						@endphp
@@ -52,7 +52,7 @@
 							<td class="border-0">-</td>
 						</tr>
 						@endif
-					</tbody> --}}
+					</tbody>
 					<tbody>
 						@php
 							$size = $cheque->current_book ? $cheque->current_book->entries->count() : 0;

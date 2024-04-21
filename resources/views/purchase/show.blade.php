@@ -56,8 +56,6 @@
                 @foreach ($purchases as $purchase)
                     <tr>
                         <td>
-                          
-                                {{-- @include('templates.thumbnail-preview', ['small_thumbnail' =>'images/small-thumbnail/'. $purchase['image'] ?? $purchase['shoe']->image_url, 'preview' => $purchase['preview_url'] ?? $purchase['shoe']->preview_url]) --}}
                                 @if (isset($purchase['image']))
                                     @include('templates.thumbnail-preview', [
                                         'small_thumbnail' => 'images/small-thumbnail/' . $purchase['image'],

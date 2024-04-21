@@ -109,9 +109,9 @@
 			<tbody>
 				<tr>
 					<td>সাবেক</td>
-					<td class="text-right">{{ toFixed($data->initialCashBalance) }}</td>
+					{{-- <td class="text-right">{{ toFixed($data->initialCashBalance) }}</td> --}}
 				</tr>
-				@foreach($data->incomes as $i => $income)
+				{{-- @foreach($data->incomes as $i => $income)
 				@if($income->amount == 0)
 				@continue
 				@endif
@@ -119,12 +119,12 @@
 					<td>{{ $income->transaction_type }}</td>
 					<td class="text-right">{{ toFixed($income->amount) }}</td>
 				</tr>
-				@endforeach
+				@endforeach --}}
 				<tr>
 					<td><strong>মোট</strong></td>
-					<td class="text-right"><strong>{{ toFixed($data->incomesSum) }}</strong></td>
+					{{-- <td class="text-right"><strong>{{ toFixed($data->incomesSum) }}</strong></td> --}}
 				</tr>
-				@if($data->expensesSum > 0)
+				{{-- @if($data->expensesSum > 0)
 				<tr>
 					<td>খরচ বাদ</td>
 					<td class="text-right">{{ toFixed($data->expensesSum) }}</td>
@@ -133,7 +133,7 @@
 					<td><strong>ক্যাশ</strong></td>
 					<td class="text-right"><strong>{{ toFixed($data->finalCashBalance) }}</strong></td>
 				</tr>
-				@endif
+				@endif --}}
 			</tbody>
 		</table>
 	</div>
@@ -147,7 +147,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				@foreach($data->expenses as $i => $expense)
+				{{-- @foreach($data->expenses as $i => $expense)
 				@if($expense->amount == 0)
 				@continue
 				@endif
@@ -155,10 +155,10 @@
 					<td>{{ $expense->transaction_type }}</td>
 					<td class="text-right">{{ toFixed($expense->amount) }}</td>
 				</tr>
-				@endforeach
+				@endforeach --}}
 				<tr>
 					<td><strong>মোট</strong></td>
-					<td class="text-right"><strong>{{ toFixed($data->expensesSum) }}</strong></td>
+					{{-- <td class="text-right"><strong>{{ toFixed($data->expensesSum) }}</strong></td> --}}
 				</tr>
 			</tbody>
 		</table>
