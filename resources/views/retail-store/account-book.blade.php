@@ -115,7 +115,9 @@
 			<td>{{ $entry->count }}</td>
 			<td>{{ $entry->return_count }}</td>
 			<td>{{ $entry->expense_description }}</td>
-			<td>{{ $entry->expense_amount == 0 ? '-' : toFixed($entry->expense_amount) }}</td>
+			<td>
+				{{-- {{ $entry->expense_amount == 0 ? '-' : toFixed($entry->expense_amount) }} --}}
+			</td>
 			<td>{{ toFixed($entry->total_retail_price) }}</td>
 			<td>{{ toFixed($entry->total_retail_price - $entry->total_commission) }}</td>
 			<td>{{ $entry->paid_amount == 0 ? '-' : toFixed($entry->paid_amount) }}</td>

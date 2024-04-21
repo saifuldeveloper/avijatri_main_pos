@@ -21,7 +21,7 @@ if(!isset($preview)) $preview = false;
 			<td>
 				<div class="d-print-none">
 				@if(!$preview)
-				{{-- <a href="{{ route('invoice.show', ['invoice' => $invoice, 'view' => 'id']) }}" class="btn btn-success btn-sm">আইডিসহ দেখুন</a> --}}
+				<a href="{{ route('invoice.show', ['invoice' => $invoice, 'view' => 'id']) }}" class="btn btn-success btn-sm">আইডিসহ দেখুন</a>
 				@include('layouts.crud-buttons',    ['model' => 'invoice',  'parameter' =>'invoice', 'object' => $invoice, 'http' => false])
 				@endif
 				</div>

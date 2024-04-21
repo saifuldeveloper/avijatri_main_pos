@@ -20,16 +20,30 @@ class BankAccount extends Model
     }
 
     // Relationships
-    public function accountBooks()
-    {
-        return $this->morphMany(AccountBook::class, 'account');
-    }
+    // public function accountBooks()
+    // {
+    //     return $this->morphMany(AccountBook::class, 'account');
+    // }
+
+    // public function getCurrentAccountBook()
+    // {
+    
+    //     return $this->accountBooks()->latest()->first();
+    // }
 
     public function getCurrentAccountBook()
     {
-    
         return $this->accountBooks()->latest()->first();
     }
+    public function accountBooks()
+    {
+        return $this->hasMany(AccountBook::class ,'account_id','id')->where('account_type','bank-account');
+    }
+
+
+    
+
+
 
     // Attributes
     public function getNameAttribute()

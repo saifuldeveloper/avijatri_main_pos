@@ -9,9 +9,9 @@ use App\Http\Controllers\Controller;
 
 class TransactionController extends \App\Http\Controllers\Main\TransactionController
 {
-    public function __construct() {
-        $this->middleware(['permission:manage transactions']);
-    }
+    // public function __construct() {
+    //     $this->middleware(['permission:manage transactions']);
+    // }
 
     /**
      * Display a listing of the resource.

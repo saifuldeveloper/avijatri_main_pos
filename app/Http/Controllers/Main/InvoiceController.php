@@ -11,6 +11,7 @@ use App\Models\GiftTransaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory;
+use App\Models\View\RetailStoreAccountEntry;
 
 class InvoiceController extends Controller
 {
@@ -32,6 +33,7 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
+
 
         $retailStore = RetailStore::find($request->input('retail_store_id'));
         $accountBook = $retailStore->getCurrentAccountBook();
@@ -106,6 +108,17 @@ class InvoiceController extends Controller
             $giftSale->type = 'sale';
             $invoice->giftTransactions()->save($giftSale);
         }
+        $entry             = new RetailStoreAccountEntry;
+        $entry->entry_id   = $invoice->id;
+        $entry->entry_type = '0';
+        $entry->account_book_id =$accountBook->id;
+        $entry->invoice_id  =$invoice->id;
+        $entry->save();
+
+
+
+
+
         
        
 
