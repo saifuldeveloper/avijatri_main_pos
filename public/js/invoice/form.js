@@ -23,16 +23,13 @@ $(document).ready(function() {
 		var row = $(this).parents('.tr-main');
 		var url = $(this).attr('data-shoe-details').replace('#', $(this).val());
 
-	
-
 		$.get(url, [], function(data) {
-			 
-			// if(data.available == 0) {
-			// 	alert('এই জুতাটি ইনভেন্টরিতে নেই।');
-			// 	me.val('');
-			// 	me.focus();
-			// 	return;
-			// }
+			if(data.available == 0) {
+				alert('এই জুতাটি ইনভেন্টরিতে নেই।');
+				me.val('');
+				me.focus();
+				return;
+			}
 			row.find('.input-category').val(data.category.full_name);
 			row.find('.input-color').val(data.color.name);
 			row.find('.input-retail-price').val(data.retail_price.toFixed(2));

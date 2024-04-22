@@ -25,8 +25,8 @@ class BankAccountsTableSeeder extends Seeder
                 'account_no' => '-',
                 'bank' => 'ক্যাশ',
                 'branch' => 'cash',
-                'created_at' => '2024-04-21 11:27:55',
-                'updated_at' => '2024-04-21 11:27:55',
+                'created_at' => '2024-04-22 10:45:39',
+                'updated_at' => '2024-04-22 10:45:39',
             ),
             1 => 
             array (
@@ -34,8 +34,8 @@ class BankAccountsTableSeeder extends Seeder
                 'account_no' => '2917',
                 'bank' => 'Pubali Bank',
                 'branch' => 'B.B. Avenue',
-                'created_at' => '2024-04-21 11:28:09',
-                'updated_at' => '2024-04-21 11:28:09',
+                'created_at' => '2024-04-22 10:45:56',
+                'updated_at' => '2024-04-22 10:45:56',
             ),
             2 => 
             array (
@@ -43,8 +43,8 @@ class BankAccountsTableSeeder extends Seeder
                 'account_no' => '১২২৩',
                 'bank' => 'জনতা ব্যাংক',
                 'branch' => 'গুলিস্তান',
-                'created_at' => '2024-04-21 11:28:23',
-                'updated_at' => '2024-04-21 11:28:23',
+                'created_at' => '2024-04-22 10:46:10',
+                'updated_at' => '2024-04-22 10:46:10',
             ),
             3 => 
             array (
@@ -52,8 +52,8 @@ class BankAccountsTableSeeder extends Seeder
                 'account_no' => '51489962',
                 'bank' => 'Dutch Bangla Bank',
                 'branch' => 'Dhaka',
-                'created_at' => '2024-04-21 11:28:38',
-                'updated_at' => '2024-04-21 11:28:38',
+                'created_at' => '2024-04-22 10:46:26',
+                'updated_at' => '2024-04-22 10:46:26',
             ),
         ));
         

@@ -135,12 +135,6 @@ class InvoiceController extends \App\Http\Controllers\Main\InvoiceController
     public function show(Request $request, Invoice $invoice)
     {
         $invoice = parent::show($request, $invoice);
-
-
-        
-
-  
-        
         if($request->input('view') == 'id') {
             return view('invoice.id-view', compact('invoice'));
         }
@@ -181,9 +175,13 @@ class InvoiceController extends \App\Http\Controllers\Main\InvoiceController
      * @param  \App\Models\Invoice  $invoice
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Invoice $invoice)
+    public function destroy($invoice)
     {
         //
+        $delete =parent::destroy($invoice);
+        return redirect()->route('invoice.create')->with('success-alert', 'জুতা বিক্রয়   ডিলিট করা হয়েছে ।');
+
+        
     }
 
     public function tr(Request $request) {

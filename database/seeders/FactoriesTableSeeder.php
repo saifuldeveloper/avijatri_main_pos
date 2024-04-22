@@ -22,29 +22,29 @@ class FactoriesTableSeeder extends Seeder
             0 => 
             array (
                 'id' => 1,
-                'name' => 'Mamun islam',
+                'name' => 'Al Mamun',
                 'address' => 'Thakurgaon',
-                'mobile_no' => '01586296296',
-                'created_at' => '2024-04-21 11:30:01',
-                'updated_at' => '2024-04-21 11:30:01',
+                'mobile_no' => '01789639696',
+                'created_at' => '2024-04-22 10:46:48',
+                'updated_at' => '2024-04-22 10:46:48',
             ),
             1 => 
             array (
                 'id' => 2,
-                'name' => 'AL amin',
-                'address' => 'Rangpur',
-                'mobile_no' => '01896635458',
-                'created_at' => '2024-04-21 11:30:17',
-                'updated_at' => '2024-04-21 11:30:17',
+                'name' => 'Bokkor',
+                'address' => 'Rnagpur',
+                'mobile_no' => '0241966325',
+                'created_at' => '2024-04-22 10:47:01',
+                'updated_at' => '2024-04-22 10:47:01',
             ),
             2 => 
             array (
                 'id' => 3,
-                'name' => 'Ruhul',
-                'address' => 'Bogura',
-                'mobile_no' => '0179634565',
-                'created_at' => '2024-04-21 11:30:49',
-                'updated_at' => '2024-04-21 11:30:49',
+                'name' => 'Al  Amin',
+                'address' => 'Pirgonj',
+                'mobile_no' => '018639852',
+                'created_at' => '2024-04-22 10:47:34',
+                'updated_at' => '2024-04-22 10:47:34',
             ),
         ));
         

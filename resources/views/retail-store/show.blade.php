@@ -29,7 +29,7 @@
 				{{-- @for($i = $retailStore->accountBooks->count() - 1; $i >= 0; $i--)
 				<?php $accountBook = $retailStore->accountBooks[$i]; ?>
 				<tr>
-					<td><a href="{{ route('account-book.show', compact('accountBook')) }}">{{ $accountBook->description }}</a></td>
+					<td><a href="{{ route('account-book.show', ['account_book' => $accountBook->id]) }}">{{ $accountBook->description }}</a></td>
 					<td class="text-right">{{ toFixed($accountBook->description_balance) }}</td>
 				</tr>
 				@endfor --}}

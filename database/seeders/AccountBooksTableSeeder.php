@@ -34,8 +34,8 @@ class AccountBooksTableSeeder extends Seeder
                 'balance_carry_forward' => NULL,
                 'closing_balance' => 0.0,
                 'closing_date' => NULL,
-                'created_at' => '2024-04-21 11:27:55',
-                'updated_at' => '2024-04-21 11:27:55',
+                'created_at' => '2024-04-22 10:45:39',
+                'updated_at' => '2024-04-22 10:45:39',
             ),
             1 => 
             array (
@@ -52,8 +52,8 @@ class AccountBooksTableSeeder extends Seeder
                 'balance_carry_forward' => NULL,
                 'closing_balance' => 0.0,
                 'closing_date' => NULL,
-                'created_at' => '2024-04-21 11:28:09',
-                'updated_at' => '2024-04-21 11:28:09',
+                'created_at' => '2024-04-22 10:45:56',
+                'updated_at' => '2024-04-22 10:45:56',
             ),
             2 => 
             array (
@@ -70,8 +70,8 @@ class AccountBooksTableSeeder extends Seeder
                 'balance_carry_forward' => NULL,
                 'closing_balance' => 0.0,
                 'closing_date' => NULL,
-                'created_at' => '2024-04-21 11:28:23',
-                'updated_at' => '2024-04-21 11:28:23',
+                'created_at' => '2024-04-22 10:46:10',
+                'updated_at' => '2024-04-22 10:46:10',
             ),
             3 => 
             array (
@@ -88,8 +88,8 @@ class AccountBooksTableSeeder extends Seeder
                 'balance_carry_forward' => NULL,
                 'closing_balance' => 0.0,
                 'closing_date' => NULL,
-                'created_at' => '2024-04-21 11:28:38',
-                'updated_at' => '2024-04-21 11:28:38',
+                'created_at' => '2024-04-22 10:46:26',
+                'updated_at' => '2024-04-22 10:46:26',
             ),
             4 => 
             array (
@@ -106,8 +106,8 @@ class AccountBooksTableSeeder extends Seeder
                 'balance_carry_forward' => NULL,
                 'closing_balance' => 0.0,
                 'closing_date' => NULL,
-                'created_at' => '2024-04-21 11:30:01',
-                'updated_at' => '2024-04-21 11:30:01',
+                'created_at' => '2024-04-22 10:46:48',
+                'updated_at' => '2024-04-22 10:46:48',
             ),
             5 => 
             array (
@@ -124,8 +124,8 @@ class AccountBooksTableSeeder extends Seeder
                 'balance_carry_forward' => NULL,
                 'closing_balance' => 0.0,
                 'closing_date' => NULL,
-                'created_at' => '2024-04-21 11:30:17',
-                'updated_at' => '2024-04-21 11:30:17',
+                'created_at' => '2024-04-22 10:47:01',
+                'updated_at' => '2024-04-22 10:47:01',
             ),
             6 => 
             array (
@@ -142,8 +142,8 @@ class AccountBooksTableSeeder extends Seeder
                 'balance_carry_forward' => NULL,
                 'closing_balance' => 0.0,
                 'closing_date' => NULL,
-                'created_at' => '2024-04-21 11:30:49',
-                'updated_at' => '2024-04-21 11:30:49',
+                'created_at' => '2024-04-22 10:47:34',
+                'updated_at' => '2024-04-22 10:47:34',
             ),
             7 => 
             array (
@@ -160,8 +160,8 @@ class AccountBooksTableSeeder extends Seeder
                 'balance_carry_forward' => NULL,
                 'closing_balance' => 0.0,
                 'closing_date' => NULL,
-                'created_at' => '2024-04-21 11:31:42',
-                'updated_at' => '2024-04-21 11:31:42',
+                'created_at' => '2024-04-22 10:47:58',
+                'updated_at' => '2024-04-22 10:47:58',
             ),
             8 => 
             array (
@@ -178,8 +178,26 @@ class AccountBooksTableSeeder extends Seeder
                 'balance_carry_forward' => NULL,
                 'closing_balance' => 0.0,
                 'closing_date' => NULL,
-                'created_at' => '2024-04-21 11:31:56',
-                'updated_at' => '2024-04-21 11:31:56',
+                'created_at' => '2024-04-22 10:48:19',
+                'updated_at' => '2024-04-22 10:48:19',
+            ),
+            9 => 
+            array (
+                'id' => 10,
+                'account_id' => 3,
+                'account_type' => 'retail-store',
+                'previous_balance' => 0.0,
+                'open' => 1,
+                'commission' => 0.0,
+                'staff' => 0.0,
+                'discount' => 0.0,
+                'due' => 0.0,
+                'deadline' => NULL,
+                'balance_carry_forward' => NULL,
+                'closing_balance' => 0.0,
+                'closing_date' => NULL,
+                'created_at' => '2024-04-22 10:48:40',
+                'updated_at' => '2024-04-22 10:48:40',
             ),
         ));
         
