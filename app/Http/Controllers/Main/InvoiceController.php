@@ -73,24 +73,10 @@ class InvoiceController extends Controller
         foreach ($returns as $return) {
             $invoice->returns()->save($return);
         }
-
         $expenses = $retailStore->unlistedExpenses()->get();
         foreach ($expenses as $expense) {
             $invoice->retailStoreExpenses()->save($expense);
         }
-
-        /*if($request->filled('payment_amount') && $request->input('payment_amount') > 0) {
-            $description = $request->has('cheque_no') ? 'চেক নং ' . $request->input('cheque_no') : null;
-            Transaction::createTransaction('retail-store', $retailStore->id, 'income', $request->input('payment_method'), $request->input('payment_amount'), $description, $invoice);
-        }*/
-        $payments = $request->input('payments');
-        foreach ($payments as $payment) {
-            if (empty($payment['amount']))
-                continue;
-            $description = isset($payment['cheque_no']) ? 'চেক নং ' . $payment['cheque_no'] : null;
-            Transaction::createTransaction('retail-store', $retailStore->id, 'income', $payment['payment_method'], $payment['amount'], $description, $invoice);
-        }
-
         foreach ($request->input('gifts') as $row) {
             if (empty($row['gift_id'])) {
                 continue;

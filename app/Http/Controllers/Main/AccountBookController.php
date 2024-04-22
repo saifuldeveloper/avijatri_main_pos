@@ -48,6 +48,9 @@ class AccountBookController extends Controller
                             'transactionsTo',
                             'factoryentries.purchase.purchaseEntries.shoe',
                             'factoryentries.returnshoe.returnentries.shoe');
+
+
+        
    
         // $accountBook->append('entries');
  

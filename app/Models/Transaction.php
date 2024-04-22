@@ -73,12 +73,7 @@ class Transaction extends Model
 			} else {
 				$from_account_id = $account->getCurrentAccountBook()->id;
 			}
-			$to_account_id =     $bankAccount->getCurrentAccountBook()->id;
-			// $to_account_id = AccountBook::where('account_id', $bankAccount->id)
-			// 	->where('account_type', 'bank-account')
-			// 	->first()
-			// 	->latest()
-			// 	->value('id');
+			$to_account_id =     $bankAccount->getCurrentAccountBook()->id;;
 			break;
 			case 'expense':
 			if($accountType == 'account-book') {

@@ -130,6 +130,10 @@ class AccountBook extends Model
         return $this->hasMany(FactoryAccountEntry::class, 'account_book_id', 'id')->where('status',1)->orderBy('created_at', 'desc');
      }
 
+     public function retailEntries(){
+        return $this->hasMany(RetailStoreAccountEntry::class, 'account_book_id', 'id')->orderBy('created_at', 'desc');
+     }
+
     // Attributes
     public function getDescriptionAttribute() {
         $description = dateFormat($this->created_at) . ' থেকে ';

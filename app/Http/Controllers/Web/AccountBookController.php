@@ -79,8 +79,8 @@ class AccountBookController extends \App\Http\Controllers\Main\AccountBookContro
                 return view('factory.account-book', compact('accountBook','purchases_amount', 'payment_amount','factoryEntries','returnsum'));
 
             case 'retail-store':
-
-                return view('retail-store.account-book', compact('accountBook'));
+                $entries =$accountBook->retailEntries()->with('invoices.invoiceEntries.shoe','invoices.transactions')->paginate(50);
+                return view('retail-store.account-book', compact('accountBook','entries'));
         }
     }
 
