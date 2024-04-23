@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory;
 use App\Models\ReturnToFactory;
+use App\Models\View\RetailStoreAccountEntry;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 
@@ -50,8 +51,14 @@ class ReturnController extends Controller
 
     public function retailStore(Request $request)
     {
+
+      
+      
+       
         $retailStore = RetailStore::find($request->input('retail_store_id'));
         $accountBook = $retailStore->getCurrentAccountBook();
+        $count =0;
+        $return_amount = 0;
         foreach ($request->input('returns') as $i => $row) {
             if (isset($row['category_id'])) {
                 if ($request->file("returns.{$i}.image")) {
@@ -71,6 +78,8 @@ class ReturnController extends Controller
                 $shoe->fill($row);
                 $shoe->id = $row['shoe_id'];
                 $shoe->save();
+                $count +=$row['count'];
+                $return_amount +=$shoe->retail_price * $row['commision']/100;
             }
             $returnEntry = new ReturnFromRetailEntry();
             $returnEntry->fill($row);
@@ -109,8 +118,6 @@ class ReturnController extends Controller
                 $wasteEntry->entries_type = 'retail_store';
                 $wasteEntry->save();
             } else {
-                   
-               
                 if (isset($row['category_id'])) {
                     $inventory = new Inventory;
                     $inventory->id = $row['shoe_id'];
@@ -130,8 +137,20 @@ class ReturnController extends Controller
             $returnEntry->account_book_id = $accountBook->id;
             $returnEntry->save();
             // $accountBook->returnFromRetailEntries()->save($returnEntry);
-
         }
+
+
+      
+
+     
+        $entry =new RetailStoreAccountEntry;
+        $entry->entry_type ='1';
+        $entry->account_book_id =$accountBook->id;
+        $entry->return_count =$count;
+        $entry->save();
+
+
+
         return true;
     }
 

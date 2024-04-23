@@ -10,6 +10,7 @@ use App\Models\AccountBook;
 use App\Models\BankAccount;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\View\RetailStoreAccountEntry;
 
 class TransactionController extends Controller
 {
@@ -98,6 +99,17 @@ class TransactionController extends Controller
                 $request->input('amount'),
                 $request->input('description')
             );
+
+           $accountBook            =AccountBook::with('BankAccount')->find($transaction->to_account_id);
+           $entry                  = new RetailStoreAccountEntry;
+           $entry->account_book_id =$transaction->from_account_id;
+           $entry->entry_type      = '3';
+           $entry->description     = $transaction->description;
+           $entry->account_name    = $accountBook->BankAccount->bank;
+           $entry->paid_amount     = $transaction->amount;
+           $entry->save();
+
+             
         }
         return $transaction;
     }

@@ -115,7 +115,7 @@
 			<td>
 				{{ $entry->count }}
 			</td>
-			<td>{{ $entry->return_count ? $entry->return_count : '-' }}</td>
+			<td>{{ $entry->return_count ==0 ? '-' : $entry->return_count  }}</td>
 			<td>{{ $entry->expense_description ? $entry->expense_description : '-' }}</td>
 			<td>
 				{{ $entry->expense_amount == 0 ? '-' : toFixed($entry->expense_amount) }}

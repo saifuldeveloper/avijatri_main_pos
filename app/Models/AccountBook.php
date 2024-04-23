@@ -30,6 +30,12 @@ class AccountBook extends Model
         return $this->belongsTo(GiftSupplier::class, 'account_id', 'id');
     }
 
+    public function BankAccount()
+    {
+        return $this->belongsTo(BankAccount::class, 'account_id', 'id');
+    }
+
+
 
 
 
