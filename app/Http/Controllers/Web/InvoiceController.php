@@ -60,6 +60,8 @@ class InvoiceController extends \App\Http\Controllers\Main\InvoiceController
     public function store(Request $request)
     {
 
+        // dd($request->all());
+
         if($request->has('submit') && $request->input('submit') === 'preview') {
             $retailStore = RetailStore::find($request->input('retail_store_id'));
             $sales = $request->input('sales');

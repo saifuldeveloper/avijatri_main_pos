@@ -28,7 +28,7 @@ class InvoiceController extends Controller
     public function store(Request $request)
     {
 
-
+    
         $retailStore = RetailStore::find($request->input('retail_store_id'));
         $accountBook = $retailStore->getCurrentAccountBook();
         $invoice = new Invoice;
@@ -38,6 +38,8 @@ class InvoiceController extends Controller
         $invoice->fill($fill);
         $accountBook->invoices()->save($invoice);
 
+        $count =0;
+        $total_retail_price = 0;
         foreach ($request->input('sales') as $row) {
             if (empty($row['shoe_id'])) {
                 continue;
@@ -45,13 +47,13 @@ class InvoiceController extends Controller
             $invoiceEntry = new InvoiceEntry;
             $invoiceEntry->fill($row);
             $invoice->invoiceEntries()->save($invoiceEntry);
-
-            $shoe = Shoe::find($row['shoe_id']);
-
-            $inventory = Inventory::find($shoe->id);
+            $shoe               = Shoe::find($row['shoe_id']);
+            $count              +=$row['count'];
+            $total_retail_price +=$shoe->retail_price * $row['count'];
+            $inventory           = Inventory::find($shoe->id);
             $inventory->decrement('count', $row['count']);
 
-            $boxSale = new GiftTransaction;
+            $boxSale            = new GiftTransaction;
             $boxSale->fill([
                 'gift_id' => $shoe->box_id,
                 'count' => $row['count'],
@@ -70,9 +72,11 @@ class InvoiceController extends Controller
         }
 
         $returns = $retailStore->unlistedReturns()->get();
+
         foreach ($returns as $return) {
             $invoice->returns()->save($return);
         }
+
         $expenses = $retailStore->unlistedExpenses()->get();
         foreach ($expenses as $expense) {
             $invoice->retailStoreExpenses()->save($expense);
@@ -86,11 +90,36 @@ class InvoiceController extends Controller
             $giftSale->type = 'sale';
             $invoice->giftTransactions()->save($giftSale);
         }
-        $entry             = new RetailStoreAccountEntry;
-        $entry->entry_id   = $invoice->id;
-        $entry->entry_type = '0';
-        $entry->account_book_id = $accountBook->id;
-        $entry->invoice_id  = $invoice->id;
+
+        $payments     = $request->input('payments');
+        $padid_amount = 0;
+        foreach($payments as $payment) {
+            if(empty($payment['amount']))
+            continue;
+            $description = isset($payment['cheque_no']) ? 'চেক নং ' . $payment['cheque_no'] : null;
+            Transaction::createTransaction('retail-store', $retailStore->id, 'income', $payment['payment_method'], $payment['amount'], $description, $invoice);
+            $padid_amount +=$payment['amount'];
+        }
+
+        $entry                      = new RetailStoreAccountEntry;
+        $entry->entry_id            = $invoice->id;
+        $entry->entry_type          = '0';
+        $entry->account_book_id     = $accountBook->id;
+        $entry->invoice_id          = $invoice->id;
+        $entry->count               = $count;
+        $entry->total_retail_price  = $total_retail_price;
+
+        $entry->return_count      = $returns->sum('count');
+        $entry->return_amount      =  $returns->sum(function ($return) {
+            return $return->shoe->retails_price;
+        });
+        $entry->expense_amount      = $expenses->sum('amount');
+        $entry->expense_description = $expenses->pluck('description')->implode(', ');
+        $entry->total_commission    = $request->commission;
+        $entry->transport           = $request->transport;
+        $entry->discount            = $request->discount;
+        $entry->paid_amount         = $padid_amount;
+        $entry->amount              = $request->total_amount;
         $entry->save();
         $invoice->load('accountBook.account', 'invoiceItems', 'transactions');
         return $invoice;
@@ -117,10 +146,11 @@ class InvoiceController extends Controller
     public function update(Request $request, Invoice $invoice)
     {
 
-
+       
+    
         $invoice->load('accountBook.account');
         $survived = [];
-
+        $retailStore = RetailStore::find($request->input('retail_store_id'));
         if ($invoice->accountBook->open && $invoice->accountBook->account_id != $request->input('retail_store_id')) {
             $retailStore = RetailStore::find($request->input('retail_store_id'));
             $accountBook = $retailStore->getCurrentAccountBook();
@@ -130,6 +160,9 @@ class InvoiceController extends Controller
         $invoice->fill($request->all());
         $invoice->save();
 
+
+        $count =0;
+        $total_retail_price = 0;
         foreach ($request->input('sales') as $i => $row) {
             if (isset($row['id'])) {
                 /*$shoeTransaction = ShoeTransaction::find($row['id']);
@@ -141,8 +174,9 @@ class InvoiceController extends Controller
                 $difference   = $row['count'] - $invoiceEntry->count;
                 $inventory = Inventory::find($invoiceEntry->shoe_id);
                 $inventory->count = max(0, $inventory->count + $difference);
+                $count +=$row['count'];
+                $total_retail_price +=$invoiceEntry->shoe->retail_price * $row['count'];
                 $inventory->save();
-
                 $invoiceEntry->fill($row);
                 $invoiceEntry->save();
             } else if (empty($row['shoe_id'])) {
@@ -155,12 +189,14 @@ class InvoiceController extends Controller
                 $invoice->shoeTransactions()->save($shoeTransaction);*/
                 $invoiceEntry = new InvoiceEntry;
                 $invoiceEntry->fill($row);
+                $count +=$row['count'];
+                $total_retail_price +=$invoiceEntry->shoe->retail_price * $row['count'];
                 $invoice->invoiceEntries()->save($invoiceEntry);
             }
+
             //$survived[] = $shoeTransaction->id;
             $survived[] = $invoiceEntry->id;
         }
-
         $invoiceEntries = $invoice->invoiceEntries()->get();
         foreach ($invoiceEntries as $invoiceEntry) {
             if (!in_array($invoiceEntry->id, $survived)) {
@@ -168,6 +204,27 @@ class InvoiceController extends Controller
             }
         }
 
+        
+        $payments     = $request->input('payments');
+  
+        foreach($payments as $payment) {
+            if(empty($payment['amount']))
+            continue;
+            $description = isset($payment['cheque_no']) ? 'চেক নং ' . $payment['cheque_no'] : null;
+            Transaction::createTransaction('retail-store', $retailStore->id, 'income', $payment['payment_method'], $payment['amount'], $description, $invoice);
+           
+        }
+
+        $transactions =Transaction::where('attachment_id',$invoice->id)->where('attachment_type','App\Models\Invoice')->get();
+        $entry                     = RetailStoreAccountEntry::where('invoice_id',$invoice->id)->first();
+        $entry->count               = $count;
+        $entry->total_retail_price  = $total_retail_price;
+        $entry->total_commission    = $request->commission;
+        $entry->transport           = $request->transport;
+        $entry->discount            = $request->discount;
+        $entry->amount              = $request->total_amount;
+        $entry->paid_amount         = $transactions->sum('amount');
+        $entry->save();
         $invoice->load('invoiceEntries.shoe');
         return $invoice;
     }

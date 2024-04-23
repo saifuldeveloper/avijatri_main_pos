@@ -124,6 +124,7 @@ $retailStore = session()->get('retail-store', null);
 					<td colspan="7" class="text-right"><div class="form-control-plaintext">সর্বমোট</div></td>
 					<td>
 						{{ disabledInput($errors, 'text', '', '', toFixed($invoice->total_receivable ?? 0), 'text-right input-total-receivable font-weight-bold') }}
+						<input type="hidden" name="total_amount" value="{{  toFixed($invoice->total_receivable ?? 0) }}" class="input-total-receivable">
 					</td>
 				</tr>
 				<tr>

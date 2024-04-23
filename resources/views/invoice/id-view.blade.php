@@ -129,7 +129,7 @@
 		<tr>
 			<td colspan="5"></td>
 			<td class="text-center"><strong>মোট বাকী</strong></td>
-			{{-- <td class="text-right"><strong>{{ toFixed($invoice->account_book_balance ?? $total_due) }}</strong></td> --}}
+			<td class="text-right"><strong>{{ toFixed($invoice->account_book_balance ?? $total_due) }}</strong></td>
 		</tr>
 	</tfoot>
 </table>

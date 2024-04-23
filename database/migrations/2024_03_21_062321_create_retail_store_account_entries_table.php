@@ -23,6 +23,7 @@ return new class extends Migration
             $table->double('return_amount')->nullable();
             $table->double('return_amount_without_commission')->nullable();
             $table->mediumText('expense_description')->nullable();
+            $table->double('expense_amount')->nullable();
             $table->double('total_commission')->nullable();
             $table->double('transport')->nullable();
             $table->double('discount')->nullable();

@@ -52,7 +52,7 @@ class AccountBookController extends Controller
 
         
    
-        // $accountBook->append('entries');
+        $accountBook->append('entries');
  
         switch($accountBook->account_type) {
             case 'factory':

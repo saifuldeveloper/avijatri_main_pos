@@ -151,15 +151,15 @@ if(!isset($preview)) $preview = false;
 			<td class="text-right">(-) {{ toFixed(isset($invoice) ? $invoice->total_payment : $payment_amount) }}</td>
 		</tr>
 		@endif
-		{{-- <tr>
+		<tr>
 			<td colspan="3"></td>
 			<td class="text-center">সাবেক বাকী</td>
 			<td class="text-right">(+) {{ toFixed($invoice->account_book_previous_balance ?? $previous_due) }}</td>
-		</tr> --}}
+		</tr>
 		<tr>
 			<td colspan="3"></td>
 			<td class="text-center"><strong>মোট বাকী</strong></td>
-			<td class="text-right"><strong>{{ toFixed($invoice->account_book_previous_balance ?? $total_due ?? 0) }}</strong></td>
+			<td class="text-right"><strong>{{ toFixed($invoice->account_book_balance ?? $total_due ) }}</strong></td>
 		</tr>
 	</tfoot>
 </table>

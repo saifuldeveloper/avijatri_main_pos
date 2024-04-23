@@ -106,39 +106,29 @@
 		</tr>
 		@endif
 		@endif
-		@foreach($entries as $i => $entry)
+		@foreach($accountBook->entries as $i => $entry)
 		<tr>
 			<td>{{ $i + $inc }}</td>
 			<td>{{ dateTimeFormat($entry->created_at) }}</td>
 			@if($entry->entry_type == 0)
 			<td><a href="{{ route('invoice.show', ['invoice' => $entry->invoice_id]) }}">{{ $entry->invoice_id }}</a></td>
 			<td>
-				{{ $entry->invoices->invoiceEntries->sum('count') }}
+				{{ $entry->count }}
 			</td>
-			<td>{{ $entry->return_count }}</td>
-			<td>{{ $entry->expense_description }}</td>
+			<td>{{ $entry->return_count ? $entry->return_count : '-' }}</td>
+			<td>{{ $entry->expense_description ? $entry->expense_description : '-' }}</td>
 			<td>
 				{{ $entry->expense_amount == 0 ? '-' : toFixed($entry->expense_amount) }}
 			</td>
-			<td>
-				@php
-				$totalRetailPrice = $entry->invoices->invoiceEntries->sum(function ($item) {
-					return $item->shoe->retail_price;
-				});
-			    @endphp
-			   {{ $totalRetailPrice }}
+			<td>   
+			   {{ $entry->total_retail_price }}
 			</td>
-			<td>{{ toFixed($entry->total_retail_price - $entry->total_commission) }}</td>
 			<td>
-				@php
-				$paid_amount = $entry->invoices->transactions->sum(function ($item) {
-					return $item->amount;
-				});
-			    @endphp
-			   {{ $paid_amount }}
+				{{ toFixed(  $entry->total_retail_price -  $entry->total_retail_price  * $entry->total_commission  / 100 ) }}
 			</td>
-
-
+			<td>
+			   {{ $entry->paid_amount }}
+			</td>
 			<td>{{ toFixed($entry->amount) }}</td>
 			@elseif($entry->entry_type == 1)
 			<td>-</td>
@@ -188,5 +178,5 @@
 		@endif
 	</tbody>
 </table>
-{{ $entries->links('pagination.default') }}
+{{ $accountBook->entries->links('pagination.default') }}
 @endsection

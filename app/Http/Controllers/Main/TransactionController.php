@@ -45,6 +45,8 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
+
+        // dd($request->all());
         if($request->input('account_type') == 'withdraw' || $request->input('account_type') == 'deposit') {
             $transaction = Transaction::createBankToCashTransaction(
                 $request->input('account_type'),
