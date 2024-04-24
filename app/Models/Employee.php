@@ -17,5 +17,11 @@ class Employee extends Model
     {
         return $this->hasMany(AccountBook::class ,'account_id','id')->where('account_type','employee');
     }
+
+    public function entries(){
+        return $this->hasMany(EmployeeAccountEntry::class,'account_id','id');
+    }
+
+
     protected $fillable = ['name', 'address', 'mobile_no', 'limit'];
 }

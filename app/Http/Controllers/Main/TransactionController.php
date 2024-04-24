@@ -10,6 +10,8 @@ use App\Models\AccountBook;
 use App\Models\BankAccount;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
+use App\Models\EmployeeAccountEntry;
 use App\Models\View\RetailStoreAccountEntry;
 
 class TransactionController extends Controller
@@ -29,13 +31,13 @@ class TransactionController extends Controller
 
         $purchases = PurchaseEntry::getPurchasesOn($date);
         $purchaseSummary = PurchaseEntry::getPurchaseSummaryOn($date);
-        // $incomes = Transaction::getIncomesOn($date);
-        // $expenses = Transaction::getExpensesOn($date);
+        $incomes = Transaction::getIncomesOn($date);
+        $expenses = Transaction::getExpensesOn($date);
         // $incomesSum = Transaction::sumIncomesWithPreviousBalanceOn($date);
-        // $expensesSum = Transaction::sumExpensesOn($date);
+        $expensesSum = Transaction::sumExpensesOn($date);
         // $initialCashBalance = BankAccount::getCashAccount()->getCurrentAccountBook()->getBalanceBefore($date);
         // $finalCashBalance = BankAccount::getCashAccount()->getCurrentAccountBook()->getBalanceBefore($date->addDay());
-        return (object)compact('purchases', 'purchaseSummary');
+        return (object)compact('purchases', 'purchaseSummary','incomes','expenses','expensesSum');
     }
 
     /**
@@ -47,7 +49,7 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
 
-        // dd($request->all());
+ 
         if($request->input('account_type') == 'withdraw' || $request->input('account_type') == 'deposit') {
             $transaction = Transaction::createBankToCashTransaction(
                 $request->input('account_type'),
@@ -64,7 +66,7 @@ class TransactionController extends Controller
                 $request->input('due_date')
             );
         } else if($request->input('account_type') == 'cheque') {
-            $transaction = Transaction::createTransaction(
+               $transaction = Transaction::createTransaction(
                 $request->input('account_type'),
                 $request->input('cheque_no'),
                 $request->input('payment_type'),
@@ -86,7 +88,43 @@ class TransactionController extends Controller
             $accountBook = AccountBook::find($request->input('account_id'));
             $accountBook->closing_balance -= $transaction->amount;
             $accountBook->save();
-        } else {
+        }else if($request->input('account_type') == 'employee'){
+
+          
+      
+
+            $transaction = Transaction::createTransaction(
+                $request->input('account_type'),
+                $request->input('account_id'),
+                $request->input('payment_type'),
+                $request->input('payment_method'),
+                $request->input('amount'),
+                $request->input('description')
+            );
+
+            $employe =Employee::find($request->account_id);
+
+            $entry = new EmployeeAccountEntry;
+            $entry->entry_id ='001';
+            $entry->entry_type ='0';
+            $entry->account_book_id =$employe->getCurrentAccountBook()->id;
+            $entry->account_name ='0';
+            $entry->account_id =$request->input('account_id');
+            $entry->account_type ='0';
+            $entry->description =$request->input('description');
+            $entry->total_amount = $request->input('amount');
+            $entry->save();
+
+
+
+
+
+        }
+        
+        
+        
+        
+        else {
             $accountType = $request->input('account_type');
             if($accountType == 'loan-receipt' || $accountType == 'loan-payment') {
                 $accountType = 'loan';

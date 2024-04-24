@@ -9,6 +9,10 @@ class BankAccount extends Model
 {
     use HasFactory;
 
+    public function account()
+    {
+        return $this->morphTo();
+    }
 
     // Static functions
     public static function getCashAccount()

@@ -327,7 +327,6 @@ class AccountBook extends Model
     public function getBalanceBefore($date) {
         $total_income = $this->transactionsTo()->where('created_at', '<', $date)->sum('amount');
         $total_expense = $this->transactionsFrom()->where('created_at', '<', $date)->sum('amount');
-
         return $this->opening_balance + $total_income - $total_expense;
     }
 

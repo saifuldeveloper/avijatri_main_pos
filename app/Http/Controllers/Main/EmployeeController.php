@@ -66,7 +66,8 @@ class EmployeeController extends Controller
     public function show(Employee $employee)
     {
         $employee->append('current_book');
-        $employee->current_book->append('entries');
+        // $employee->current_book->append('entries');
+        $employee->load('entries');
         return $employee;
     }
 

@@ -14,7 +14,7 @@
 				নাম: <strong>{{ $employee->name }}</strong><br>
 				ঠিকানা: <strong>{{ $employee->address }}</strong><br>
 				মোবাইল নং: <strong>{{ $employee->mobile_no }}</strong>
-				<!--বর্তমান লিমিট: <strong>25000.00</strong>-->
+				বর্তমান লিমিট: <strong>{{ $employee->limit }}</strong>
 			</td>
 			<td style="width:30%">
 				@include('layouts.crud-buttons', ['model' => 'employee',  'parameter' => 'employee','object' => $employee])
@@ -34,7 +34,8 @@
 		</tr>
 	</thead>
 	<tbody>
-		{{-- @foreach($employee->current_book->entries as $i => $entry)
+
+		@foreach($entries as $i => $entry)
 		<tr>
 			<td>{{ $i + 1 }}</td>
 			<td>{{ dateTimeFormat($entry->created_at) }}</td>
@@ -45,10 +46,10 @@
 			<td>{{ toFixed(-$entry->total_amount) }}</td>
 			@endif
 		</tr>
-		@endforeach --}}
+		@endforeach
 	</tbody>
 </table>
-{{-- {{ $employee->current_book->entries->links('pagination.default') }} --}}
+{{ $entries->links('pagination.default') }}
 
 <div id="employee-form" class="modal fade form-modal" tabindex="-1" role="dialog" aria-labelledby="form-modal-title" aria-hidden="true">
 	<div class="modal-dialog" role="document">

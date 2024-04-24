@@ -6,8 +6,8 @@
 	<tbody>
 		<tr>
 			<td>
-				<p>নাম: <strong>{{ $accountBook->account->name }}</strong><br>
-				মোবাইল নং: <strong>{{ $accountBook->account->mobile_no }}</strong></p>
+				<p>নাম: <strong>{{ $accountBook->retailAccount->name }}</strong><br>
+				মোবাইল নং: <strong>{{ $accountBook->retailAccount->mobile_no }}</strong></p>
 				তারিখ: <strong>{{ $accountBook->description }}</strong>
 			</td>
 		</tr>
@@ -140,7 +140,7 @@
 				<tbody>
 					<tr>
 						<td width="60%">
-							{{ $accountBook->account->name }} এর মোট বাকী <strong><span class="span-total-remaining">{{ toFixed($amount) }}</span> টাকা</strong>।<br>
+							{{ $accountBook->retailAccount->name }} এর মোট বাকী <strong><span class="span-total-remaining">{{ toFixed($amount) }}</span> টাকা</strong>।<br>
 							<label class="mb-0"><input type="radio" name="balance_carry_forward" value="1"> বাকী পরবর্তী খাতায় যুক্ত হবে</label>
 							<label class="mb-0"><input type="radio" name="balance_carry_forward" value="0" checked> বাকী পরবর্তী খাতায় যুক্ত হবে না</label>
 						</td>

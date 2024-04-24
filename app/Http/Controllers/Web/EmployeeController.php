@@ -55,7 +55,10 @@ class EmployeeController extends \App\Http\Controllers\Main\EmployeeController
      */
     public function show(Employee $employee)
     {
-        return view('employee.show', compact('employee'));
+
+        $employee = parent::show($employee);
+        $entries = $employee->entries()->paginate(10);
+        return view('employee.show', compact('employee','entries'));
     }
 
     /**
