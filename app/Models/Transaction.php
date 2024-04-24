@@ -73,7 +73,12 @@ class Transaction extends Model
 			} else {
 				$from_account_id = $account->getCurrentAccountBook()->id;
 			}
-			$to_account_id =     $bankAccount->getCurrentAccountBook()->id;;
+			if ($bankAccount !== null) {
+				$to_account_id = $bankAccount->getCurrentAccountBook()->id;
+			}else{
+				$to_account_id =0;
+			}
+			
 			break;
 			case 'expense':
 			if($accountType == 'account-book') {
