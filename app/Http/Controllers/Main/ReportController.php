@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Main;
 
-use Excel;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Transaction;
 use App\Views\TransactionReportEntry;
 use App\Exports\MonthlyTransactionReport;

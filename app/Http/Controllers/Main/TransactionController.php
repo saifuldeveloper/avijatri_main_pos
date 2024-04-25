@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\EmployeeAccountEntry;
+use App\Models\Expense;
+use App\Models\ExpenseAccountEntry;
 use App\Models\View\RetailStoreAccountEntry;
 
 class TransactionController extends Controller
@@ -48,8 +50,6 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-
- 
         if($request->input('account_type') == 'withdraw' || $request->input('account_type') == 'deposit') {
             $transaction = Transaction::createBankToCashTransaction(
                 $request->input('account_type'),
@@ -89,10 +89,26 @@ class TransactionController extends Controller
             $accountBook->closing_balance -= $transaction->amount;
             $accountBook->save();
         }else if($request->input('account_type') == 'employee'){
-
-          
-      
-
+            $transaction = Transaction::createTransaction(
+                $request->input('account_type'),
+                $request->input('account_id'),
+                $request->input('payment_type'),
+                $request->input('payment_method'),
+                $request->input('amount'),
+                $request->input('description')
+            );
+            $employe =Employee::find($request->account_id);
+            $entry = new EmployeeAccountEntry;
+            $entry->entry_id        =$employe->id;
+            $entry->entry_type      ='0';
+            $entry->account_book_id =$employe->getCurrentAccountBook()->id;
+            $entry->account_name    =$employe->name;
+            $entry->account_id      =$request->input('account_id');
+            $entry->account_type    =$request->input('payment_type');
+            $entry->description     =$request->input('description');
+            $entry->total_amount    = $request->input('amount');
+            $entry->save();
+        }else if($request->input('account_type') == 'expense'){
             $transaction = Transaction::createTransaction(
                 $request->input('account_type'),
                 $request->input('account_id'),
@@ -102,28 +118,18 @@ class TransactionController extends Controller
                 $request->input('description')
             );
 
-            $employe =Employee::find($request->account_id);
-
-            $entry = new EmployeeAccountEntry;
-            $entry->entry_id ='001';
-            $entry->entry_type ='0';
-            $entry->account_book_id =$employe->getCurrentAccountBook()->id;
-            $entry->account_name ='0';
-            $entry->account_id =$request->input('account_id');
-            $entry->account_type ='0';
-            $entry->description =$request->input('description');
-            $entry->total_amount = $request->input('amount');
+            $expence =Expense::find($request->input('account_id'));
+            $bankAccount =BankAccount::find($request->input('payment_method'));
+            $entry                  =new ExpenseAccountEntry;
+            $entry->entry_id        =$expence->id;
+            $entry->account_book_id =$expence->getCurrentAccountBook()->id;
+            $entry->account_name    =$expence->name;
+            $entry->account_id      =$expence->id;
+            $entry->account_type    =$request->input('payment_type');
+            $entry->description     =$request->input('description');
+            $entry->total_amount    =$request->input('amount');
             $entry->save();
-
-
-
-
-
         }
-        
-        
-        
-        
         else {
             $accountType = $request->input('account_type');
             if($accountType == 'loan-receipt' || $accountType == 'loan-payment') {
@@ -137,7 +143,6 @@ class TransactionController extends Controller
                 $request->input('amount'),
                 $request->input('description')
             );
-
            $accountBook            =AccountBook::with('BankAccount')->find($transaction->to_account_id);
            $entry                  = new RetailStoreAccountEntry;
            $entry->account_book_id =$transaction->from_account_id;
@@ -146,8 +151,6 @@ class TransactionController extends Controller
            $entry->account_name    = $accountBook->BankAccount->bank;
            $entry->paid_amount     = $transaction->amount;
            $entry->save();
-
-             
         }
         return $transaction;
     }

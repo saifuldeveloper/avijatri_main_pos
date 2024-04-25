@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bank_account_entries', function (Blueprint $table) {
+        Schema::create('expense_account_entries', function (Blueprint $table) {
             $table->id();
             $table->string('entry_id');
-            $table->integer('entry_type');
-            $table->string('account_book_id');
+            $table->integer('entry_type')->default(0);
+            $table->bigInteger('account_book_id');
             $table->string('account_name')->nullable();
             $table->bigInteger('account_id');
             $table->string('account_type');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->double('total_amount');
             $table->timestamps();
         });
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bank_account_entries');
+        Schema::dropIfExists('expense_account_entries');
     }
 };

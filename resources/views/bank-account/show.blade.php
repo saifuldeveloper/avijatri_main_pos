@@ -12,10 +12,12 @@
 				<strong>{{ $bankAccount->bank }}, {{ $bankAccount->branch }} শাখা</strong><br>
 				অ্যাকাউন্ট নং: <strong>{{ $bankAccount->account_no }}</strong><br>
 				@endif
-				ব্যালেন্স: <strong>{{ toFixed($bankAccount->current_book->balance) }}</strong>
+				ব্যালেন্স: <strong>
+					{{-- {{ toFixed($bankAccount->current_book->balance) }} --}}
+				</strong>
 			</td>
 			<td style="width:20%">
-				@include('layouts.crud-buttons', ['model' => 'bank-account', 'object' => $bankAccount])
+				@include('layouts.crud-buttons', ['model' => 'bank-account',  'parameter' =>'bank_account'  ,   'object' => $bankAccount])
 				<a href="#" class="btn btn-success btn-sm">ক্লোজিং</a>
 			</td>
 		</tr>
@@ -34,7 +36,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach($bankAccount->current_book->entries as $i => $entry)
+		@foreach($entries as $i => $entry)
 		<tr>
 			<td>{{ $i + 1 }}</td>
 			<td>{{ dateTimeFormat($entry->created_at) }}</td>
@@ -59,7 +61,7 @@
 			<td>{{ toFixed($entry->balance) }}</td>
 		</tr>
 		@endforeach
-		@if($bankAccount->current_book->entries->currentPage() == $bankAccount->current_book->entries->lastPage()
+		{{-- @if($bankAccount->current_book->entries->currentPage() == $bankAccount->current_book->entries->lastPage()
 			&& $bankAccount->current_book->opening_balance != 0)
 		<tr>
 			<td>{{ isset($i) ? $i + 2 : 1 }}</td>
@@ -69,10 +71,10 @@
 			<td>-</td>
 			<td>{{ toFixed($bankAccount->current_book->opening_balance) }}</td>
 		</tr>
-		@endif
+		@endif --}}
 	</tbody>
 </table>
-{{ $bankAccount->current_book->entries->links('pagination.default') }}
+{{-- {{ $bankAccount->current_book->entries->links('pagination.default') }} --}}
 
 <div id="bank-account-form" class="modal fade form-modal" tabindex="-1" role="dialog" aria-labelledby="form-modal-title" aria-hidden="true">
 	<div class="modal-dialog" role="document">

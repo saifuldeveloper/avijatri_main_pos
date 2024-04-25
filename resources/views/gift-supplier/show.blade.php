@@ -11,11 +11,15 @@
 				মোবাইল নং: <strong>{{ $giftSupplier->mobile_no }}</strong>
 			</td>
 			<td style="width:50%">
-				মোট দেনা: <strong>{{ toFixed($giftSupplier->current_book->balance) }}</strong><br>
-				তাগাদা: <strong>{{ toFixed($giftSupplier->current_book->payment_percentage) }}%</strong>
+				মোট দেনা: <strong>
+					{{-- {{ toFixed($giftSupplier->current_book->balance) }} --}}
+				</strong><br>
+				তাগাদা: <strong>
+					{{-- {{ toFixed($giftSupplier->current_book->payment_percentage) }} --}}
+					%</strong>
 			</td>
 			<td style="width:20%">
-				@include('layouts.crud-buttons', ['model' => 'gift-supplier', 'object' => $giftSupplier])
+				@include('layouts.crud-buttons', ['model' => 'gift-supplier', 'parameter'=> 'gift_supplier','object' => $giftSupplier])
 				<a href="#" class="btn btn-success btn-sm">ক্লোজিং</a>
 			</td>
 		</tr>
@@ -38,7 +42,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach($giftSupplier->current_book->entries as $i => $entry)
+		{{-- @foreach($giftSupplier->current_book->entries as $i => $entry)
 		<tr>
 			<td>{{ $i + 1 }}</td>
 			<td>{{ dateTimeFormat($entry->created_at) }}</td>
@@ -74,10 +78,10 @@
 			<td>-</td>
 			<td>-</td>
 			<td>{{ toFixed($giftSupplier->current_book->balance) }}</td>
-		@endif
+		@endif --}}
 	</tbody>
 </table>
-{{ $giftSupplier->current_book->entries->links('pagination.default') }}
+{{-- {{ $giftSupplier->current_book->entries->links('pagination.default') }} --}}
 
 <div id="gift-supplier-form" class="modal fade form-modal" tabindex="-1" role="dialog" aria-labelledby="form-modal-title" aria-hidden="true">
 	<div class="modal-dialog" role="document">

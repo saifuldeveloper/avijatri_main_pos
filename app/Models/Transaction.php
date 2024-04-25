@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\View\BankAccountEntry;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -26,13 +27,24 @@ class Transaction extends Model
 
 			case 'withdraw':
 			$from_account_id = $bankAccount->getCurrentAccountBook()->id;
+
 			$to_account_id = $cashAccount->getCurrentAccountBook()->id;
 			break;
 
 			default:
 			return null;
 		}
-
+		// BankAccount entry
+		$entry                   =new BankAccountEntry;
+		$entry->entry_id         = $bankAccount->id;
+		$entry->entry_type       = 1;
+		$entry->account_book_id  =$bankAccount->getCurrentAccountBook()->id;
+		$entry->account_name     =$bankAccount->bank;
+		$entry->account_id       =$bankAccount->id;
+		$entry->account_type     =$type;
+		$entry->description      =$description;
+		$entry->total_amount           =$amount;
+		$entry->save();
 		return self::create(compact('from_account_id', 'to_account_id', 'amount', 'description'));
 	}
 

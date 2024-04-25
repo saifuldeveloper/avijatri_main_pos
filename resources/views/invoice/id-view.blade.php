@@ -10,9 +10,9 @@
 		</tr>
 		<tr>
 			<td>
-				নাম: <strong>{{ $invoice->accountBook->account->name ?? $retailStore->name }}</strong><br>
-				<!--ঠিকানা: <strong>{{ $invoice->accountBook->account->address ?? $retailStore->address }}</strong><br>-->
-				মোবাইল নং: <strong>{{ $invoice->accountBook->account->mobile_no ?? $retailStore->mobile_no }}</strong>
+				নাম: <strong>{{ $invoice->accountBook->retailAccount->name ?? $retailStore->shop_name }}</strong><br>
+				<!--ঠিকানা: <strong>{{ $invoice->accountBook->retailAccount->address ?? $retailStore->address }}</strong><br>-->
+				মোবাইল নং: <strong>{{ $invoice->accountBook->retailAccount->mobile_no ?? $retailStore->mobile_no }}</strong>
 			</td>
 			<td>
 				<div class="d-print-none">

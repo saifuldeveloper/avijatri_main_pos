@@ -55,7 +55,9 @@ class ExpenseController extends \App\Http\Controllers\Main\ExpenseController
      */
     public function show(Expense $expense)
     {
-        return view('expense.show', compact('expense'));
+        $expense = parent::show($expense);
+        $entreis = $expense->entries()->paginate(10);
+        return view('expense.show', compact('expense','entreis'));
     }
 
     /**

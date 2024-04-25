@@ -27,7 +27,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{{-- @foreach($expense->current_book->entries as $i => $entry)
+		@foreach($entreis as $i => $entry)
 		<tr>
 			<td>{{ $i + 1 }}</td>
 			<td>{{ dateTimeFormat($entry->created_at) }}</td>
@@ -39,8 +39,8 @@
 			@endif
 		</tr>
 		@endforeach
-		@if($expense->current_book->entries->currentPage() == $expense->current_book->entries->lastPage()
-			&& $expense->current_book->opening_balance != 0)
+		{{-- @if($entreis->currentPage() == $entreis->lastPage()
+			&& $entreisopening_balance != 0)
 		<tr>
 			<td>{{ $i + 2 }}</td>
 			<td>-</td>
@@ -50,7 +50,7 @@
 		@endif --}}
 	</tbody>
 </table>
-{{-- {{ $expense->current_book->entries->links('pagination.default') }} --}}
+{{ $entreis->links('pagination.default') }}
 
 <div id="expense-form" class="modal fade form-modal" tabindex="-1" role="dialog" aria-labelledby="form-modal-title" aria-hidden="true">
 	<div class="modal-dialog" role="document">

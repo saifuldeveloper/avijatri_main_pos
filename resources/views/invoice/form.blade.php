@@ -21,12 +21,12 @@ $retailStore = session()->get('retail-store', null);
 	@if($invoice !== null)
 		{{ method_field('PUT') }}
 	@endif
-	{{ input($errors, 'hidden', 'retail_store_id', 'memo-to-id', $invoice->accountBook->account->id ?? $retailStore->id ?? '') }}
+	{{ input($errors, 'hidden', 'retail_store_id', 'memo-to-id', $invoice->accountBook->retailAccount->id ?? $retailStore->id ?? '') }}
 	<button type="submit" name="submit" value="submit" class="btn-invisible"></button>
 	<div class="row mb-3">
 		<div class="col-md-9">
 			{{ inputGroupBegin('memo-to', 'পার্টি') }}
-			{{ input($errors, 'text', 'memo_to_name', 'memo-to', $invoice->accountBook->account->name ?? $retailStore->name ?? '', '', ['data-datalist-id' => 'retail-store-list', 'data-datalist' => route('datalist.retail-store') . '?extend=extend', 'disabled' => ($invoice === null ? ($retailStore->onetime_buyer ?? false) : ($invoice->accountBook->account->onetime_buyer || !$invoice->accountBook->open)), 'autofocus' => ($invoice === null) ]) }}
+			{{ input($errors, 'text', 'memo_to_name', 'memo-to', $invoice->accountBook->retailAccount->name ?? $retailStore->name ?? '', '', ['data-datalist-id' => 'retail-store-list', 'data-datalist' => route('datalist.retail-store') . '?extend=extend', 'disabled' => ($invoice === null ? ($retailStore->onetime_buyer ?? false) : ($invoice->accountBook->retailAccount->onetime_buyer || !$invoice->accountBook->open)), 'autofocus' => ($invoice === null) ]) }}
 			{{ error($errors, 'retail_store_id') }}
 			{{ inputGroupEnd() }}
 		</div>

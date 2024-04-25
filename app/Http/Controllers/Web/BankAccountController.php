@@ -55,7 +55,10 @@ class BankAccountController extends \App\Http\Controllers\Main\BankAccountContro
      */
     public function show(BankAccount $bankAccount)
     {
-        return view('bank-account.show', compact('bankAccount'));
+
+        $bankAccount = parent::show($bankAccount);
+        $entries = $bankAccount->entries()->paginate(10);
+        return view('bank-account.show', compact('bankAccount','entries'));
     }
 
     /**

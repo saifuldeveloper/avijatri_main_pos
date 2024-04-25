@@ -50,7 +50,8 @@ class ExpenseController extends Controller
     public function show(Expense $expense)
     {
         $expense->append('current_book');
-        $expense->current_book->append('entries');
+        // $expense->current_book->append('entries');
+        $expense->load('entries');
         return $expense;
     }
 

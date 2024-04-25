@@ -112,7 +112,7 @@ class AccountBook extends Model
             return $this->hasMany(RetailStoreAccountEntry::class);
         }
         if($this->account_type == 'gift-supplier') {
-            return $this->hasMany('App\Views\GiftSupplierAccountEntry');
+            return $this->hasMany('GiftSupplierAccountEntry');
         }
         if($this->account_type == 'cheque') {
             return $this->hasMany('App\Views\ChequeAccountEntry');
