@@ -101,6 +101,7 @@ Route::middleware('auth')->group(function () {
 		Route::prefix('datalist')->group(function () {
 			Route::get('factory', [FactoryController::class, 'datalist'])->name('datalist.factory');
 			Route::get('retail-store', [RetailStoreController::class, 'datalist'])->name('datalist.retail-store');
+			Route::post('retail-store/invoice/product/check', [RetailStoreController::class, 'invoiceProductCheck'])->name('invoice.product.check.retail-store');
 			Route::get('retail-closing', [RetailStoreController::class, 'closingDatalist'])->name('datalist.retail-closing');
 			Route::get('gift-supplier', [GiftSupplierController::class, 'datalist'])->name('datalist.gift-supplier');
 			Route::get('employee', [EmployeeController::class,'datalist'])->name('datalist.employee');

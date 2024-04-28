@@ -6,6 +6,8 @@ use App\Models\RetailStore;
 use App\Models\BankAccount;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Invoice;
+use App\Models\InvoiceEntry;
 
 class RetailStoreController extends \App\Http\Controllers\Main\RetailStoreController
 {
@@ -33,7 +35,7 @@ class RetailStoreController extends \App\Http\Controllers\Main\RetailStoreContro
     {
         preventHttp();
         $retailStore = null;
-        if($request->has('onetime') && $request->input('onetime') == 1) {
+        if ($request->has('onetime') && $request->input('onetime') == 1) {
             $one_time = true;
         } else {
             $one_time = false;
@@ -50,7 +52,7 @@ class RetailStoreController extends \App\Http\Controllers\Main\RetailStoreContro
     public function store(Request $request)
     {
         $retailStore = parent::store($request);
-        if($retailStore->onetime_buyer) {
+        if ($retailStore->onetime_buyer) {
             return back()->with(['success-alert' => 'খুচরা বিক্রি শুরু করুন।', 'retail-store' => $retailStore]);
         }
         return back()->with('success-alert', 'নতুন পার্টির তথ্য সংরক্ষণ করা হয়েছে।');
@@ -66,7 +68,7 @@ class RetailStoreController extends \App\Http\Controllers\Main\RetailStoreContro
     {
         $retailStore = parent::show($retailStore);
         $parameter = 'retail_store';
-        return view('retail-store.show', compact('retailStore','parameter'));
+        return view('retail-store.show', compact('retailStore', 'parameter'));
     }
 
     /**
@@ -106,23 +108,26 @@ class RetailStoreController extends \App\Http\Controllers\Main\RetailStoreContro
         return redirect()->route('retail-store.index')->with('success-alert', $message['success']);
     }
 
-    public function closingPage(RetailStore $retailStore) {
+    public function closingPage(RetailStore $retailStore)
+    {
         $retailStore->append('current_book');
         $retailStore->current_book->appendClosingAttributes();
         $bankAccounts = BankAccount::all();
         return view('retail-store.closing', compact('retailStore', 'bankAccounts'));
     }
 
-    public function closing(Request $request, RetailStore $retailStore) {
+    public function closing(Request $request, RetailStore $retailStore)
+    {
         parent::closing($request, $retailStore);
         return redirect()->route('retail-store.show', ['retailStore' => $retailStore])->with('success-alert', 'ক্লোজিং সম্পন্ন হয়েছে।');
     }
 
-    public function closingTr(Request $request) {
+    public function closingTr(Request $request)
+    {
         preventHttp();
 
         $bankAccounts = BankAccount::all();
-        if($request->has('index')) {
+        if ($request->has('index')) {
             $index = $request->input('index');
         } else {
             $index = 0;
@@ -130,31 +135,62 @@ class RetailStoreController extends \App\Http\Controllers\Main\RetailStoreContro
         return view('retail-store.closing-tr', compact('bankAccounts', 'index'));
     }
 
-    public function datalist(Request $request) {
+    public function datalist(Request $request)
+    {
         preventHttp();
-        
+
         $model = 'retail-store';
         $list = RetailStore::where('onetime_buyer', false)->get();
         $extend = false;
 
-        if($request->has('extend')) {
+        if ($request->has('extend')) {
             $extend = true;
-            foreach($list as $retailStore) {
+            foreach ($list as $retailStore) {
                 $retailStore->append(['return_count', 'return_amount', 'other_costs', 'unlisted_return_url']);
             }
         }
         return view('layouts.datalist', compact('model', 'list', 'extend'));
     }
 
-    public function closingDatalist(Request $request) {
+    public function closingDatalist(Request $request)
+    {
         preventHttp();
-        
+
         $model = 'retail-closing';
         $list = RetailStore::where('onetime_buyer', false)->get();
 
-        foreach($list as $retailStore) {
+        foreach ($list as $retailStore) {
             $retailStore->append(['previous_book']);
         }
         return view('layouts.datalist', compact('model', 'list'));
+    }
+
+
+
+
+    public function  invoiceProductCheck(Request $request)
+    {
+
+        $retailStore     = RetailStore::findOrFail($request->RetailStore);
+        $account_book_id = $retailStore->getCurrentAccountBook()->id;
+        $invoices        = Invoice::where('account_book_id', $account_book_id)->get();
+        foreach ($invoices as $invoice) {
+            $invoiceEntry = InvoiceEntry::where('invoice_id', $invoice->id)
+                ->where('shoe_id', $request->input('shoe_id'))
+                ->first();
+            if ($invoiceEntry) {
+                return response()->json([
+                    'found' => true,
+                    'name'  => $retailStore->shop_name,
+                    'id'    => $request->input('shoe_id')
+                ]);
+            }
+        }
+
+        return response()->json([
+            'found' => false,
+            'name'  => $retailStore->shop_name,
+            'id'    => $request->input('shoe_id')
+        ]);
     }
 }

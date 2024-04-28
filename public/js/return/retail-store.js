@@ -56,6 +56,47 @@ $(document).ready(function() {
 		var row = $(this).parents('tr');
 		var url = $(this).attr('data-shoe-details').replace('#', $(this).val());
 
+		var retail_store = $('#memo-to-id').val();
+		var csrfToken = $('meta[name="csrf-token"]').attr('content');
+		var postData = {
+			_token: csrfToken,
+			shoe_id: me.val(),
+			RetailStore: retail_store // Sending the invoice ID
+		};
+		var invoiceCheckUrl = '/ajax/datalist/retail-store/invoice/product/check';
+
+		// $.post(invoiceCheckUrl, postData, function(data) {
+		// 	 if(data.found == true){
+		// 		$.get(url, [], function(data) {
+		// 			row.find('.input-factory').val(data.factory.name)
+		// 			row.find('.input-category').val(data.category.full_name);
+		// 			row.find('.input-color').val(data.color.name);
+		// 			row.find('.input-retail-price').val(data.retail_price.toFixed(2));
+		// 			row.find('.input-purchase-price').val(data.purchase_price.toFixed(2));
+		// 			if(row.find('.input-count').val() == '') {
+		// 				row.find('.input-count').val(6);
+		// 			}
+		// 			if(row.find('.input-commission').val() == '') {
+		// 				row.find('.input-commission').val(28);
+		// 			}
+		// 			row.find('.input-count').trigger('change');
+		
+		// 			var subrow = row.next('.tr-sub');
+		// 			var radios = subrow.find('.input-destination');
+		// 			if(radios.filter(function() { return $(this).prop('checked') }).length == 0) {
+		// 				radios.first().prop('checked', true);
+		// 			}
+		// 		}).fail(function() {
+		// 			alert('এই আইডির কোন জুতা নেই।');
+		// 			me.val('');
+		// 			me.focus();
+		// 		});
+		// 	 }else{
+		// 		alert( data.id+' আইডির  জুতা ' + data.name +' এর কাছে  বিক্রয়  করা হয় নাই ');
+		// 	 }
+			 
+		// })
+
 		$.get(url, [], function(data) {
 			row.find('.input-factory').val(data.factory.name)
 			row.find('.input-category').val(data.category.full_name);
