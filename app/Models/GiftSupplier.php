@@ -22,4 +22,11 @@ class GiftSupplier extends Model
         return $this->accountBooks()->latest()->first();
     }
 
+    public function entries(){
+        return $this->hasMany(GiftSupplierAccountEntry::class,'account_id','id');
+
+    }
+
+
+
 }

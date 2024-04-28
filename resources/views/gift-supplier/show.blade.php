@@ -42,7 +42,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{{-- @foreach($giftSupplier->current_book->entries as $i => $entry)
+		@foreach($entries as $i => $entry)
 		<tr>
 			<td>{{ $i + 1 }}</td>
 			<td>{{ dateTimeFormat($entry->created_at) }}</td>
@@ -70,7 +70,7 @@
 			<td>{{ toFixed($entry->balance) }}</td>
 		</tr>
 		@endforeach
-		@if($giftSupplier->current_book->entries->currentPage() == $giftSupplier->current_book->entries->lastPage()
+		{{-- @if($entries->currentPage() == $entries->lastPage()
 			&& $giftSupplier->current_book->opening_balance != 0)
 			<td>{{ $i + 2 }}</td>
 			<td>-</td>
@@ -81,7 +81,7 @@
 		@endif --}}
 	</tbody>
 </table>
-{{-- {{ $giftSupplier->current_book->entries->links('pagination.default') }} --}}
+{{ $entries->links('pagination.default') }}
 
 <div id="gift-supplier-form" class="modal fade form-modal" tabindex="-1" role="dialog" aria-labelledby="form-modal-title" aria-hidden="true">
 	<div class="modal-dialog" role="document">

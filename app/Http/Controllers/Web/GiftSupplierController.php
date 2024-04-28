@@ -56,7 +56,10 @@ class GiftSupplierController extends \App\Http\Controllers\Main\GiftSupplierCont
      */
     public function show(GiftSupplier $giftSupplier)
     {
-        return view('gift-supplier.show', compact('giftSupplier'));
+
+        $giftSupplier = parent::show($giftSupplier);
+        $entries = $giftSupplier->entries()->paginate(10);
+        return view('gift-supplier.show', compact('giftSupplier','entries'));
     }
 
     /**

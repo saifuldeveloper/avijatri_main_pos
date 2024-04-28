@@ -30,7 +30,8 @@ class Transaction extends Model
 
 			$to_account_id = $cashAccount->getCurrentAccountBook()->id;
 			break;
-
+			
+			
 			default:
 			return null;
 		}

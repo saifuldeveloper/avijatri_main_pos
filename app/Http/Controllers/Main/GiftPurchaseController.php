@@ -8,6 +8,7 @@ use App\Models\GiftTransaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GiftPurchaseRequest;
+use App\Models\GiftSupplierAccountEntry;
 
 class GiftPurchaseController extends Controller
 {
@@ -29,6 +30,8 @@ class GiftPurchaseController extends Controller
      */
     public function store(GiftPurchaseRequest $request)
     {
+
+
         $request->validated();
         
         $giftSupplier = GiftSupplier::find($request->input('gift_supplier_id'));
@@ -38,6 +41,8 @@ class GiftPurchaseController extends Controller
         $giftPurchase = new GiftPurchase;
         $accountBook->giftPurchases()->save($giftPurchase);
 
+        $count =0;
+        $total_amount =0;
         foreach($request->input('gift_purchases') as $row) {
             if(empty($row['unit_price'])) {
                 $row['unit_price'] = 0;
@@ -45,9 +50,38 @@ class GiftPurchaseController extends Controller
             $giftTransaction = new GiftTransaction();
             $giftTransaction->fill($row);
             $giftTransaction->type = 'purchase';
-
-            $giftPurchase->giftTransactions()->save($giftTransaction);
+            $count +=$row['count'];
+            $total_amount +=$row['unit_price'];
+            $giftPurchase->giftTransactions()->save($giftTransaction);  
         }
+
+        $entry                   =new GiftSupplierAccountEntry;
+        $entry->entry_id         =0;
+        $entry->entry_type       =0;
+        $entry->account_book_id  =$accountBook->id;
+        $entry->gift_purchase_id =$giftPurchase->id;
+        $entry->gift_name        ='s';
+        $entry->count            =$count;
+        $entry->total_amount     =$total_amount;
+        $entry->account_id       =$giftSupplier->id;
+        $entry->account_name     =$giftSupplier->name;
+        $entry->save();
+
+        if($request->payment_amount  !=='null'){
+            $entry                   =new GiftSupplierAccountEntry;
+            $entry->entry_id         =0;
+            $entry->entry_type       =2;
+            $entry->account_book_id  =$accountBook->id;
+            $entry->gift_purchase_id =$giftPurchase->id;
+            $entry->total_amount     =$request->payment_amount;
+            $entry->account_id       =$giftSupplier->id;
+            $entry->account_name     =$giftSupplier->name;
+            $entry->save();
+
+        }
+
+
+
         $giftPurchase->load('accountBook.account', 'giftTransactions.gift');
         return $giftPurchase;
     }

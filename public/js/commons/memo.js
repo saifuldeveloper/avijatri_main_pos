@@ -27,7 +27,10 @@ $(document).ready(function() {
 		if(option.length == 0) {
 			 if(datalistId =='#factory-list'){
 				alert('এই নামে কোন মহাজন নেই।');
-			 }else{
+			 }else if(datalistId == '#gift-supplier-list'){
+				alert('এই নামে কোন গিফট মহাজন নেই।');
+			 }
+			 else{
 				alert('এই নামে কোন পার্টি নেই।');
 			 }
 			$(this).val($(this).data('oldval'));
@@ -245,3 +248,5 @@ function addRow(parent_id = '#memo-table') {
 window.onbeforeunload = function() {
 	return 'Are you sure?';
 }
+
+

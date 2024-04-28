@@ -7,6 +7,8 @@ use App\Models\GiftPurchase;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GiftPurchaseRequest;
+use App\Models\BankAccount;
+use Illuminate\Support\Collection;
 
 class GiftPurchaseController extends \App\Http\Controllers\Main\GiftPurchaseController
 {
@@ -33,7 +35,16 @@ class GiftPurchaseController extends \App\Http\Controllers\Main\GiftPurchaseCont
     {
         $gifts = Gift::all();
         $memoNo = GiftPurchase::getNextId();
-        return view('gift-purchase.form', compact('gifts', 'memoNo'));
+        $bankAccount = BankAccount::all();
+        $bankAccounts = new Collection();
+        foreach ($bankAccount as $item) {
+            $bankAccounts->push((object) [
+                'id' => $item->id,
+                'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
+            ]);
+        }
+        $bankAccounts->push((object) ['id' => 'cheque', 'name' => 'চেক']);
+        return view('gift-purchase.form', compact('gifts', 'memoNo','bankAccounts'));
     }
 
     /**
@@ -63,6 +74,7 @@ class GiftPurchaseController extends \App\Http\Controllers\Main\GiftPurchaseCont
     public function show(GiftPurchase $giftPurchase)
     {
         $giftPurchase = parent::show($giftPurchase);
+        
         return view('gift-purchase.show', compact('giftPurchase'));
     }
 
@@ -76,7 +88,16 @@ class GiftPurchaseController extends \App\Http\Controllers\Main\GiftPurchaseCont
     {
         $gifts = Gift::all();
         $giftPurchase->load('accountBook.account', 'giftTransactions');
-        return view('gift-purchase.form', compact('gifts', 'giftPurchase'));
+        $bankAccount = BankAccount::all();
+        $bankAccounts = new Collection();
+        foreach ($bankAccount as $item) {
+            $bankAccounts->push((object) [
+                'id' => $item->id,
+                'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
+            ]);
+        }
+        $bankAccounts->push((object) ['id' => 'cheque', 'name' => 'চেক']);
+        return view('gift-purchase.form', compact('gifts', 'giftPurchase','bankAccounts'));
     }
 
     /**
