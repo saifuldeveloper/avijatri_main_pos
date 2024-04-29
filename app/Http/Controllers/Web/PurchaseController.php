@@ -123,7 +123,7 @@ class PurchaseController extends \App\Http\Controllers\Main\PurchaseController
     public function barcode(Purchase $purchase)
     {
         $purchase->load('purchaseEntries.shoe');
-        return view('barcode.printer', ['entries' => $purchase->purchaseEntries]);
+        return view('barcode.barcode_printer', ['entries' => $purchase->purchaseEntries]);
     }
 
     /**

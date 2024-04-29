@@ -27,7 +27,13 @@
 		<tfoot>
 			<tr>
 				<td><button class="btn btn-success btn-add-row" data-tr="{{ route('tr.barcode') }}" data-index="1"><span class="fas fa-plus"></span></button></td>
-				<td colspan="4"></td>
+				<td colspan="3"></td>
+				<td>
+					<input type="radio" name="code" value="barcode" required>
+					<label>বারকোড</label>
+					<input type="radio" name="code" value="qr_code">
+					<label>কিউ আর কোড  </label>
+				</td>
 				<td><button type="submit" name="submit" value="submit" class="btn btn-primary form-control">সাবমিট</button></td>
 			</tr>
 		</tfoot>

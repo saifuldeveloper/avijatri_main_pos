@@ -61,6 +61,9 @@ class InvoiceController extends \App\Http\Controllers\Main\InvoiceController
     {
 
         // dd($request->all());
+        if($request->retail_store_id == null){
+            return redirect()->route('invoice.create')->with('info-alert', 'পার্টি  সঠিক নয় ');
+        }
 
         if($request->has('submit') && $request->input('submit') === 'preview') {
             $retailStore = RetailStore::find($request->input('retail_store_id'));
@@ -122,6 +125,9 @@ class InvoiceController extends \App\Http\Controllers\Main\InvoiceController
             }
             return view('invoice.show', compact('retailStore', 'sales', 'preview', 'invoice_id', 'total_amount', 'commission', 'total_commission', 'commission_deducted', 'return_count', 'return_amount', 'return_deducted', 'transport', 'transport_added', 'other_costs', 'other_costs_deducted', 'discount', 'total_receivable', 'payment_amount', 'previous_due', 'total_due', 'gifts'));
         } else {
+            if($request->retail_store_id == null){
+                return redirect()->route('invoice.create')->with('info-alert', 'পার্টি  সঠিক নয় ');
+            }
             $invoice = parent::store($request);
             return redirect()->route('invoice.show', ['invoice' => $invoice]);
         }

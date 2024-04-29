@@ -123,16 +123,25 @@ class ShoeController extends \App\Http\Controllers\Main\ShoeController
     }
 
     public function barcode(Request $request) {
+        // dd($request->all());
+    
         $entries = [];
-
-        foreach($request->input('entries') as $entry) {
-            $entries[] = (object)[
-                'shoe' => Shoe::find($entry['shoe_id']),
-                'count' => $entry['count'],
-            ];
+        foreach ($request->input('entries') as $shoeEntry) {
+            $shoe = Shoe::find($shoeEntry['shoe_id']);
+            if ($shoe) {
+                $entries[] = (object) [
+                    'shoe' => $shoe,
+                    'count' => $shoeEntry['count'],
+                ];
+            } else {
+                // Handle case where Shoe model cannot be found
+            }
         }
-        return view('barcode.printer', compact('entries'));
+    
+        $viewName = ($request->code == 'qr_code') ? 'barcode.qrcode_printer' : 'barcode.barcode_printer';
+        return view($viewName, compact('entries'));
     }
+    
 
     public function barcodeTr(Request $request) {
         preventHttp();
