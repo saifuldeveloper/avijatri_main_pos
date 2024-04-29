@@ -34,12 +34,6 @@ class AccountBook extends Model
     {
         return $this->belongsTo(BankAccount::class, 'account_id', 'id');
     }
-
-
-
-
-
-
     public function retailStoreExpenses() {
     	if($this->account_type !== 'retail-store') {
     		return null;
@@ -112,7 +106,7 @@ class AccountBook extends Model
             return $this->hasMany(RetailStoreAccountEntry::class);
         }
         if($this->account_type == 'gift-supplier') {
-            return $this->hasMany('GiftSupplierAccountEntry');
+            return $this->hasMany(GiftSupplierAccountEntry::class);
         }
         if($this->account_type == 'cheque') {
             return $this->hasMany('App\Views\ChequeAccountEntry');
@@ -161,7 +155,7 @@ class AccountBook extends Model
 
     public function getBalanceBeforeClosingAttribute() {
         //return $this->total_sale_minus_commission - $this->total_return_minus_commission - $this->total_payment + $this->total_transport - $this->total_expense - $this->total_discount + $this->opening_balance;
-        return $this->balance + $this->total_closing_payment;
+        // return $this->balance + $this->total_closing_payment;
     }
 
     public function getDescriptionBalanceAttribute() {

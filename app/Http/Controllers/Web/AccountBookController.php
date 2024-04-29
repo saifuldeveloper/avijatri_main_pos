@@ -54,9 +54,6 @@ class AccountBookController extends \App\Http\Controllers\Main\AccountBookContro
     {
 
         $accountBook = parent::show($accountBook);
-
-        
-
         $purchases = Purchase::with('purchaseEntries.shoe')->where('account_book_id', $accountBook->id)->orderBy('created_at', 'desc')->get();
         $qty = 0;
         $qty = $purchases->flatMap(function ($item) {
@@ -81,8 +78,10 @@ class AccountBookController extends \App\Http\Controllers\Main\AccountBookContro
                 return view('factory.account-book', compact('accountBook','purchases_amount', 'payment_amount','factoryEntries','returnsum'));
 
             case 'retail-store':
-                // $entries =$accountBook->retailEntries()->with('invoices.invoiceEntries.shoe','invoices.transactions')->paginate(50);
                 return view('retail-store.account-book', compact('accountBook'));
+            case 'gift-supplier':
+                  $accountBook->load('giftSupplierAccount');
+                return view('gift-supplier.account-book',compact('accountBook'));
         }
     }
 

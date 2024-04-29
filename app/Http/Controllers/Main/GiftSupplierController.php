@@ -51,8 +51,7 @@ class GiftSupplierController extends Controller
     public function show(GiftSupplier $giftSupplier)
     {
         $giftSupplier->append('current_book');
-        // $giftSupplier->current_book->append('entries');
-        $giftSupplier->load('entries');
+        $giftSupplier->load('entries','accountBooks');
         return $giftSupplier;
     }
 

@@ -13,7 +13,7 @@ class GiftSupplier extends Model
     public function accountBooks()
     {
         // return $this->hasMany(AccountBook::class);
-        return $this->hasOne(AccountBook::class ,'account_id','id')->where('account_type','gift-supplier');
+        return $this->hasMany(AccountBook::class ,'account_id','id')->where('account_type','gift-supplier');
         
     }
 
