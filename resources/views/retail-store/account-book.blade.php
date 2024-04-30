@@ -1,4 +1,4 @@
-@extends('layouts.app', ['title' => 'বাকী খাতা - ' . $accountBook->account->name])
+@extends('layouts.app', ['title' => 'বাকী খাতা - ' . $accountBook->retailAccount->name])
 
 @section('content')
 <h1>বাকী খাতা</h1>
