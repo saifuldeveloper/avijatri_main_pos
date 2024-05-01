@@ -6,6 +6,7 @@ use App\Models\GiftSupplier;
 use App\Models\AccountBook;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 
 class GiftSupplierController extends Controller
 {
@@ -30,6 +31,14 @@ class GiftSupplierController extends Controller
         $giftSupplier = new GiftSupplier;
         $giftSupplier->fill($request->all());
         $giftSupplier->save();
+
+        $account = new Account;
+        $account->id =$giftSupplier->id;
+        $account->type ='gift-supplier';
+        $account->name =$giftSupplier->name;
+        $account->save();
+
+        
 
         if($giftSupplier){
             $account_book = new AccountBook;

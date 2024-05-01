@@ -6,6 +6,7 @@ use App\Models\Expense;
 use App\Models\AccountBook;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 
 class ExpenseController extends Controller
 {
@@ -31,8 +32,14 @@ class ExpenseController extends Controller
         $expense->fill($request->all());
         $expense->save();
 
-        $accountBook =new AccountBook;
-        $accountBook->account_id =$expense->id;
+        $account       =new Account;
+        $account->id   =$expense->id;
+        $account->type ='expense';
+        $account->name =$expense->name;
+        $account->save();
+
+        $accountBook               =new AccountBook;
+        $accountBook->account_id   =$expense->id;
         $accountBook->account_type ='expense';
         $accountBook->save();
 

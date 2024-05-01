@@ -7,6 +7,7 @@ use App\Models\AccountBook;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 
 class RetailStoreController extends Controller
 {
@@ -33,6 +34,12 @@ class RetailStoreController extends Controller
         $retailStore = new RetailStore;
         $retailStore->fill($request->all());
         $retailStore->save();
+
+        $account = new Account;
+        $account->id =$retailStore->id;
+        $account->type ='retail-store';
+        $account->name =$retailStore->shop_name;
+        $account->save();
 
         $accountBook = new AccountBook;
         $accountBook->account_id =$retailStore->id;

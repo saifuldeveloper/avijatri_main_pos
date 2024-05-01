@@ -107,11 +107,11 @@
 				</tr>
 			</thead>
 			<tbody>
-				{{-- <tr>
+				<tr>
 					<td>সাবেক</td>
 					<td></td>
 					<td class="text-right">{{ toFixed($data->initialCashBalance) }}</td>
-				</tr> --}}
+				</tr>
 				@php
 					$total =0;
 				@endphp
@@ -131,8 +131,7 @@
 				@endforeach
 				<tr>
 					<td><strong>মোট</strong></td>
-					<td class="text-right"><strong>{{ toFixed($total) }}</td>
-					{{-- <td class="text-right"><strong>{{ toFixed($data->incomesSum) }}</strong></td> --}}
+					<td class="text-right"><strong>{{ toFixed($data->incomesSum) }}</strong></td>
 				</tr>
 				@if($data->expenses->sum('amount') > 0)
 				<tr>
@@ -141,7 +140,7 @@
 				</tr>
 				<tr>
 					<td><strong>ক্যাশ</strong></td>
-					{{-- <td class="text-right"><strong>{{ toFixed($data->finalCashBalance) }}</strong></td> --}}
+					<td class="text-right"><strong>{{ toFixed($data->finalCashBalance) }}</strong></td>
 				</tr>
 				@endif
 			</tbody>

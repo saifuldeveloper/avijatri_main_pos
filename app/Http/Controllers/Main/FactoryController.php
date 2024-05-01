@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use App\Models\Cheque;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 
 class FactoryController extends Controller
 {
@@ -33,9 +34,15 @@ class FactoryController extends Controller
         $factory->fill($request->all());
         $factory->save();
 
+        $account       =new Account;
+        $account->id   =$factory->id;
+        $account->type ='factory';
+        $account->name =$factory->name;
+        $account->save();
+
         if($factory){
-            $account_book = new AccountBook;
-            $account_book->account_id =$factory->id;
+            $account_book               = new AccountBook;
+            $account_book->account_id   =$factory->id;
             $account_book->account_type ='factory';
             $account_book->save();
         }
@@ -88,7 +95,6 @@ class FactoryController extends Controller
         $balance = $accountBook->balance;
 
         $accountBook->fill($request->all());
-
         $payments = $request->input('payment');
         $payment_sum = 0;
         foreach($payments as $payment) {

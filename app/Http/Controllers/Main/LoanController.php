@@ -6,6 +6,7 @@ use App\Models\Loan;
 use App\Models\AccountBook;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 
 class LoanController extends Controller
 {
@@ -30,9 +31,13 @@ class LoanController extends Controller
         $loan = new Loan;
         $loan->fill($request->all());
         $loan->save();
-
-        $accountBook =new AccountBook;
-        $accountBook->account_id =$loan->id;
+        $account       =new Account;
+        $account->id   =$loan->id;
+        $account->type ='loan';
+        $account->name =$loan->name;
+        $account->save();
+        $accountBook               =new AccountBook;
+        $accountBook->account_id   =$loan->id;
         $accountBook->account_type ='loan';
         $accountBook->save();
 

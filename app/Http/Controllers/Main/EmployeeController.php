@@ -6,6 +6,7 @@ use App\Models\Employee;
 use App\Models\AccountBook;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 
@@ -45,6 +46,12 @@ class EmployeeController extends Controller
             
         }
         $employee->save();
+
+        $account       =new Account;
+        $account->id   =$employee->id;
+        $account->type ='employee';
+        $account->name =$employee->name;
+        $account->save();
 
         $accountBook =new AccountBook;
         $accountBook->account_id =$employee->id;

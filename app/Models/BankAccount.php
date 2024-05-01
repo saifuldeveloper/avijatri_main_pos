@@ -14,8 +14,6 @@ class BankAccount extends Model
     {
         return $this->morphTo();
     }
-
-    // Static functions
     public static function getCashAccount()
     {
         if (self::$cashAccount === null) {
@@ -24,17 +22,6 @@ class BankAccount extends Model
         return self::$cashAccount;
     }
 
-    // Relationships
-    // public function accountBooks()
-    // {
-    //     return $this->morphMany(AccountBook::class, 'account');
-    // }
-
-    // public function getCurrentAccountBook()
-    // {
-    
-    //     return $this->accountBooks()->latest()->first();
-    // }
 
     public function getCurrentAccountBook()
     {
@@ -45,24 +32,18 @@ class BankAccount extends Model
         return $this->hasMany(AccountBook::class ,'account_id','id')->where('account_type','bank-account');
     }
 
-
     public function entries(){
         return $this->hasMany(BankAccountEntry::class,'account_id','id');
     }
-
-
-    
-
-
 
     // Attributes
     public function getNameAttribute()
     {
         return $this->bank;
-        // /*if($this->account_no == 'cash') {
-        //     return $this->bank;
-        // }
-        // return $this->bank . ', ' . $this->branch . ' শাখা (অ্যাকাউন্ট নং ' . $this->account_no . ')';*/
+        if($this->account_no == 'cash') {
+            return $this->bank;
+        }
+        return $this->bank . ', ' . $this->branch . ' শাখা (অ্যাকাউন্ট নং ' . $this->account_no . ')';
     }
 
     protected static $cashAccount = null;

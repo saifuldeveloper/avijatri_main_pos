@@ -6,6 +6,7 @@ use App\Models\BankAccount;
 use App\Models\AccountBook;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 
 class BankAccountController extends Controller
 {
@@ -30,6 +31,12 @@ class BankAccountController extends Controller
         $bankAccount = new BankAccount;
         $bankAccount->fill($request->all());
         $bankAccount->save();
+
+        $account = new Account;
+        $account->id =$bankAccount->id;
+        $account->type ='bank-account';
+        $account->name =$bankAccount->bank;
+        $account->save();
 
         $accountBook =new AccountBook;
         $accountBook->account_id =$bankAccount->id;
