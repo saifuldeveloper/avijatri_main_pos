@@ -57,7 +57,7 @@ class PurchaseController extends Controller
                     $imageName = $row['shoe_id'] . '_' . uniqid() . '.' . $extension;
                     $manager   = new ImageManager(new Driver());
                     $image     = $manager->read($image);
-                    $image->resize(300, 200);
+                    $image->resize(720, 720);
                     $image->save('images/small-thumbnail/' . $imageName);
                     $row['image'] = $imageName;
                 }
@@ -178,7 +178,7 @@ class PurchaseController extends Controller
                         $imageName = $row['shoe_id'] . '_' . uniqid() . '.' . $extension;
                         $manager = new ImageManager(new Driver());
                         $image = $manager->read($image);
-                        $image->resize(300, 200);
+                        $image->resize(720, 720);
                         $image->save('images/small-thumbnail/' . $imageName);
                         $row['image'] = $imageName;
                     }
