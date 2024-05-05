@@ -44,11 +44,17 @@ class InvoiceController extends \App\Http\Controllers\Main\InvoiceController
         $bankAccount  = BankAccount::all();
         $bankAccounts = new Collection();
         foreach ($bankAccount as $item) {
-
-            $bankAccounts->push((object) [
-                'id'   => $item->id,
-                'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
-            ]);
+            if ($item->bank === 'ক্যাশ') {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => 'ক্যাশ' 
+                ]);
+            } else {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
+                ]);
+            }
         }
         $bankAccounts->push((object) ['id' => 'cheque', 'name' => 'চেক']);
         $transactions      = null;
@@ -126,28 +132,29 @@ class InvoiceController extends \App\Http\Controllers\Main\InvoiceController
                
 
                 $payments = $request->input('payments');
+
                 $validPayments = [];
-                
                 foreach ($payments as $item) {
-                    if (empty($item['payment_method']) || empty($item['cheque_no']) || empty($item['amount'])) {
+                    if (empty($item['payment_method'])  || empty($item['amount'])) {
                         continue;
                     }
                     $bankAccount = BankAccount::find($item['payment_method']);
-                    if (!$bankAccount) {
-                        continue;
+                    if ($item['payment_method'] =='cheque') {
+                        $payment['payment_method'] = 'চেক';
+
+                    }else{
+                        $payment = [
+                            'payment_method' => $bankAccount['name'],
+                            'amount' => $item['amount'],
+                        ];
+
                     }
-                    $payment = [
-                        'payment_method' => $bankAccount['name'],
-                        'cheque_no' => $item['cheque_no'],
-                        'amount' => $item['amount'],
-                    ];
-                
+                    if (isset($item['cheque_no'])) {
+                        $payment['cheque_no'] = $item['cheque_no'];
+    
+                    }
                     $validPayments[] = $payment;
-                }
-                
-             
-                
-                
+                }  
             $gifts_input = $request->input('gifts');
             $gifts = [];
 
@@ -209,10 +216,25 @@ class InvoiceController extends \App\Http\Controllers\Main\InvoiceController
     {
         //$invoice->load('accountBook.account', 'sales.shoe');
         $invoice->load('accountBook.BankAccount', 'invoiceEntries.shoe');
-        $bankAccounts     = BankAccount::all();
         $gifts            = Gift::all();
         $giftTransactions = GiftTransaction::where('attachment_id',$invoice->id)->where('type','sale')->where('attachment_type','App\Models\Invoice')->get();
         $transactions     = Transaction::with('fromAccount.BankAccount','toAccount.BankAccount')->where('attachment_id' ,$invoice->id)->where('attachment_type','App\Models\Invoice')->get();
+        $bankAccount  = BankAccount::all();
+        $bankAccounts = new Collection();
+        foreach ($bankAccount as $item) {
+            if ($item->bank === 'ক্যাশ') {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => 'ক্যাশ' 
+                ]);
+            } else {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
+                ]);
+            }
+        }
+        $bankAccounts->push((object) ['id' => 'cheque', 'name' => 'চেক']);
         return view('invoice.form', compact('invoice', 'bankAccounts', 'gifts','giftTransactions','transactions'));
     }
 
@@ -280,13 +302,20 @@ class InvoiceController extends \App\Http\Controllers\Main\InvoiceController
         } else {
             $index = 0;
         }
-        $bankAccount = BankAccount::all();
+        $bankAccount  = BankAccount::all();
         $bankAccounts = new Collection();
         foreach ($bankAccount as $item) {
-            $bankAccounts->push((object) [
-                'id' => $item->id,
-                'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
-            ]);
+            if ($item->bank === 'ক্যাশ') {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => 'ক্যাশ' 
+                ]);
+            } else {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
+                ]);
+            }
         }
         $bankAccounts->push((object) ['id' => 'cheque', 'name' => 'চেক']);
         return view('invoice.payment-tr', compact('index', 'bankAccounts'));

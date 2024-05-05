@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Main;
 use App\Models\RetailStoreExpense;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\View\RetailStoreAccountEntry;
+
 
 class RetailStoreExpenseController extends Controller
 {
@@ -27,6 +29,14 @@ class RetailStoreExpenseController extends Controller
     public function store(Request $request)
     {
         $retailStoreExpense = RetailStoreExpense::create($request->all());
+        $entry                      = new RetailStoreAccountEntry;
+        $entry->account_book_id     = $request->account_book_id;
+        $entry->entry_type          = '2';
+        $entry->amount              = $request->total_amount;
+        $entry->expense_description = $request->description;
+        $entry->expense_amount      = $request->amount;
+        $entry->paid_amount         = $request->amount;
+        $entry->save();
         return $retailStoreExpense;
     }
 

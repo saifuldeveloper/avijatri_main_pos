@@ -176,7 +176,7 @@ $(document).ready(function() {
 						var td = elem.parents('td');
 						var th = td.parents('table').first().find('th').eq(td.index());
 						var title = th.html();
-						// alert(title + ' প্রদান করুন।');
+						alert(title + ' প্রদান করুন।');
 						// Swal.fire({
 						// 	text: title + " প্রদান করুন।",
 						// });
@@ -188,7 +188,7 @@ $(document).ready(function() {
 					var td = elem.parents('td');
 					var th = td.parents('table').first().find('th').eq(td.index());
 					var title = th.html();
-					// alert(title + ' প্রদান করুন।');
+					alert(title + ' প্রদান করুন।');
 					// Swal.fire({
 					// 	text: title + " প্রদান করুন।",
 					// });

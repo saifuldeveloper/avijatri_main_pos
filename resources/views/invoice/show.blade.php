@@ -203,17 +203,21 @@ if(!isset($preview)) $preview = false;
 			<thead>
 				<tr>
 					<th>#</th>
-					<th style="width:60%">গিফট</th>
+					<th style="width:60%">ধরণ</th>
 					<th style="width:20%">চেক নং</th>
 					<th style="width:20%" class="text-right">টাকা</th>
 				</tr>
 			</thead>
 			<tbody>
 				@foreach($validPayments ?? $transactions as $index => $item)
+		
 					<tr>
 						<td>{{ $index + 1 }}</td>
-						<td>{{ $item['payment_method']  ?? $item->toAccount->BankAccount->bank }}</td>
-						<td>{{ $item['cheque_no']  ?? $item->description }}</td>
+						<td>
+							{{ $item['payment_method'] ?? ($item->toAccount->BankAccount->bank ?? 'চেক') }}
+						</td>
+						
+						<td>{{ @$item['cheque_no']  ?? @$item->description }}</td>
 						<td style="width:20%" class="text-right">{{ $item['amount']   ?? $item->amount}}</td>
 					</tr>
                 @endforeach

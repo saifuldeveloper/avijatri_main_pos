@@ -53,10 +53,17 @@ class PurchaseController extends \App\Http\Controllers\Main\PurchaseController
         $bankAccount = BankAccount::all();
         $bankAccounts = new Collection();
         foreach ($bankAccount as $item) {
-            $bankAccounts->push((object) [
-                'id' => $item->id,
-                'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
-            ]);
+            if ($item->bank === 'ক্যাশ') {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => 'ক্যাশ' 
+                ]);
+            } else {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
+                ]);
+            }
         }
         $bankAccounts->push((object) ['id' => 'cheque', 'name' => 'চেক']);
         return view('purchase.form', compact('memoNo', 'nextShoe', 'bankAccounts'));

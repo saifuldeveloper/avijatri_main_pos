@@ -23,7 +23,7 @@ class BankAccountsTableSeeder extends Seeder
             array (
                 'id' => 1,
                 'account_no' => 'cash',
-                'bank' => 'cash',
+                'bank' => 'ক্যাশ',
                 'branch' => '-',
                 'created_at' => '2024-04-30 15:57:12',
                 'updated_at' => '2024-04-30 15:57:33',

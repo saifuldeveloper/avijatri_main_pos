@@ -51,6 +51,7 @@ $(document).ready(function() {
 
 	$(document).on('change', '.input-payment-method', function(e) {
 		var row = $(this).parents('.tr-main');
+		console.log(row);
 		row.find('.input-cheque-no').prop('disabled', $(this).find('option:selected').html() == 'ক্যাশ');
 	});
 

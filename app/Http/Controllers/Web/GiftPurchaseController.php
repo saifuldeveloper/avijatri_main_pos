@@ -35,13 +35,20 @@ class GiftPurchaseController extends \App\Http\Controllers\Main\GiftPurchaseCont
     {
         $gifts = Gift::all();
         $memoNo = GiftPurchase::getNextId();
-        $bankAccount = BankAccount::all();
+        $bankAccount  = BankAccount::all();
         $bankAccounts = new Collection();
         foreach ($bankAccount as $item) {
-            $bankAccounts->push((object) [
-                'id' => $item->id,
-                'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
-            ]);
+            if ($item->bank === 'ক্যাশ') {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => 'ক্যাশ' 
+                ]);
+            } else {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
+                ]);
+            }
         }
         $bankAccounts->push((object) ['id' => 'cheque', 'name' => 'চেক']);
         return view('gift-purchase.form', compact('gifts', 'memoNo','bankAccounts'));
@@ -88,13 +95,20 @@ class GiftPurchaseController extends \App\Http\Controllers\Main\GiftPurchaseCont
     {
         $gifts = Gift::all();
         $giftPurchase->load('accountBook.account', 'giftTransactions');
-        $bankAccount = BankAccount::all();
+        $bankAccount  = BankAccount::all();
         $bankAccounts = new Collection();
         foreach ($bankAccount as $item) {
-            $bankAccounts->push((object) [
-                'id' => $item->id,
-                'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
-            ]);
+            if ($item->bank === 'ক্যাশ') {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => 'ক্যাশ' 
+                ]);
+            } else {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
+                ]);
+            }
         }
         $bankAccounts->push((object) ['id' => 'cheque', 'name' => 'চেক']);
         return view('gift-purchase.form', compact('gifts', 'giftPurchase','bankAccounts'));

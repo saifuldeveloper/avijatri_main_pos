@@ -171,7 +171,7 @@ class InvoiceController extends Controller
 
                 $difference          = $row['count'] - $invoiceEntry->count;
                 $inventory           = Inventory::find($invoiceEntry->shoe_id);
-                $inventory->count    = max(0, $inventory->count + $difference);
+                $inventory->count    = max(0, $inventory->count - $difference);
                 $count              += $row['count'];
                 $total_retail_price += $invoiceEntry->shoe->retail_price * $row['count'];
                 $inventory->save();

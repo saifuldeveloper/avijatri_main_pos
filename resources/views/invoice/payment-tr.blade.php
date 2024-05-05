@@ -14,7 +14,7 @@ if(!isset($index)) $index = 0;
 		{{ error($errors, "payments.{$index}.payment_method") }}
 	
 	</td>
-	<td>{{ input($errors, 'text', "payments.{$index}.cheque_no", '', $transaction->description ?? '', 'input-cheque-no number') }}</td>
+	<td>{{ disabledInput($errors, 'text', "payments.{$index}.cheque_no", '', $transaction->description ?? '', 'input-cheque-no number') }}</td>
 	     {{ error($errors, "payments.{$index}.cheque_no") }}
 
 

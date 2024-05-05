@@ -140,11 +140,6 @@ $retailStore = session()->get('retail-store', null);
 								</tr>
 							</thead>
 							<tbody>
-								{{-- @php
-								$index = 0;
-								@endphp
-								@include('invoice.payment-tr', compact('index', 'bankAccounts')) --}}
-
 								@if ($errors->has('payments.*.*'))
 								@foreach (old('payments') as $index => $oldvals)
 									@include('invoice.payment-tr', compact('index', 'oldvals'))
