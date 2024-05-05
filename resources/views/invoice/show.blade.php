@@ -6,6 +6,8 @@ if(!isset($preview)) $preview = false;
 
 @section('content')
 <h1>জুতা বিক্রয়ের রশিদ</h1>
+
+
 <table class="table table-striped border">
 	<tbody>
 		<tr>
@@ -163,13 +165,15 @@ if(!isset($preview)) $preview = false;
 		</tr>
 	</tfoot>
 </table>
-@if(($preview && count($gifts) > 0) || (!$preview && $invoice->giftTransactions->count() > 0))
+ {{-- @if(($preview && count($gifts) > 0) || (!$preview && $invoice->giftTransactions->count() > 0)) 
+
 <?php
 	if($preview) $giftTransactions = $gifts;
 	else         $giftTransactions = $invoice->giftTransactions;
-?>
+?> 
+@endif --}}
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-4">
 		<h3>গিফটের বিবরণ</h3>
 		<table class="table table-striped">
 			<thead>
@@ -181,7 +185,7 @@ if(!isset($preview)) $preview = false;
 			</thead>
 			<tbody>
 				<?php $i = 1; ?>
-				@foreach($giftTransactions as $giftTransaction)
+				@foreach ($gifts ?? $giftTransactions as $giftTransaction)
 				<tr>
 					<td>{{ $i++ }}</td>
 					<td>{{ $giftTransaction->gift->name ?? $giftTransaction['gift']->name }}</td>
@@ -191,6 +195,32 @@ if(!isset($preview)) $preview = false;
 			</tbody>
 		</table>
 	</div>
+	{{-- @endif --}}
+	{{-- @if(isset($transactions) && $transactions !== null   ||   isset($validPayments) && $transactions !== null ) --}}
+	<div class="col-md-8">
+		<h3>জমার  বিবরণ</h3>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th style="width:60%">গিফট</th>
+					<th style="width:20%">চেক নং</th>
+					<th style="width:20%" class="text-right">টাকা</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach($validPayments ?? $transactions as $index => $item)
+					<tr>
+						<td>{{ $index + 1 }}</td>
+						<td>{{ $item['payment_method']  ?? $item->toAccount->BankAccount->bank }}</td>
+						<td>{{ $item['cheque_no']  ?? $item->description }}</td>
+						<td style="width:20%" class="text-right">{{ $item['amount']   ?? $item->amount}}</td>
+					</tr>
+                @endforeach
+			</tbody>
+		</table>
+	</div>
+	{{-- @endif --}}
 </div>
-@endif
+
 @endsection

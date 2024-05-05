@@ -140,16 +140,34 @@ $retailStore = session()->get('retail-store', null);
 								</tr>
 							</thead>
 							<tbody>
-								@php
+								{{-- @php
 								$index = 0;
 								@endphp
-								@include('invoice.payment-tr', compact('index', 'bankAccounts'))
+								@include('invoice.payment-tr', compact('index', 'bankAccounts')) --}}
+
+								@if ($errors->has('payments.*.*'))
+								@foreach (old('payments') as $index => $oldvals)
+									@include('invoice.payment-tr', compact('index', 'oldvals'))
+								@endforeach
+								@elseif($transactions !== null)
+								     @php
+										$total_payment = 0
+									 @endphp
+									@foreach ($transactions as $index => $transaction)
+										@include('invoice.payment-tr', compact('index', 'transaction','bankAccounts'))
+										@php
+											$total_payment  +=$transaction->amount;
+										@endphp
+									@endforeach
+								@else
+									@include('invoice.payment-tr',compact('bankAccounts'))
+								@endif
 							</tbody>
 							<tfoot>
 								<tr>
 									<td><button class="btn btn-success btn-add-row" data-tr="{{ route('tr.payment') }}" data-index="{{ ++$index }}" data-parent-id="#payment-table"><span class="fas fa-plus"></span></button></td>
 									<td colspan="2" class="text-right"><div class="form-control-plaintext">মোট জমা</div></td>
-									<td>{{ disabledInput($errors, 'text', '', '', '0.00', 'input-total-payment text-right') }}</td>
+									<td>{{ disabledInput($errors, 'text', '',  '',  '0.00', 'input-total-payment text-right') }}</td>
 								</tr>
 							</tfoot>
 						</table>
@@ -172,10 +190,17 @@ $retailStore = session()->get('retail-store', null);
 								</tr>
 							</thead>
 							<tbody>
-								@php
-								$index = 0;
-								@endphp
-								@include('invoice.gift-tr', compact('index', 'gifts'))
+								@if ($errors->has('gifts.*.*'))
+								@foreach (old('gifts') as $index => $oldvals)
+									@include('invoice.gift-tr', compact('index', 'oldvals'))
+								@endforeach
+								@elseif($giftTransactions !== null)
+									@foreach ($giftTransactions as $index => $giftTransaction)
+										@include('invoice.gift-tr', compact('index', 'giftTransaction'))
+									@endforeach
+								@else
+									@include('invoice.gift-tr')
+								@endif
 							</tbody>
 							<tfoot>
 								<tr>
@@ -212,6 +237,6 @@ $retailStore = session()->get('retail-store', null);
 @endsection
 
 @section('page-script')
-<script src="{{ asset('js/commons/memo.js') }}"></script>
-<script src="{{ asset('js/invoice/form.js') }}"></script>
+<script  src="{{ asset('js/commons/memo.js') }}"></script>
+<script  src="{{ asset('js/invoice/form.js') }}"></script>
 @endsection
