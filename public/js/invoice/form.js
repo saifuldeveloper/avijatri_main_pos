@@ -117,3 +117,79 @@ function addRowAfterCallback(parent_id) {
 function beforeRemoveRowCallback(row, subrow) {
 	row.find('.input-count').val(0).trigger('change');
 }
+
+
+
+
+
+$('#invoice-memo-form').submit(function(e) {
+	if(typeof memoSubmitPrecondition === 'function') {
+		var preTest = memoSubmitPrecondition();
+		if(!preTest.result) {
+			alert(preTest.message);
+			e.preventDefault();
+			return;
+		}
+	}
+	var emptyInputs = $('.required-value:enabled').filter(isEmpty);
+	if(emptyInputs.length > 0) {
+		for(var i = 0; i < emptyInputs.length; i++) {
+			var elem = $(emptyInputs[i]);
+			if(elem.hasClass('allow-empty')) {
+				continue;
+			}
+			var requiredOnceRows = elem.parents('table').find('.required-once').length;
+			if((requiredOnceRows > 1 || requiredOnceRows == 0) && elem.hasClass('empty-row')) {
+				var tr = elem.parents('tr');
+				var emptyRowInputs = tr.find('.empty-row');
+				for(var j = 0; j < emptyRowInputs.length; j++) {
+					if($(emptyRowInputs[j]).val() != '') {
+						break;
+					}
+				}
+				if(j < emptyRowInputs.length) {
+					var td = elem.parents('td');
+					var th = td.parents('table').first().find('th').eq(td.index());
+					var title = th.html();
+					// alert(title + ' প্রদান করুন।');
+					elem.focus();
+					e.preventDefault();
+					return;
+				}
+			} else {
+				var td = elem.parents('td');
+				var th = td.parents('table').first().find('th').eq(td.index());
+				var title = th.html();
+				// alert(title + ' প্রদান করুন।');
+				elem.focus();
+				e.preventDefault();
+				return;
+			}
+		}
+	}
+	// var table = $('.purchase-table');
+	// if(table.length > 0) {
+	// 	var emptyFound = false;
+	// 	table.find('.tr-sub').each(function() {
+	// 		if($(this).find('.input-box:enabled').length > 0 && $(this).find('.input-box:enabled:checked').length == 0) {
+	// 			// alert('বক্স বাছাই করুন।');
+	// 			Swal.fire({
+	// 				text: "বক্স বাছাই করুন।",
+	// 			});
+	// 			$(this).find('.input-box:enabled').first().focus();
+	// 			emptyFound = true;
+	// 			return false;
+	// 		}
+	// 		if($(this).find('.input-bag:enabled').length > 0 && $(this).find('.input-bag:enabled:checked').length == 0) {
+	// 			// alert('ব্যাগ বাছাই করুন।');
+	// 			Swal.fire({
+	// 				text: "ব্যাগ বাছাই করুন।",
+	// 			});
+	// 			$(this).find('.input-bag:enabled').first().focus();
+	// 			emptyFound = true;
+	// 			return false;
+	// 		}
+	// 	});
+	// 	if(emptyFound) e.preventDefault();
+	// }
+});

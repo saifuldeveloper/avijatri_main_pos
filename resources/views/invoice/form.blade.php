@@ -16,7 +16,7 @@ $retailStore = session()->get('retail-store', null);
 	@endif
 </h1>
 @endif
-<form action="{{ $invoice === null ? route('invoice.store') : route('invoice.update', ['invoice' => $invoice]) }}" method="POST" enctype="multipart/form-data" id="memo-form" autocomplete="off">
+<form action="{{ $invoice === null ? route('invoice.store') : route('invoice.update', ['invoice' => $invoice]) }}" method="POST" enctype="multipart/form-data" id="invoice-memo-form" autocomplete="off">
 	{{ csrf_field() }}
 	@if($invoice !== null)
 		{{ method_field('PUT') }}
