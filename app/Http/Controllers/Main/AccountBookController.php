@@ -144,9 +144,11 @@ class AccountBookController extends Controller
         $accountBook->open = false;
         $accountBook->closing_date = \Carbon\Carbon::today();
         $accountBook->save();
-
+   
         $newBook = new AccountBook();
+        $newBook->account_type =$accountBook->account_type;
         $accountBook->account->accountBooks()->save($newBook);
+       
         return $newBook;
     }
 

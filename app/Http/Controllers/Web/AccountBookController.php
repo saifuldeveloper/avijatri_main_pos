@@ -138,7 +138,8 @@ class AccountBookController extends \App\Http\Controllers\Main\AccountBookContro
     public function closing(Request $request, AccountBook $accountBook)
     {
         $accountBook = parent::closing($request, $accountBook);
-        return redirect()->route('account-book.show', compact('accountBook'))->with('success-alert', 'ক্লোজিং সম্পন্ন হয়েছে।');
+        // return redirect()->route('account-book.show', compact('accountBook'))->with('success-alert', 'ক্লোজিং সম্পন্ন হয়েছে।');
+        return redirect()->route('account-book.show', ['account_book' => $accountBook->id])->with('success-alert', 'ক্লোজিং সম্পন্ন হয়েছে।');
     }
 
     public function forwardBalance(AccountBook $accountBook)
