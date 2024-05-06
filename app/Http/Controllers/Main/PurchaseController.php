@@ -102,13 +102,13 @@ class PurchaseController extends Controller
                 Cheque::issue($request->input('cheque_no'), $accountBook, $request->input('payment_amount'), $request->input('cheque_date'), $purchase);
             } else {
                 $description = $request->has('cheque_no') ? 'চেক নং ' . $request->input('cheque_no') : null;
-
                 $transaction= Transaction::createTransaction('factory', $factory->id, 'expense', $request->input('payment_method'), $request->input('payment_amount'), $description, $purchase);
                 $accountEntries             = new FactoryAccountEntry;
                 $accountEntries->account_id = $factory->id;
                 $accountEntries->account_book_id = $accountBook->id;
-                $accountEntries->entry_type =2;
-                $accountEntries->entry_id   =$transaction->id;
+                $accountEntries->entry_type  =2;
+                $accountEntries->entry_id    =$transaction->id;
+                $accountEntries->total_amount=$request->input('payment_amount');
                 $accountEntries->save();
             }
         }

@@ -155,7 +155,7 @@ class AccountBook extends Model
 
     public function getBalanceBeforeClosingAttribute() {
         //return $this->total_sale_minus_commission - $this->total_return_minus_commission - $this->total_payment + $this->total_transport - $this->total_expense - $this->total_discount + $this->opening_balance;
-        // return $this->balance + $this->total_closing_payment;
+        return $this->balance + $this->total_closing_payment;
     }
 
     public function getDescriptionBalanceAttribute() {

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->bigInteger('entry_id');
             $table->double('total_amount')->default(0);
             $table->string('status')->default(1);
+            $table->string('closing_id')->nullable();
             $table->timestamps();
         });
     }
