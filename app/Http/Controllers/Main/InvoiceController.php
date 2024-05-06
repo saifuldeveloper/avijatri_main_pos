@@ -204,6 +204,7 @@ class InvoiceController extends Controller
 
         $removedPayment    = [];
         $payments     = $request->input('payments');
+        if (!is_null($payments)) {
         foreach ($payments as $payment) {
             if (isset($payment['id'])) {
                 $transaction = Transaction::find($payment['id']);
@@ -220,6 +221,7 @@ class InvoiceController extends Controller
             }
             $removedPayment[] = $transaction->id;
         }
+       }
         $transaction = Transaction::where('attachment_id',$invoice->id)->where('attachment_type','App\Models\Invoice')->get();
         foreach ($transaction as $item) {
             if (!in_array($item->id, $removedPayment)) {

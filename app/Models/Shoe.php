@@ -14,7 +14,7 @@ class Shoe extends Model
 	{
 		$last = self::where('id', 'not like', 'X-%')->orderByRaw('convert(conv(id, 16, 10), signed) desc')->first();
 		if (!$last) {
-			return '1000';
+			return '100';
 		}
 		$lastId = hexdec($last->id);
 		$nextId = dechex($lastId + 1);
@@ -25,7 +25,7 @@ class Shoe extends Model
 	{
 		$last = self::where('id', 'like', 'X-%')->orderByRaw('convert(conv(substring(id, 3), 16, 10), signed) desc')->first();
 		if (!$last) {
-			return '1000';  
+			return '100';  
 		}
 		$lastId = hexdec(substr($last->id, 2));
 		$nextId = dechex($lastId + 1);

@@ -32,7 +32,7 @@
 					গায়ের দাম: <span class="shoe-check-span" id="shoe-check-retail-price"></span><br>
 					ডজন দাম: <span class="shoe-check-span" id="shoe-check-purchase-price"></span>
 				</td>
-				<td><img src="{{ asset('img/shoe.png') }}" id="shoe-check-thumbnail"></td>
+				<td><img src="{{ asset('img/shoe.png') }}" id="shoe-check-thumbnail" style="height:180px;width:180px;"></td>
 			</tr>
 			<tr>
 				<td><button type="submit" class="btn btn-primary form-control">যোগ করুন</button></td>
