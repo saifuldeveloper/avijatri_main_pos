@@ -39,6 +39,10 @@ class RetailStoreExpenseController extends \App\Http\Controllers\Main\RetailStor
         $retailStoreExpense = parent::store($request);
         return back()->with('success-alert', 'অন্যান্য খরচ সংরক্ষণ করা হয়েছে।');
     }
+    
+
+
+
 
     /**
      * Display the specified resource.
