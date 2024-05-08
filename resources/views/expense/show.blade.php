@@ -7,7 +7,7 @@
 		<tr>
 			<td style="width:80%">
 				নাম: <strong>{{ $expense->name }}</strong><br>
-				মোট খরচ: <strong>{{ toFixed(@$expense->current_book->balance) }}</strong>
+				মোট খরচ: <strong>{{ toFixed(@$entreis->sum('total_amount')) }}</strong>
 			</td>
 			<td style="width:20%">
 				@include('layouts.crud-buttons', ['model' => 'expense', 'parameter' => 'expense', 'object' => $expense])
@@ -39,8 +39,7 @@
 			@endif
 		</tr>
 		@endforeach
-		{{-- @if($entreis->currentPage() == $entreis->lastPage()
-			&& $entreisopening_balance != 0)
+		{{-- @if($entreis->currentPage() == $entreis->lastPage() && $entreisopening_balance != 0)
 		<tr>
 			<td>{{ $i + 2 }}</td>
 			<td>-</td>

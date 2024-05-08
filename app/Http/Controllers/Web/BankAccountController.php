@@ -57,7 +57,7 @@ class BankAccountController extends \App\Http\Controllers\Main\BankAccountContro
     {
 
         $bankAccount = parent::show($bankAccount);
-        $entries = $bankAccount->entries()->paginate(10);
+        $entries = $bankAccount->entries()->orderBy('id','desc')->paginate(10);
         return view('bank-account.show', compact('bankAccount','entries'));
     }
 

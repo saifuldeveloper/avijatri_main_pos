@@ -64,7 +64,7 @@
 			<thead>
 				<tr>
 					<th>#</th>
-					<th style="width:22%" class="text-left">কারখানাদার</th>
+					<th style="width:22%" class="text-left">মহাজন</th>
 					<th style="width:13%">টাইপ</th>
 					<th style="width:13%">রং</th>
 					<th style="width:13%">গায়ের দাম</th>
@@ -109,7 +109,7 @@
 			<tbody>
 				<tr>
 					<td>সাবেক</td>
-					<td></td>
+					{{-- <td></td> --}}
 					<td class="text-right">{{ toFixed($data->initialCashBalance) }}</td>
 				</tr>
 				@php
@@ -157,6 +157,7 @@
 			</thead>
 			<tbody>
 				@foreach($data->expenses as $i => $expense)
+		
 				@if($expense->amount == 0)
 				@continue
 				@endif

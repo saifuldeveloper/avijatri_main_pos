@@ -13,8 +13,9 @@
 			<td style="width:70%">
 				নাম: <strong>{{ $employee->name }}</strong><br>
 				ঠিকানা: <strong>{{ $employee->address }}</strong><br>
-				মোবাইল নং: <strong>{{ $employee->mobile_no }}</strong>
-				বর্তমান লিমিট: <strong>{{ $employee->limit }}</strong>
+				মোবাইল নং: <strong>{{ $employee->mobile_no }}</strong><br>
+				বর্তমান লিমিট: <strong>{{ $employee->limit }}</strong><br>
+				মোট খরচ: <strong>{{ toFixed($total) }}</strong>
 			</td>
 			<td style="width:30%">
 				@include('layouts.crud-buttons', ['model' => 'employee',  'parameter' => 'employee','object' => $employee])

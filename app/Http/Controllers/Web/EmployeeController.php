@@ -57,8 +57,9 @@ class EmployeeController extends \App\Http\Controllers\Main\EmployeeController
     {
 
         $employee = parent::show($employee);
-        $entries = $employee->entries()->paginate(10);
-        return view('employee.show', compact('employee','entries'));
+        $entries  = $employee->entries()->paginate(10);
+        $total    = $entries->sum('total_amount');
+        return view('employee.show', compact('employee','entries','total'));
     }
 
     /**

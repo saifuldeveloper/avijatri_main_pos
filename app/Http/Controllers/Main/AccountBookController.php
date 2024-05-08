@@ -49,9 +49,6 @@ class AccountBookController extends Controller
                             'factoryentries.purchase.purchaseEntries.shoe',
                             'factoryentries.returnshoe.returnentries.shoe');
 
-
-        
-   
         $accountBook->append('entries');
  
         switch($accountBook->account_type) {

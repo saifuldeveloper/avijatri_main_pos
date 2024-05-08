@@ -22,7 +22,7 @@
 	</div>
 	<div class="form-group">
 		<label for="employee-limit">টাকা তোলার লিমিট</label>
-		<input type="text" name="limit" id="employee-limit" class="form-control" value="{{ old('limit', optional($employee)->limit) }}">
+		<input type="number" name="limit" id="employee-limit" class="form-control" value="{{ old('limit', optional($employee)->limit) }}">
 	</div>
 	<button type="submit" class="btn btn-primary btn-form-save">সংরক্ষণ করুন</button>
 </form>

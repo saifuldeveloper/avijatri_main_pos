@@ -9,9 +9,9 @@ use App\Http\Controllers\Controller;
 
 class TransactionController extends \App\Http\Controllers\Main\TransactionController
 {
-    public function __construct() {
-        $this->middleware(['permission:manage transactions']);
-    }
+    // public function __construct() {
+    //     $this->middleware(['permission:manage transactions']);
+    // }
 
     /**
      * Display a listing of the resource.
@@ -29,7 +29,7 @@ class TransactionController extends \App\Http\Controllers\Main\TransactionContro
         $accountTypes = [
             (object)[ 'id' => 'withdraw',       'name' => 'ব্যাংক থেকে তোলা' ],
             (object)[ 'id' => 'deposit',        'name' => 'ব্যাংক জমা' ],
-            (object)[ 'id' => 'factory',        'name' => 'কারখানাদার তাগাদা' ],
+            (object)[ 'id' => 'factory',        'name' => 'মহাজন তাগাদা' ],
             (object)[ 'id' => 'retail-store' ,  'name' => 'পার্টি জমা' ],
             (object)[ 'id' => 'retail-closing', 'name' => 'পার্টি জমা (ক্লোজিং)' ],
             (object)[ 'id' => 'gift-supplier',  'name' => 'গিফট মহাজন তাগাদা' ],

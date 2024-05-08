@@ -13,7 +13,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\EmployeeAccountEntry;
 use App\Models\Expense;
+use App\Models\View\BankAccountEntry;
 use App\Models\ExpenseAccountEntry;
+use App\Models\View\FactoryAccountEntry;
 use App\Models\View\RetailStoreAccountEntry;
 
 class TransactionController extends Controller
@@ -52,7 +54,7 @@ class TransactionController extends Controller
     {
 
     
-             
+        // dd($request->all());
 
         if($request->input('account_type') == 'withdraw' || $request->input('account_type') == 'deposit') {
             $transaction = Transaction::createBankToCashTransaction(
@@ -69,6 +71,26 @@ class TransactionController extends Controller
                 $request->input('amount'),
                 $request->input('due_date')
             );
+        }
+        else if($request->input('account_type') == 'factory' && $request->input('payment_method') !== 'cheque') {
+            $factory = Factory::find($request->input('account_id'));
+            $transaction = Transaction::createTransaction(
+                $request->input('account_type'),
+                $request->input('account_id'),
+                $request->input('payment_type'),
+                $request->input('payment_method'),
+                $request->input('amount'),
+                $request->input('description')
+            );
+            $entry                  = new FactoryAccountEntry;
+            $entry->account_id      = $factory->id;
+            $entry->account_book_id = $factory->getCurrentAccountBook()->id;
+            $entry->entry_type      = 2;
+            $entry->entry_id        = $transaction->id;
+            $entry->total_amount    = $request->input('amount');
+            $entry->save();
+
+
         } else if($request->input('account_type') == 'cheque') {
                $transaction = Transaction::createTransaction(
                 $request->input('account_type'),
@@ -85,8 +107,7 @@ class TransactionController extends Controller
                 $request->input('payment_type'),
                 $request->input('payment_method'),
                 $request->input('amount'),
-                $request->input('description'),
-                null,
+                $request->input('description'), null,
                 $request->input('account_id')
             );
             $accountBook = AccountBook::find($request->input('account_id'));

@@ -22,6 +22,9 @@
         .barcode-col {
             margin: 0.1in 0;
             position: relative;
+            width: 1.5in;
+            height: 1in;
+
         }
 
         .barcode-left {
@@ -90,26 +93,27 @@
 <body>
     <button class="print-button">Print</button>
 	@foreach ($entries as $entry)
+    <div class="barcode">
     @for ($i = 0; $i < $entry->count; $i++)
-        <div class="barcode">
-            <div class="barcode-col {{ $i % 1 == 0 ? 'barcode-left' : 'barcode-right' }}">
+            <div class="barcode-col {{ $i % 2 == 0 ? 'barcode-left' : 'barcode-right' }}">
                 <div class="bar-first" style="padding-top: 41px !important;margin: 0px;margin: -12px;">
                     <p class="company-name" style="rotate: 270deg;">অভিযাত্রী</p>
                 </div>
                 <div class="bar-left" style="margin-right: 10px; margin-top: 6px;">
-                    <p class="shoebarsize"><b>Size:</b> 42</p>
+                    <p class="shoebarsize"><b>Name:</b> {{ $entry->shoe->category->full_name }}-{{ $entry->shoe->color->name }}</p>
                     <p class="shoe-description">
-                        <b>Name:</b> {{ $entry->shoe->category->full_name }}-{{ $entry->shoe->color->name }}<br>
+                        <b>size:</b> L <br>
                         <b>দাম:</b> {{ number_format($entry->shoe->retail_price, 2, '.', '') }}
                     </p>
                     <p class="shoe-id">{{ $entry->shoe->id }}</p>
                 </div>
                 <div class="bar-right">
-                    <img src="data:image/png;base64,{{ DNS2D::getBarcodePNG($entry->shoe->id, 'QRCODE') }}" alt="barcode" style="height:35px;padding-top:13px;">
+                    <img src="data:image/png;base64,{{ DNS2D::getBarcodePNG($entry->shoe->id, 'QRCODE') }}" alt="barcode" style="height:35px;padding-top:22px;">
                 </div>
             </div>
-        </div>
+        
     @endfor
+</div>
 @endforeach
 
 

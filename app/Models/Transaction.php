@@ -16,6 +16,8 @@ class Transaction extends Model
 
     
 	public static function createBankToCashTransaction($type, $bankAccount, $amount, $description = '') {
+
+
 		$cashAccount = BankAccount::getCashAccount();
 		$bankAccount = BankAccount::find($bankAccount);
 
@@ -38,13 +40,13 @@ class Transaction extends Model
 		// BankAccount entry
 		$entry                   =new BankAccountEntry;
 		$entry->entry_id         = $bankAccount->id;
-		$entry->entry_type       = 1;
+		$entry->entry_type       = ($type == 'deposit') ? 0 : 1;
 		$entry->account_book_id  =$bankAccount->getCurrentAccountBook()->id;
 		$entry->account_name     =$bankAccount->bank;
 		$entry->account_id       =$bankAccount->id;
 		$entry->account_type     =$type;
 		$entry->description      =$description;
-		$entry->total_amount           =$amount;
+		$entry->total_amount     =$amount;
 		$entry->save();
 		return self::create(compact('from_account_id', 'to_account_id', 'amount', 'description'));
 	}
@@ -309,42 +311,42 @@ private static function queryIncomesOn($date) {
 	public function getTransactionTypeAttribute() {
 		if(isset($this->bank_withdrawal)) {
 			if($this->bank_withdrawal == 1) {
-				return 'ব্যাংক তোলা - ' . $this->fromAccount->account->name;
+				return 'ব্যাংক তোলা - ' . $this->fromAccount->BankAccount->name;
 			} else {
-				return ($this->fromAccount->account_type == 'loan' ? 'হাওলাত - ' : '') . $this->fromAccount->account->name;
+				return ($this->fromAccount->account_type == 'loan' ? 'হাওলাত - ' : '') . $this->fromAccount->BankAccount->name;
 			}
 		}
 		if(isset($this->bank_deposit)) {
 			if($this->bank_deposit == 1) {
-				return 'ব্যাংক জমা - ' . $this->toAccount->account->name;
+				return 'ব্যাংক জমা - ' . $this->toAccount->BankAccount->name;
 			} else {
-				return ($this->toAccount->account_type == 'loan' ? 'হাওলাত - ' : '') . $this->toAccount->account->name;
+				return ($this->toAccount->account_type == 'loan' ? 'হাওলাত - ' : '') . $this->toAccount->BankAccount->name;
 			}
 		}
 		if($this->from_account_id === null) {
 			if($this->toAccount->account_type == 'loan') {
-				return 'হাওলাত - ' . $this->toAccount->account->name;
+				return 'হাওলাত - ' . $this->toAccount->BankAccount->name;
 			} else {
-				return $this->toAccount->account->name;
+				return $this->toAccount->BankAccount->name;
 			}
 		} else if($this->to_account_id === null) {
 			if($this->fromAccount->account_type == 'loan') {
-				return 'হাওলাত - ' . $this->fromAccount->account->name;
+				return 'হাওলাত - ' . $this->fromAccount->BankAccount->name;
 			} else {
-				return $this->fromAccount->account->name;
+				return $this->fromAccount->BankAccount->name;
 			}
-		} else if($this->fromAccount->account->account_no == 'cash' && $this->toAccount->account_type == 'bank-account') {
+		} else if($this->fromAccount->BankAccount->account_no == 'cash' && $this->toAccount->account_type == 'bank-account') {
 			return 'ব্যাংক জমা';
-		} else if($this->toAccount->account->account_no == 'cash' && $this->fromAccount->account_type == 'bank-account') {
+		} else if($this->toAccount->BankAccount->account_no == 'cash' && $this->fromAccount->account_type == 'bank-account') {
 			return 'ব্যাংক তোলা';
 		} else if($this->fromAccount->account_type == 'bank-account') {
-			return $this->toAccount->account->name;
+			return $this->toAccount->BankAccount->name;
 		} else {
-			return $this->fromAccount->account->name;
+			return $this->fromAccount->BankAccount->name;
 		}
 	}
 	
-	protected $with = ['fromAccount.account', 'toAccount.account'];
+	protected $with = ['fromAccount.BankAccount', 'toAccount.BankAccount'];
 	protected $appends = ['transaction_type'];
     protected $fillable = ['from_account_id', 'to_account_id', 'amount', 'description'];
 }
