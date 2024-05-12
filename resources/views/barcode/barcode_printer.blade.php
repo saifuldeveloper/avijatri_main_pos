@@ -14,15 +14,15 @@
 		}
 
 		.barcode-col {
-			margin: -8px;
-			width: 1.5in;
-			height: 1in;
+			margin: 0.1in 0;
+			width: 1.35in;
+			height: 0.8in;
 			position: relative;
-			margin-top: 6px;
 		}
 
 		.barcode-left {
 			float: left;
+			    margin-left: 5px;
 		}
 
 		.barcode-right {
@@ -72,19 +72,24 @@
   font-size: -12px !important;
 		
 	}
+	@media print {
+		.print-button {
+			display: none;
+		}
+	}
 	</style>
 	
 </head>
 
 <body>
 	<button class="print-button">Print</button>
-<div>
 @foreach($entries as $entry)    
 <div class="barcode">
+
 	@for($i = 0; $i < $entry->count; $i++)
 	<div class="barcode-col {{ $i % 2 == 0 ? 'barcode-left' : 'barcode-right' }}">
 		{{-- <canvas id="barcode-{{ $entry->shoe->id }}-{{ $i }}" data-id="{{ $entry->shoe->id }}"></canvas> --}}
-		<img src="data:image/png;base64,{{ DNS1D::getBarcodePNG($entry->shoe->id, 'C39') }}" alt="barcode" style="padding-top: 14px;width: 100%;height: 52px">
+		<img src="data:image/png;base64,{{ DNS1D::getBarcodePNG($entry->shoe->id, 'C39') }}" alt="barcode" style="padding-top: 14px;width: 95%;height: 33px">
 		<p class="company-name">অভিযাত্রী</p>
 		<p class="shoe-id">{{ $entry->shoe->id }}</p>
 		<p class="shoe-description">
@@ -95,7 +100,6 @@
 	@endfor
 </div>
 @endforeach
-</div>
 
 <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jsbarcode/3.5.8/barcodes/JsBarcode.code128.min.js"></script>
