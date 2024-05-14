@@ -94,7 +94,7 @@
 		<p class="shoe-id">{{ $entry->shoe->id }}</p>
 		<p class="shoe-description">
 			{{ $entry->shoe->category->full_name }}-{{ $entry->shoe->color->name }}<br>
-			দাম: {{ number_format($entry->shoe->retail_price, 2, '.', '') }}
+			দাম: {{ englishToBanglaNumber(number_format($entry->shoe->retail_price, 2, '.', '')) }}
 		</p>
 	</div>
 	@endfor

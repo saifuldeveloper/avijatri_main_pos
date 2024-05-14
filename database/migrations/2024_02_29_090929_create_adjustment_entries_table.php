@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('shoe_id');
             $table->integer('count');
             $table->string('description')->nullable();
+            $table->string('type')->nullable();
             $table->timestamps();
         });
     }

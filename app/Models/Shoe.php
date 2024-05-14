@@ -17,7 +17,7 @@ class Shoe extends Model
 			return '100';
 		}
 		$lastId = hexdec($last->id);
-		$nextId = dechex($lastId + 1);
+		$nextId = ($lastId + 1);
 		return $nextId;
 	}
 
@@ -65,17 +65,17 @@ class Shoe extends Model
 
 	public function purchaseEntries()
 	{
-		return $this->hasMany(PurchaseEntry::class);
+		return $this->hasMany(PurchaseEntry::class)->orderByDesc('created_at');
 	}
 
 	public function invoiceEntries()
 	{
-		return $this->hasMany(InvoiceEntry::class);
+		return $this->hasMany(InvoiceEntry::class)->orderByDesc('created_at');
 	}
 
 	public function returnToFactoryEntries()
 	{
-		return $this->hasMany(ReturnToFactoryEntry::class);
+		return $this->hasMany(ReturnToFactoryEntry::class)->orderByDesc('created_at');
 	}
 
 	public function acceptedFactoryReturnEntries()
@@ -95,7 +95,11 @@ class Shoe extends Model
 
 	public function inventoryCheckEntries()
 	{
-		return $this->hasMany(inventoryCheckEntry::class);
+		return $this->hasMany(inventoryCheckEntry::class ,'shoe_id','id');
+	}
+	public function adjustmentEntries()
+	{
+		return $this->hasMany(AdjustmentEntry::class ,'shoe_id','id')->orderByDesc('created_at');
 	}
 
 	// Attributes

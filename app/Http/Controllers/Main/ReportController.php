@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 class ReportController extends Controller
 {
     public function monthlyTransactionReport(Request $request) {
+	
     	$year = $request->input('year');
     	$month = $request->input('month');
     	$month_fixed = str_pad($month, 2, '0', STR_PAD_LEFT);

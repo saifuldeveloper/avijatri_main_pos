@@ -5,7 +5,7 @@
 <table class="table table-striped">
 	<tbody>
 		<tr>
-			<td width="150"><a href="#" class="shoe-image-link" data-toggle="modal" data-target="#shoe-image-modal"><img src="{{asset('images/small-thumbnail/'. $shoe->image) }}" id="shoe-thumbnail"></a></td>
+			<td width="150"><a href="#" class="shoe-image-link" data-toggle="modal" data-target="#shoe-image-modal"><img src="{{asset('images/small-thumbnail/'. $shoe->image) }}" height="200" id="shoe-thumbnail"></a></td>
 			<td>
 				আইডি: <span id="shoe-factory"><strong>{{ $shoe->id }}</strong></span><br>
 				মহাজন: <span id="shoe-factory">{{ $shoe->factory->name ?? '-' }}</span><br>
@@ -41,6 +41,7 @@
 				@endforeach
 			</tbody>
 		</table>
+		@if(!$shoe->acceptedFactoryReturnEntries->isEmpty())
 		<h3>মহাজন ফেরত</h3>
 		<table class="table table-striped text-center">
 			<thead>
@@ -58,8 +59,10 @@
 				@endforeach
 			</tbody>
 		</table>
+		@endif
 	</div>
 	<div class="col-md-6">
+		@if(!$shoe->invoiceEntries->isEmpty())
 		<h3>বিক্রয়</h3>
 		<table class="table table-striped text-center">
 			<thead>
@@ -79,6 +82,10 @@
 				@endforeach
 			</tbody>
 		</table>
+
+
+		@endif
+		@if(!$shoe->acceptedRetailReturnEntries->isEmpty())
 		<h3>পার্টি ফেরত</h3>
 		<table class="table table-striped text-center">
 			<thead>
@@ -96,7 +103,40 @@
 				@endforeach
 			</tbody>
 		</table>
+		@endif
 	</div>
+
+
+
+	<div class="col-md-6">
+
+		@if(!$shoe->adjustmentEntries->isEmpty())
+		<h3>ইনভেন্টরি চেক</h3>
+		<table class="table table-striped text-center">
+			<thead>
+				<tr>
+					<th style="width:40%">তারিখ</th>
+					<th style="width:30%">জোড়া বাদ  </th>
+					<th style="width:30%">জোড়া যোগ </th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach($shoe->adjustmentEntries as $entry)
+				<tr>
+					<td>{{ $entry->created_at }}</td>
+					<td>
+						{{ $entry->type == 'out' ? $entry->count : '-' }}
+					</td>
+					<td>
+						{{ $entry->type == 'in' ? $entry->count : '-' }}
+					</td>	
+				</tr>
+				@endforeach
+			</tbody>
+		</table>
+		@endif
+	</div>
+	
 </div>
 <div id="shoe-form" class="modal fade form-modal" tabindex="-1" role="dialog" aria-labelledby="form-modal-title" aria-hidden="true">
 	<div class="modal-dialog" role="document">
@@ -111,7 +151,16 @@
 </div>
 <div id="shoe-image-modal" class="modal fade shoe-image-modal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog text-center" role="document">
-		<img src="{{ $shoe->full_image_url }}" style="max-width:100%">
+		<img src="{{asset('images/small-thumbnail/'. $shoe->image) }}">
 	</div>
 </div>
+
+
+<script>
+	$(".shoe-image-link").click(function (e) {
+        e.preventDefault();
+        var originalImagePath = $(this).find("img").prop("src");
+        $("#shoe-image-modal img").prop("src", originalImagePath);
+    });
+</script>
 @endsection

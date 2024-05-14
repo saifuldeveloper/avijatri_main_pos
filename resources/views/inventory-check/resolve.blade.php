@@ -26,7 +26,7 @@
 				<td>{{ $entry->category }}</td>
 				<td>{{ $entry->color }}</td>
 
-				<td class="text-center"><a href="{{ asset('images/small-thumbnail/'.$entry->image) }}" class="shoe-image-link" data-toggle="modal" data-target="#shoe-image-modal"><img src="{{ asset('images/small-thumbnail/'.$entry->image) }}" height="60"></a></td>
+				<td class="text-center"><a href="{{ asset('images/small-thumbnail/'.$entry->full_image_url) }}" class="shoe-image-link" data-toggle="modal" data-target="#shoe-image-modal"><img src="{{ asset('images/small-thumbnail/'.$entry->image) }}" height="60"></a></td>
 				<td>{{ toFixed($entry->retail_price) }}</td>
 				<td>{{ toFixed($entry->purchase_price) }}</td>
 				<td>{{ $entry->remaining }}</td>
@@ -65,12 +65,13 @@
 				<td>{{ $entry->factory }}</td>
 				<td>{{ $entry->category }}</td>
 				<td>{{ $entry->color }}</td>
-				<td class="text-center"><a href="{{ $entry->full_image_url }}" class="shoe-image-link" data-toggle="modal" data-target="#shoe-image-modal"><img src="{{ $entry->image_url }}"></a></td>
+				<td class="text-center"><a href="{{ $entry->image_url }}" class="shoe-image-link" data-toggle="modal" data-target="#shoe-image-modal"><img src="{{ $entry->image_url }}" height="60"></a></td>
 				<td>{{ toFixed($entry->retail_price) }}</td>
 				<td>{{ toFixed($entry->purchase_price) }}</td>
 				<td>{{ -$entry->remaining }}</td>
 				<td class="text-left">
-					<label class="mb-0"><input type="radio" name="resolve[{{ $i }}][action]" value="adjust" required> জোড়া ঠিক করুন</label>&nbsp;
+					<label class="mb-0"><input type="radio" name="resolve[{{ $i }}][action]" value="adjust" required> জোড়া বাদ দিন </label>&nbsp;
+					<label class="mb-0"><input type="radio" name="resolve[{{ $i }}][action]" value="add" required>জোড়া যোক  করুন </label>&nbsp;
 					<label class="mb-0"><input type="radio" name="resolve[{{ $i }}][action]" value="cancel"> বাতিল</label>
 					<input type="hidden" name="resolve[{{ $i }}][shoe_id]" value="{{ $entry->id }}">
 					<input type="hidden" name="resolve[{{ $i }}][count]" value="{{ -$entry->remaining }}">
@@ -85,6 +86,14 @@
 </form>
 <div id="shoe-image-modal" class="modal fade shoe-image-modal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog text-center" role="document">
-		<img src="" style="max-width:500px">
+		<img src="" style="max-width:100%">
 	</div>
 </div>
+
+<script>
+	$(".shoe-image-link").click(function (e) {
+        e.preventDefault();
+        var originalImagePath = $(this).find("img").prop("src");
+        $("#shoe-image-modal img").prop("src", originalImagePath);
+    });
+</script>

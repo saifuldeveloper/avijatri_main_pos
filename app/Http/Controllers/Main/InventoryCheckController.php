@@ -77,14 +77,26 @@ class InventoryCheckController extends Controller
     public function resolve(Request $request, InventoryCheck $inventoryCheck)
     {
 
+
+       
         if ($request->has('resolve')) {
             $resolve = $request->input('resolve');
             foreach ($resolve as $r) {
                 if ($r['action'] == 'adjust') {
+                    $r['type'] = 'out';
                     AdjustmentEntry::create($r);
                     $inventory = Inventory::find($r['shoe_id']);
                     if ($inventory) {
                         $inventory->count -= abs($r['count']);
+
+                        $inventory->save();
+                    }
+                }else if($r['action'] == 'add'){
+                    $r['type'] = 'in';
+                    AdjustmentEntry::create($r);
+                    $inventory = Inventory::find($r['shoe_id']);
+                    if ($inventory) {
+                        $inventory->count += abs($r['count']);
                         $inventory->save();
                     }
                 }

@@ -43,8 +43,6 @@
 	</table>
 </form>
 @endif
-
-
 @if($inventoryCheck->partialMatchEntries->count() > 0)
 <h2>আংশিক মিল</h2>
 <table class="table table-striped text-center">
@@ -61,10 +59,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		
 		@foreach($inventoryCheck->partialMatchEntries as $entry)
-
-	
 		<tr id="shoe-{{ $entry->id }}" data-remaining="{{ $entry->remaining }}">
 			<td>{{ $entry->id }}</td>
 			<td>{{ $entry->factory }}</td>
@@ -75,7 +70,6 @@
 			<td>{{ $entry->total_count_breakdown }} = {{ $entry->count }}</td>
 			<td>{{ $entry->remaining }}</td>
 		</tr>
-	
 		@endforeach
 	</tbody>
 </table>
@@ -100,9 +94,8 @@
 
 	</thead>
 	<tbody>
-		
+
 		@foreach($inventoryCheck->extraMatchEntries as $entry)
-		
 		<tr id="shoe-{{ $entry->id }}" data-remaining="{{ $entry->remaining }}">
 			<td>{{ $entry->id }}</td>
 			<td>{{ $entry->factory }}</td>
@@ -148,4 +141,5 @@
 		@endforeach
 	</tbody>
 </table>
+
 @endif

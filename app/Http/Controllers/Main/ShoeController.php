@@ -91,7 +91,7 @@ class ShoeController extends Controller
     {
 
         if(!$request->ajax()) {
-            $shoe->load('purchaseEntries', 'invoiceEntries', 'acceptedFactoryReturnEntries', 'acceptedRetailReturnEntries');
+            $shoe->load('purchaseEntries', 'invoiceEntries', 'acceptedFactoryReturnEntries', 'acceptedRetailReturnEntries','adjustmentEntries');
         }
         return $shoe;
     }

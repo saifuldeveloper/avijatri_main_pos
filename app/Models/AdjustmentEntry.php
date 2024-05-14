@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class AdjustmentEntry extends Model
 {
     use HasFactory;
-    protected $fillable = ['shoe_id', 'count'];
+    protected $fillable = ['shoe_id', 'count' ,'type'];
 }
