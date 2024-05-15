@@ -17,7 +17,7 @@ class Shoe extends Model
 			return '100';
 		}
 		$lastId = hexdec($last->id);
-		$nextId = ($lastId + 1);
+		$nextId = dechex($lastId + 1);
 		return $nextId;
 	}
 

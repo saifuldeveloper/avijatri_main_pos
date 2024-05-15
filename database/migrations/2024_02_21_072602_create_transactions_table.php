@@ -19,7 +19,9 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->integer('closing_id')->nullable();
             $table->string('attachment_type')->nullable();
+            $table->string('transaction_type')->nullable();
             $table->integer('attachment_id')->default(0);
+            $table->string('payment_type')->nullable();
             $table->timestamps();
         });
     }

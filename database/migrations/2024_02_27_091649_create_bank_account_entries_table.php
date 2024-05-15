@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('account_type');
             $table->string('description')->nullable();
             $table->double('total_amount');
+            $table->string('type')->nullable();
             $table->timestamps();
         });
     }
