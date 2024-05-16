@@ -28,6 +28,9 @@ $(document).ready(function() {
 		var me = $(this);
 		if($('#transaction-account-type').val() == 'cheque') {
 			var url = $(this).attr('data-cheque-url').replace('#', $(this).val());
+			console.log(url);
+
+
 
 			$.get(url, [], function(data) {
 				if(data.due_amount == 0) {

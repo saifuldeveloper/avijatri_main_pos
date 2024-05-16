@@ -12,11 +12,6 @@ class BankAccountController extends \App\Http\Controllers\Main\BankAccountContro
     //     $this->middleware(['permission:manage bank accounts']);
     // }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $bankAccounts = parent::index();
@@ -57,8 +52,7 @@ class BankAccountController extends \App\Http\Controllers\Main\BankAccountContro
     {
 
         $bankAccount = parent::show($bankAccount);
-        $entries = $bankAccount->entries()->orderBy('id','desc')->paginate(10);
-        return view('bank-account.show', compact('bankAccount','entries'));
+        return view('bank-account.show', compact('bankAccount'));
     }
 
     /**
@@ -86,12 +80,6 @@ class BankAccountController extends \App\Http\Controllers\Main\BankAccountContro
         return back()->with('success-alert', 'ব্যাংক অ্যাকাউন্টের তথ্য এডিট হয়েছে।');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\BankAccount  $bankAccount
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(BankAccount $bankAccount)
     {
         $message = parent::destroy($bankAccount);

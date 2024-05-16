@@ -57,8 +57,7 @@ class BankAccountController extends Controller
     public function show(BankAccount $bankAccount)
     {
         $bankAccount->append('current_book');
-        // $bankAccount->current_book->append('entries');
-        $bankAccount->load('entries');
+        $bankAccount->getCurrentAccountBook()->append('entries');
         return $bankAccount;
     }
 

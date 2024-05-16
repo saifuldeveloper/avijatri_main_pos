@@ -197,7 +197,7 @@
                                         $account = App\Models\Factory::find($expense->toAccount->account_id);
                                     } elseif ($expense->toAccount->account_type == 'gift-supplier') {
                                         $account = App\Models\GiftSupplier::find($expense->toAccount->account_id);
-                                    } elseif ($expense->toAccount->account_type == 'Cheque') {
+                                    } elseif ($expense->toAccount->account_type == 'cheque') {
                                         $account = App\Models\Cheque::find($expense->toAccount->account_id);
                                     } elseif ($expense->toAccount->account_type == 'employee') {
                                         $account = App\Models\Employee::find($expense->toAccount->account_id);
@@ -214,8 +214,8 @@
                                     মহাজন তাগাদা -{{ $account->name }}
                                 @elseif ($expense->toAccount->account_type == 'gift-supplier')
                                     গিফট মহাজন তাগাদা - {{ $account->name }}
-                                @elseif ($expense->toAccount->account_type == 'Cheque')
-                                    check
+                                @elseif ($expense->toAccount->account_type == 'cheque')
+                                   {{ $account->name }}
                                 @elseif ($expense->toAccount->account_type == 'employee')
                                     স্টাফ -{{ $account->name }}
                                 @elseif ($expense->toAccount->account_type == 'loan')

@@ -37,8 +37,13 @@
 				<table class="table m-0">
 					<tbody>
 						@php
-							$size = $cheque->current_book->entries->count();
+							$size = 0;
+
+							if ($cheque !== null && $cheque->current_book !== null && $cheque->current_book->entries !== null) {
+								$size = $cheque->current_book->entries->count();
+							}
 						@endphp
+
 						@if($size > 0)
 						@foreach($cheque->current_book->entries as $j => $entry)
 						<tr>

@@ -21,8 +21,6 @@ class BankAccount extends Model
         }
         return self::$cashAccount;
     }
-
-
     public function getCurrentAccountBook()
     {
         return $this->accountBooks()->latest()->first();
@@ -31,9 +29,8 @@ class BankAccount extends Model
     {
         return $this->hasMany(AccountBook::class ,'account_id','id')->where('account_type','bank-account');
     }
-
     public function entries(){
-        return $this->hasMany(BankAccountEntry::class,'account_id','id');
+        return $this->hasMany(BankAccountEntry::class,'account_id','id')->orderBy('created_at','desc');
     }
 
     // Attributes

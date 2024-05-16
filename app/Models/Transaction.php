@@ -60,7 +60,7 @@ class Transaction extends Model
 	public static function createTransaction($accountType, $account, $type, $bankAccount, $amount, $description = '', $attachment = null, $closing = null)
 	{
 
-		// dd($accountType,$account,$bankAccount);
+
 		$bankAccount = BankAccount::where('id', $bankAccount)->first();
 		switch ($accountType) {
 			case 'account-book':
@@ -96,7 +96,6 @@ class Transaction extends Model
 				} else {
 					$from_account_id = $account->getCurrentAccountBook()->id;
 				}
-			
 				$to_account_id = $bankAccount->getCurrentAccountBook()->id;
 				break;
 			case 'expense':
@@ -109,6 +108,20 @@ class Transaction extends Model
 				break;
 		}
 
+		// for bank transaction 
+
+		if ($bankAccount->account_no !== 'cash') {
+			$transaction               = new Transaction;
+			$transaction->fill(compact('from_account_id', 'to_account_id', 'amount', 'description'));
+			$transaction->transaction_type = ($type == 'deposit') ? 'deposit' :
+			                                 (($type == 'expense') ? 'withdraw' :
+											  (($type == 'income') ? 'deposit' :
+				                           	'withdraw'));
+
+			$transaction->payment_type     = $accountType;
+			$transaction->save();
+		}
+        
 		$transaction = new Transaction;
 		$transaction->fill(compact('from_account_id', 'to_account_id', 'amount', 'description'));
 		if ($closing !== null) {

@@ -125,7 +125,9 @@ Route::middleware('auth')->group(function () {
 		});
 		Route::get('return/unlisted/{retailStore}', [ReturnController::class, 'unlistedReturns'])->name('ajax.return.unlisted');
 		Route::get('shoe/show/{shoe}', [App\Http\Controllers\Main\ShoeController::class, 'show'])->name('ajax.shoe.show');
-		Route::resource('cheque', 'Api\ChequeController', ['as' => 'ajax'])->only(['show']);
+		// Route::resource('cheque', 'Main\ChequeController', ['as' => 'ajax'])->only(['show']);
+		Route::get('cheque/{cheque}', [App\Http\Controllers\Main\ChequeController::class, 'show'])->name('ajax.cheque.show');
+
 	});
 	Route::get('images/{template}/{filename}', function ($template, $filename) { })->name('imagecache');
 	Route::get('logout', [LoginController::class, 'logout'])->name('app.logout');

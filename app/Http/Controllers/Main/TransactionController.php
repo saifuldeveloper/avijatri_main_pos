@@ -10,6 +10,7 @@ use App\Models\AccountBook;
 use App\Models\BankAccount;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ChequeAccountEntries;
 use App\Models\Employee;
 use App\Models\EmployeeAccountEntry;
 use App\Models\Expense;
@@ -53,9 +54,6 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
 
-    
-        // dd($request->all());
-
         if($request->input('account_type') == 'withdraw' || $request->input('account_type') == 'deposit') {
             $transaction = Transaction::createBankToCashTransaction(
                 $request->input('account_type'),
@@ -92,6 +90,9 @@ class TransactionController extends Controller
 
 
         } else if($request->input('account_type') == 'cheque') {
+
+
+            dd($request->all());
                $transaction = Transaction::createTransaction(
                 $request->input('account_type'),
                 $request->input('cheque_no'),
@@ -101,6 +102,8 @@ class TransactionController extends Controller
                 $request->input('description')
             );
         } else if($request->input('account_type') == 'retail-closing') {
+
+       
             $transaction = Transaction::createTransaction(
                 'account-book',
                 $request->input('account_id'),

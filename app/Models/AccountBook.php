@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\View\BankAccountEntry;
 use App\Models\View\FactoryAccountEntry;
 use App\Models\View\RetailStoreAccountEntry;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -109,13 +110,13 @@ class AccountBook extends Model
             return $this->hasMany(GiftSupplierAccountEntry::class);
         }
         if($this->account_type == 'cheque') {
-            return $this->hasMany('App\Views\ChequeAccountEntry');
+            return $this->hasMany(ChequeAccountEntries::class);
         }
         if($this->account_type == 'bank-account') {
-            return $this->hasMany('App\Views\BankAccountEntry');
+            return $this->hasMany(BankAccountEntry::class);
         }
         if($this->account_type == 'employee') {
-            return $this->hasMany('App\Views\EmployeeAccountEntry');
+            return $this->hasMany(EmployeeAccountEntry::class);
         }
         if($this->account_type == 'loan') {
             return $this->hasMany('App\Views\LoanAccountEntry');

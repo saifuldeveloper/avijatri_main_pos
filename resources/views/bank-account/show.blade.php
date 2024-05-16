@@ -36,7 +36,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach($entries as $i => $entry)
+		@foreach($bankAccount->entries as $i => $entry)
 		<tr>
 			<td>{{ $i + 1 }}</td>
 			<td>{{ dateTimeFormat($entry->created_at) }}</td>

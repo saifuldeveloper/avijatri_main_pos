@@ -19,16 +19,30 @@ class Cheque extends Model
 			$cheque->closing_id = $closing;
 		}
 		$account_book->cheques()->save($cheque);
+		$account_book               = new AccountBook;
+		$account_book->account_id   =$cheque->id;
+		$account_book->account_type ='cheque';
+		$account_book->save();
 
-		$cheque->accountBooks()->save(new AccountBook());
+		$entry                  =new ChequeAccountEntries;
+		$entry->entry_id        =$cheque->id;
+		$entry->account_book_id ==$cheque->account_book_id;
+		$entry->total_amount    =$amount;
+		$entry->save();
 		return $cheque;
 	}
 
-	// Relationships
-	public function accountBooks() {
-		return $this->morphMany(AccountBook::class, 'account');
-	}
 
+	public function getCurrentAccountBook()
+    {
+        return $this->accountBooks()->latest()->first();
+    }
+
+	// Relationships
+	public function accountBooks()
+    {
+        return $this->hasMany(AccountBook::class ,'account_id','id')->where('account_type','cheque');
+    }
 	public function accountBook() {
 		return $this->belongsTo(AccountBook::class);
 	}
