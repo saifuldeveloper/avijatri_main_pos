@@ -12,6 +12,7 @@ use App\Models\Cheque;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\AccountBook;
+use App\Models\BankAccount;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use App\Models\View\FactoryAccountEntry;
@@ -49,6 +50,11 @@ class PurchaseController extends Controller
         $accountBook = $factory->getCurrentAccountBook();
         $purchase    = new Purchase;
         $accountBook->purchases()->save($purchase);
+        $bankAccount =BankAccount::find($request->input('payment_method'));    
+        
+        $count =0;
+        $total_purchase_price =0;
+        $total_retail_price =0;
         foreach ($request->input('purchases') as $i => $row) {
             if (isset($row['category_id'])) {
                 if ($request->file("purchases.{$i}.image")) {
@@ -93,7 +99,14 @@ class PurchaseController extends Controller
              $inventory->image          = $row['image'];
              $inventory->save(); 
              }
+
+             $total_p_price =$row['purchase_price'] * $row['count'] / 12;
+             $total_r_price = $row['retail_price'] * $row['count'] ;
+             $count += $row['count'];
+             $total_purchase_price += $total_p_price;
+             $total_retail_price += $total_r_price;
         }
+        
         if ($request->filled('payment_amount') && $request->input('payment_amount') > 0) {
 
             $purchase->payment_amount = $request->input('payment_amount');
@@ -103,23 +116,29 @@ class PurchaseController extends Controller
             } else {
                 $description = $request->has('cheque_no') ? 'চেক নং ' . $request->input('cheque_no') : null;
                 $transaction= Transaction::createTransaction('factory', $factory->id, 'expense', $request->input('payment_method'), $request->input('payment_amount'), $description, $purchase);
-                $accountEntries             = new FactoryAccountEntry;
-                $accountEntries->account_id = $factory->id;
+                $accountEntries                  = new FactoryAccountEntry;
+                $accountEntries->account_id      = $bankAccount->id;
+                $accountEntries->account_name    = $bankAccount->bank;
                 $accountEntries->account_book_id = $accountBook->id;
-                $accountEntries->entry_type  =2;
-                $accountEntries->entry_id    =$transaction->id;
-                $accountEntries->total_amount=$request->input('payment_amount');
+                $accountEntries->entry_type      = 2;
+                $accountEntries->entry_id        = $transaction->id;
+                $accountEntries->total_amount    = $request->input('payment_amount');
                 $accountEntries->save();
             }
         }
-
-        $accountEntries             = new FactoryAccountEntry;
-        $accountEntries->account_id = $factory->id;
+         
+        $accountEntries                  = new FactoryAccountEntry;
         $accountEntries->account_book_id = $accountBook->id;
-        $accountEntries->entry_type =0;
-        $accountEntries->entry_id   =$purchase->id;
-        $accountEntries->save();
-
+        $accountEntries->entry_type      = 0;
+        $accountEntries->entry_id        = $factory->id;
+        $accountEntries->purchase_id     = $purchase->id;
+        $accountEntries->count           = $count;
+        $accountEntries->purchase_price  = $total_purchase_price;
+        $accountEntries->retail_price    = $total_retail_price;
+        $accountEntries->account_id      = $bankAccount->id;
+        $accountEntries->account_name    = $bankAccount->bank;
+        $accountEntries->total_amount    =$total_purchase_price;
+        $accountEntries->save();  
         $purchase->load('accountBook.account', 'purchaseEntries.shoe', 'transaction', 'cheque');
         return $purchase;
     }
@@ -150,7 +169,6 @@ class PurchaseController extends Controller
         $survived = [];
         $factory = Factory::find($request->input('factory_id'));
         if ($purchase->accountBook->open && $purchase->accountBook->account_id != $request->input('factory_id')) {
-            // $factory = Factory::find($request->input('factory_id'));
             $accountBook = $factory->getCurrentAccountBook();
             $purchase->accountBook()->associate($accountBook);
             $purchase->save();
@@ -210,7 +228,6 @@ class PurchaseController extends Controller
                     $inventory->save(); 
                     }
             }
-            //$survived[] = $shoeTransaction->id;
             $survived[] = $purchaseEntry->id;
         }
 
@@ -222,6 +239,24 @@ class PurchaseController extends Controller
                 $inventory->delete();
             }
         }
+        $purchaseEntries = $purchase->purchaseEntries()->with('shoe')->get();
+        $count =0;
+        $total_purchase_price =0;
+        $total_retail_price =0;
+        foreach($purchaseEntries as $item){
+            $total_p_price =$item->shoe->purchase_price * $item->count / 12;
+            $total_r_price = $item->shoe->retail_price * $item->count ;
+            $count += $item->count;
+            $total_purchase_price += $total_p_price;
+            $total_retail_price += $total_r_price;
+        }
+        $entry                 = FactoryAccountEntry::where('purchase_id', $purchase->id)->first();
+        $entry->count          = $count;
+        $entry->purchase_price = $total_purchase_price;
+        $entry->retail_price   = $total_retail_price;
+        $entry->total_amount   = $total_purchase_price;
+        $entry->save();
+
 
         $purchase->load('purchaseEntries.shoe');
         return $purchase;

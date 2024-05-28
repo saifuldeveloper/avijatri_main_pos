@@ -19,7 +19,7 @@ class FactoryController extends Controller
      */
     public function index()
     {
-        return Factory::orderBy('id','desc')->get();
+        return Factory::orderBy('id', 'desc')->get();
     }
 
     /**
@@ -34,19 +34,19 @@ class FactoryController extends Controller
         $factory->fill($request->all());
         $factory->save();
 
-        $account       =new Account;
-        $account->id   =$factory->id;
-        $account->type ='factory';
-        $account->name =$factory->name;
+        $account       = new Account;
+        $account->id   = $factory->id;
+        $account->type = 'factory';
+        $account->name = $factory->name;
         $account->save();
 
-        if($factory){
+        if ($factory) {
             $account_book               = new AccountBook;
-            $account_book->account_id   =$factory->id;
-            $account_book->account_type ='factory';
+            $account_book->account_id   = $factory->id;
+            $account_book->account_type = 'factory';
             $account_book->save();
         }
-        
+
         return $factory;
     }
 
@@ -58,8 +58,9 @@ class FactoryController extends Controller
      */
     public function show($id)
     {
-    
-        $factory = Factory::with('accountBooks.transactionsTo',)->find($id);
+
+        $factory = Factory::with('accountBooks',)->find($id);
+        $factory->load('entries');
         return $factory;
     }
 
@@ -90,15 +91,30 @@ class FactoryController extends Controller
         return collect(['success' => 'কারখানাদারের তথ্য মুছে ফেলা হয়েছে।']);
     }
 
-    public function closing(Request $request, Factory $factory) {
+    public function forceDelete($id)
+    {
+        $color = Factory::withTrashed()->find($id);
+        $color->forceDelete();
+        return collect(['success' => 'কারখানাদারের তথ্য স্থায়ীভাবে মুছে ফেলা হয়েছে।']);
+    }
+
+    public function restore($id)
+    {
+        $color = Factory::withTrashed()->find($id);
+        $color->restore();
+        return collect(['success' => 'কারখানাদারের তথ্য পুনরুদ্ধার করা হয়েছে।']);
+    }
+
+    public function closing(Request $request, Factory $factory)
+    {
         $accountBook = $factory->getCurrentAccountBook();
         $balance = $accountBook->balance;
 
         $accountBook->fill($request->all());
         $payments = $request->input('payment');
         $payment_sum = 0;
-        foreach($payments as $payment) {
-            if(empty($payment['amount'])) {
+        foreach ($payments as $payment) {
+            if (empty($payment['amount'])) {
                 continue;
             }
             $transaction = Transaction::createTransaction('factory', $factory->id, 'expense', $payment['method'], $payment['amount'], '', null, $accountBook->id);
@@ -107,8 +123,8 @@ class FactoryController extends Controller
 
         $cheques = $request->input('cheque');
         $cheque_sum = 0;
-        foreach($cheques as $cheque_entry) {
-            if(empty($cheque_entry['id'])) {
+        foreach ($cheques as $cheque_entry) {
+            if (empty($cheque_entry['id'])) {
                 continue;
             }
             $cheque = Cheque::issue($cheque_entry['id'], $accountBook, $cheque_entry['amount'], $cheque_entry['due_date'], null, $accountBook->id);
@@ -119,7 +135,7 @@ class FactoryController extends Controller
         $accountBook->open = false;
         $accountBook->save();
         $factory->accountBooks()->save(new AccountBook());
-        
+
         $factory->append('current_book');
         return $factory;
     }

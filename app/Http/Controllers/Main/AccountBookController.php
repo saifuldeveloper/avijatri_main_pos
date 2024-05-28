@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\RetailStore;
 use App\Models\Factory;
+use App\Models\GiftSupplierAccountEntry;
+use App\Models\View\FactoryAccountEntry;
 
 class AccountBookController extends Controller
 {
@@ -41,14 +43,7 @@ class AccountBookController extends Controller
      */
     public function show(AccountBook $accountBook)
     {
-      
-        $accountBook->load('account',
-                            'retailAccount',
-                            'closingTransactions',
-                            'transactionsTo',
-                            'factoryentries.purchase.purchaseEntries.shoe',
-                            'factoryentries.returnshoe.returnentries.shoe');
-
+        $accountBook->load('account','retailAccount',);
         $accountBook->append('entries');
  
         switch($accountBook->account_type) {
@@ -92,39 +87,53 @@ class AccountBookController extends Controller
     }
 
     public function closing(Request $request, AccountBook $accountBook) {
+
+
         switch($accountBook->account_type) {
             case 'factory':
+
             $balance = $accountBook->balance;
             $accountBook->fill($request->all());
-
             $payments = $request->input('payment');
             $payment_sum = 0;
-            foreach($payments as $payment) {
-                if(empty($payment['amount'])) {
-                    continue;
+            if ($payments !== null) {
+                $payment_amounts = array_column($payments, 'amount');
+                $payment_sum = array_sum($payment_amounts);
+                foreach ($payments as $payment) {
+                    if (empty($payment['amount']) || empty($payment['method'])) {
+                        continue;
+                    }
+                    $transaction = Transaction::createTransaction('account-book', $accountBook->id, 'expense', $payment['method'],  $payment['amount'], '',  null, $accountBook->id
+                    );
                 }
-                $transaction = Transaction::createTransaction('account-book', $accountBook->id, 'expense', $payment['method'], $payment['amount'], '', null, $accountBook->id);
-                $payment_sum += $payment['amount'];
             }
-
             $cheques = $request->input('cheque');
             $cheque_sum = 0;
-            foreach($cheques as $cheque_entry) {
-                if(empty($cheque_entry['id'])) {
-                    continue;
-                }
-                $cheque = Cheque::issue($cheque_entry['id'], $accountBook, $cheque_entry['amount'], $cheque_entry['due_date'], null, $accountBook->id);
-                $cheque_sum += $cheque_entry['amount'];
-            }
+            if ($cheques !== null) {
+                $cheque_amounts = array_column($cheques, 'amount');
+                $cheque_sum = array_sum($cheque_amounts);
+                foreach($cheques as $cheque_entry) {
+                    if(empty($cheque_entry['id'])) {
+                        continue;
+                    }
+                    $cheque = Cheque::issue($cheque_entry['id'], $accountBook, $cheque_entry['amount'], $cheque_entry['due_date'], null, $accountBook->id);
 
-            $accountBook->closing_balance = $balance - $accountBook->commission - $accountBook->staff - $payment_sum - $cheque_sum;
+                }  
+           }
+           $accountEntries                  = new FactoryAccountEntry;
+           $accountEntries->account_book_id = $accountBook->id;
+           $accountEntries->entry_type      = 2;
+           $accountEntries->entry_id        = $accountBook->id;
+           $accountEntries-> total_amount    = $payment_sum + $cheque_sum;
+           $accountEntries->closing_id      = $accountBook->id;
+           $accountEntries->save();
+           $accountBook->closing_balance = $balance - $accountBook->commission - $accountBook->staff - $payment_sum - $cheque_sum;
             break;
+
 
             case 'retail-store':
             $balance = $accountBook->balance;
-
             $accountBook->fill($request->all());
-
             $payments = $request->input('payment');
             $payment_sum = 0;
             foreach($payments as $payment) {
@@ -137,6 +146,43 @@ class AccountBookController extends Controller
 
             $accountBook->closing_balance = $balance - $accountBook->commission - $accountBook->staff - $payment_sum;
             break;
+            case 'gift-supplier':
+                $balance = $accountBook->balance;
+                $accountBook->fill($request->all());
+                $payments = $request->input('payment');
+                $payment_sum = 0;
+                if ($payments !== null) {
+                    $payment_amounts = array_column($payments, 'amount');
+                    $payment_sum = array_sum($payment_amounts);
+                    foreach ($payments as $payment) {
+                        if (empty($payment['amount']) || empty($payment['method'])) {
+                            continue;
+                        }
+                        $transaction = Transaction::createTransaction('account-book', $accountBook->id, 'expense', $payment['method'],  $payment['amount'], '',  null, $accountBook->id
+                        );
+                    }
+                }
+                $cheques = $request->input('cheque');
+                $cheque_sum = 0;
+                if ($cheques !== null) {
+                    $cheque_amounts = array_column($cheques, 'amount');
+                    $cheque_sum = array_sum($cheque_amounts);
+                    foreach($cheques as $cheque_entry) {
+                        if(empty($cheque_entry['id'])) {
+                            continue;
+                        }
+                        $cheque = Cheque::issue($cheque_entry['id'], $accountBook, $cheque_entry['amount'], $cheque_entry['due_date'], null, $accountBook->id);
+    
+                    }  
+               }
+               $accountEntries                  = new GiftSupplierAccountEntry;
+               $accountEntries->account_book_id = $accountBook->id;
+               $accountEntries->entry_type      = 2;
+               $accountEntries->entry_id        = $accountBook->id;
+               $accountEntries-> total_amount   = $payment_sum + $cheque_sum;
+               $accountEntries->closing_id      = $accountBook->id;
+               $accountEntries->save();
+               break;
         }
         $accountBook->open = false;
         $accountBook->closing_date = \Carbon\Carbon::today();

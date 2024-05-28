@@ -20,7 +20,8 @@ class ExpenseController extends \App\Http\Controllers\Main\ExpenseController
     public function index()
     {
         $expenses = parent::index();
-        return view('expense.index', compact('expenses'));
+        $trashExpenses = Expense::onlyTrashed()->get();
+        return view('expense.index', compact('expenses', 'trashExpenses'));
     }
 
     /**
@@ -56,8 +57,8 @@ class ExpenseController extends \App\Http\Controllers\Main\ExpenseController
     public function show(Expense $expense)
     {
         $expense = parent::show($expense);
-        $entreis = $expense->entries()->paginate(10);
-        return view('expense.show', compact('expense','entreis'));
+        $entries = $expense->entries()->paginate(10);
+        return view('expense.show', compact('expense', 'entries'));
     }
 
     /**
@@ -97,10 +98,24 @@ class ExpenseController extends \App\Http\Controllers\Main\ExpenseController
         return back()->with('success-alert', $message['success']);
     }
 
-    public function datalist() {
-        preventHttp();
+    public function forceDelete($expense)
+    {
+        $message = parent::forceDelete($expense);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function restore($expense)
+    {
+        $message = parent::restore($expense);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function datalist()
+    {
+        // preventHttp();
         $model = 'expense';
         $list = Expense::all();
+
         return view('layouts.datalist', compact('model', 'list'));
     }
 }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('account_book_id');
             $table->double('payment_amount')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

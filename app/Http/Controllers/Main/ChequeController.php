@@ -14,18 +14,20 @@ class ChequeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $cheques = Cheque::with('accountBook.account')->paginate(20);
-    
-        foreach ($cheques as $cheque) {
-            $cheque->append('current_book');
-            if ($cheque->current_book !== null) {
-                $cheque->current_book->load('entries');
-            }
+{
+    $cheques = Cheque::with('accountBook.account', 'accountBook.giftSupplierAccount')->paginate(10);
+    $cheques->map(function ($cheque) {
+        $cheque->getCurrentAccountBook();
+        if ($cheque->getCurrentAccountBook() !== null) {
+            $cheque->load('entries');
         }
-        
-        return $cheques;
-    }
+        return $cheque;
+    });
+
+    return $cheques;
+}
+
+    
 
     /**
      * Store a newly created resource in storage.

@@ -33,17 +33,17 @@ class GiftSupplierController extends Controller
         $giftSupplier->save();
 
         $account = new Account;
-        $account->id =$giftSupplier->id;
-        $account->type ='gift-supplier';
-        $account->name =$giftSupplier->name;
+        $account->id = $giftSupplier->id;
+        $account->type = 'gift-supplier';
+        $account->name = $giftSupplier->name;
         $account->save();
 
-        
 
-        if($giftSupplier){
+
+        if ($giftSupplier) {
             $account_book = new AccountBook;
-            $account_book->account_id =$giftSupplier->id;
-            $account_book->account_type ='gift-supplier';
+            $account_book->account_id = $giftSupplier->id;
+            $account_book->account_type = 'gift-supplier';
             $account_book->save();
         }
         // $giftSupplier->accountBooks()->save(new AccountBook());
@@ -59,11 +59,10 @@ class GiftSupplierController extends Controller
      */
     public function show(GiftSupplier $giftSupplier)
     {
-        $giftSupplier->append('current_book');
-        $giftSupplier->load('entries','accountBooks');
+        $giftSupplier->getCurrentAccountBook();
+        $giftSupplier->load('entries');
         return $giftSupplier;
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -88,6 +87,20 @@ class GiftSupplierController extends Controller
     public function destroy(GiftSupplier $giftSupplier)
     {
         $giftSupplier->delete();
-        return collect(['success' => 'কারখানাদারের তথ্য মুছে ফেলা হয়েছে।']);
+        return collect(['success' => 'গিফট মহাজন তথ্য মুছে ফেলা হয়েছে।']);
+    }
+
+    public function forceDelete($id)
+    {
+        $giftSupplier = GiftSupplier::onlyTrashed()->find($id);
+        $giftSupplier->forceDelete();
+        return collect(['success' => 'গিফট মহাজন তথ্য স্থায়ীভাবে মুছে ফেলা হয়েছে।']);
+    }
+
+    public function restore($id)
+    {
+        $giftSupplier = GiftSupplier::onlyTrashed()->find($id);
+        $giftSupplier->restore();
+        return collect(['success' => 'গিফট মহাজন তথ্য পুনরুদ্ধার করা হয়েছে।']);
     }
 }

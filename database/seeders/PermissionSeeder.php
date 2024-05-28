@@ -34,7 +34,37 @@ class PermissionSeeder extends Seeder
         Permission::create(['name' => 'manage shoes']);
         Permission::create(['name' => 'manage transactions']);
 
-        $role = Role::findByName('operator');
+        // edit the role name as per your requirement
+        Permission::create(['name' => 'edit factories']);
+        Permission::create(['name' => 'edit retail stores']);
+        Permission::create(['name' => 'edit bank accounts']);
+        Permission::create(['name' => 'edit gift suppliers']);
+        Permission::create(['name' => 'edit employees']);
+        Permission::create(['name' => 'edit loans']);
+        Permission::create(['name' => 'edit colors']);
+        Permission::create(['name' => 'edit expenses']);
+        Permission::create(['name' => 'edit categories']);
+        Permission::create(['name' => 'edit gifts']);
+        Permission::create(['name' => 'edit invoices']);
+        Permission::create(['name' => 'edit purchases']);
+
+        // delete the role name as per your requirement
+        Permission::create(['name' => 'delete factories']);
+        Permission::create(['name' => 'delete retail stores']);
+        Permission::create(['name' => 'delete bank accounts']);
+        Permission::create(['name' => 'delete gift suppliers']);
+        Permission::create(['name' => 'delete employees']);
+        Permission::create(['name' => 'delete loans']);
+        Permission::create(['name' => 'delete colors']);
+        Permission::create(['name' => 'delete expenses']);
+        Permission::create(['name' => 'delete categories']);
+        Permission::create(['name' => 'delete gifts']);
+        Permission::create(['name' => 'delete invoices']);
+        Permission::create(['name' => 'delete purchases']);
+
+
+
+        $role = Role::findByName('super-admin');
         $role->givePermissionTo('manage bank accounts');
         $role->givePermissionTo('manage categories');
         $role->givePermissionTo('manage cheques');

@@ -15,7 +15,8 @@ class BankAccountController extends \App\Http\Controllers\Main\BankAccountContro
     public function index()
     {
         $bankAccounts = parent::index();
-        return view('bank-account.index', compact('bankAccounts'));
+        $trashBankAccounts = BankAccount::onlyTrashed()->get();
+        return view('bank-account.index', compact('bankAccounts', 'trashBankAccounts'));
     }
 
     /**
@@ -83,6 +84,18 @@ class BankAccountController extends \App\Http\Controllers\Main\BankAccountContro
     public function destroy(BankAccount $bankAccount)
     {
         $message = parent::destroy($bankAccount);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function forceDelete($bankAccount)
+    {
+        $message = parent::forceDelete($bankAccount);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function restore($bankAccount)
+    {
+        $message = parent::restore($bankAccount);
         return back()->with('success-alert', $message['success']);
     }
 }

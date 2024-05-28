@@ -30,6 +30,7 @@ function updateSum() {
 	var totalCheque = $('.input-total-cheque').length > 0 ? $('.input-total-cheque').first().extractFloat() : 0;
 
 	var commissionDeducted = totalPayable - commission;
+
 	var remaining = commissionDeducted - staff;
 	var totalRemaining = remaining - totalPaid - totalCheque;
 

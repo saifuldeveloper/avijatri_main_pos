@@ -7,11 +7,14 @@
 		<tr>
 			<td style="width:80%">
 				নাম: <strong>{{ $expense->name }}</strong><br>
-				মোট খরচ: <strong>{{ toFixed(@$entreis->sum('total_amount')) }}</strong>
+				মোট খরচ: <strong>
+					{{ isset($entries) ? toFixed($entries->sum('total_amount'), 2) : '0.00' }}
+
+				</strong>
 			</td>
 			<td style="width:20%">
 				@include('layouts.crud-buttons', ['model' => 'expense', 'parameter' => 'expense', 'object' => $expense])
-				<a href="#" class="btn btn-success btn-sm">ক্লোজিং</a>
+				{{-- <a href="#" class="btn btn-success btn-sm">ক্লোজিং</a> --}}
 			</td>
 		</tr>
 	</tbody>
@@ -27,7 +30,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach($entreis as $i => $entry)
+		@foreach($entries as $i => $entry)
 		<tr>
 			<td>{{ $i + 1 }}</td>
 			<td>{{ dateTimeFormat($entry->created_at) }}</td>
@@ -49,7 +52,7 @@
 		@endif --}}
 	</tbody>
 </table>
-{{ $entreis->links('pagination.default') }}
+{{ $entries->links('pagination.default') }}
 
 <div id="expense-form" class="modal fade form-modal" tabindex="-1" role="dialog" aria-labelledby="form-modal-title" aria-hidden="true">
 	<div class="modal-dialog" role="document">

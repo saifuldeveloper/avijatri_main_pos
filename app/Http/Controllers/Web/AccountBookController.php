@@ -7,8 +7,11 @@ use App\Models\BankAccount;
 use App\Models\ReturnToFactoryEntry;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Cheque;
+use App\Models\GiftSupplierAccountEntry;
 use App\Models\Purchase;
 use App\Models\PurchaseEntry;
+use App\Models\View\FactoryAccountEntry;
 use Illuminate\Support\Collection;
 
 class AccountBookController extends \App\Http\Controllers\Main\AccountBookController
@@ -52,36 +55,50 @@ class AccountBookController extends \App\Http\Controllers\Main\AccountBookContro
      */
     public function show(AccountBook $accountBook)
     {
-
         $accountBook = parent::show($accountBook);
-        $purchases = Purchase::with('purchaseEntries.shoe')->where('account_book_id', $accountBook->id)->orderBy('created_at', 'desc')->get();
-        $qty = 0;
-        $qty = $purchases->flatMap(function ($item) {
-            return $item->purchaseEntries->pluck('count'); })->sum();
-        $payment_amount = $purchases->map(function ($item) {
-            return $item;
-        })->sum('payment_amount');
-
-        $purchases_amount = $purchases->flatMap(function ($item) {
-            return $item->purchaseEntries->map(function ($entry) {
-                return $entry->shoe->purchase_price * $entry->count / 12;
-            });
-        })->sum();
-
-        $factoryEntries = $accountBook->factoryentries()->paginate(50); 
-        $returnsum = $factoryEntries->filter(fn($entry) => $entry->entry_type == 1)
-                        ->flatMap(fn($entry) => $entry->returnshoe?->returnentries)
-                        ->sum(fn($item) => ($item->shoe->purchase_price * $item->count) / 12);
-  
         switch ($accountBook->account_type) {
             case 'factory':
-                return view('factory.account-book', compact('accountBook','purchases_amount', 'payment_amount','factoryEntries','returnsum'));
+                $entries       = FactoryAccountEntry::where('account_book_id', $accountBook->id)->orderBy('created_at', 'desc')->where('status',1)->paginate(10);
+                $final_balance = 0;
+                $total_balance = [];
+                foreach ($entries->reverse() as $entry) {
+                if ($entry->entry_type == 0) {
+                $final_balance += $entry->total_amount;
+                } else {
+                $final_balance -= $entry->total_amount;
+                }
+                $total_balance[] = $final_balance;
+                }
+                $payment_amount = $entries->where('account_book_id',$accountBook->id)
+                                  ->where('entry_type', '2')->sum('total_amount');
+                $purchase_amount = $entries->where('account_book_id',$accountBook->id)
+                                  ->where('entry_type', '0')->sum('total_amount');
+                $return_amount = $entries->where('account_book_id',$accountBook->id)
+                                  ->where('entry_type', '1')->sum('total_amount');
+                $total_balance = array_reverse($total_balance);
+                return view('factory.account-book', compact('accountBook','entries','purchase_amount','payment_amount','return_amount','total_balance'));
 
             case 'retail-store':
                 return view('retail-store.account-book', compact('accountBook'));
             case 'gift-supplier':
-                  $accountBook->load('giftSupplierAccount');
-                return view('gift-supplier.account-book',compact('accountBook'));
+                $entries  = GiftSupplierAccountEntry::where('account_book_id', $accountBook->id)->orderBy('id', 'desc')->paginate(10);
+                $final_balance = 0;
+                $total_balance = [];
+                foreach ($entries->reverse() as $entry) {
+                if ($entry->entry_type == 0) {
+                $final_balance += $entry->total_amount;
+                } else {
+                $final_balance -= $entry->total_amount;
+                }
+                $total_balance[] = $final_balance;
+                }
+                $total_balance = array_reverse($total_balance);
+
+                $payment_amount = $entries->where('account_book_id',$accountBook->id)
+                ->where('entry_type', '2')->sum('total_amount');
+                $purchase_amount = $entries->where('account_book_id',$accountBook->id)
+                ->where('entry_type', '0')->sum('total_amount');
+                return view('gift-supplier.account-book',compact('accountBook','entries','total_balance','payment_amount','purchase_amount'));
         }
     }
 
@@ -121,17 +138,33 @@ class AccountBookController extends \App\Http\Controllers\Main\AccountBookContro
 
     public function closingPage(AccountBook $accountBook)
     {
+
         $accountBook->load('closingTransactions');
         $accountBook->appendClosingAttributes();
-
         $bankAccounts = BankAccount::all();
         switch ($accountBook->account_type) {
             case 'factory':
-                $accountBook->load('closingCheques');
-                return view('factory.closing', compact('accountBook', 'bankAccounts'));
+                $entries = FactoryAccountEntry::where('account_book_id',$accountBook->id)->get();
+                $payment_amount = $entries->where('entry_type', '2')->sum('total_amount');
+                $purchase_amount = $entries->where('entry_type', '0')->sum('total_amount');
+                $return_amount = $entries->where('entry_type', '1')->sum('total_amount');
+                $total_balance  =$purchase_amount -($payment_amount + $return_amount);
+                return view('factory.closing', compact('accountBook', 'bankAccounts','total_balance'));
 
             case 'retail-store':
                 return view('retail-store.closing', compact('accountBook', 'bankAccounts'));
+            case 'gift-supplier':
+                $entries =GiftSupplierAccountEntry::where('account_book_id',$accountBook->id)->get();
+                $payment_amount = $entries->where('entry_type', '2')->sum('total_amount');
+                $purchase_amount = $entries->where('entry_type', '0')->sum('total_amount');
+                $total_balance  =$purchase_amount -$payment_amount ;
+
+                $total_cheque_payment = Cheque::where('account_book_id', $accountBook->id)
+                              ->where('closing_id', $accountBook->id)
+                              ->sum('amount');
+
+             return view('gift-supplier.closing', compact('accountBook', 'bankAccounts','purchase_amount','payment_amount','total_balance','total_cheque_payment'));
+
         }
     }
 

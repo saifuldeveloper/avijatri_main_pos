@@ -33,14 +33,14 @@ class BankAccountController extends Controller
         $bankAccount->save();
 
         $account = new Account;
-        $account->id =$bankAccount->id;
-        $account->type ='bank-account';
-        $account->name =$bankAccount->bank;
+        $account->id = $bankAccount->id;
+        $account->type = 'bank-account';
+        $account->name = $bankAccount->bank;
         $account->save();
 
-        $accountBook =new AccountBook;
-        $accountBook->account_id =$bankAccount->id;
-        $accountBook->account_type ='bank-account';
+        $accountBook = new AccountBook;
+        $accountBook->account_id = $bankAccount->id;
+        $accountBook->account_type = 'bank-account';
         $accountBook->save();
 
         // $bankAccount->accountBooks()->save(new AccountBook());
@@ -56,7 +56,7 @@ class BankAccountController extends Controller
      */
     public function show(BankAccount $bankAccount)
     {
-        $bankAccount->append('current_book');
+        // $bankAccount->append('current_book');
         $bankAccount->getCurrentAccountBook()->append('entries');
         return $bankAccount;
     }
@@ -86,5 +86,19 @@ class BankAccountController extends Controller
     {
         $bankAccount->delete();
         return collect(['success' => 'ব্যাংক অ্যাকাউন্টের তথ্য মুছে ফেলা হয়েছে।']);
+    }
+
+    public function forceDelete($id)
+    {
+        $color = BankAccount::withTrashed()->find($id);
+        $color->forceDelete();
+        return collect(['success' => 'ব্যাংক অ্যাকাউন্টের তথ্য স্থায়ীভাবে মুছে ফেলা হয়েছে।']);
+    }
+
+    public function restore($id)
+    {
+        $color = BankAccount::withTrashed()->find($id);
+        $color->restore();
+        return collect(['success' => 'ব্যাংক অ্যাকাউন্টের তথ্য পুনরুদ্ধার করা হয়েছে।']);
     }
 }

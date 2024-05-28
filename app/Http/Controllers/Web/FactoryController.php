@@ -10,6 +10,7 @@ use App\Models\AccountBook;
 use App\Models\Purchase;
 use App\Models\PurchaseEntry;
 use App\Models\ReturnToFactory;
+use Illuminate\Support\Collection;
 
 class FactoryController extends \App\Http\Controllers\Main\FactoryController
 {
@@ -25,10 +26,8 @@ class FactoryController extends \App\Http\Controllers\Main\FactoryController
     public function index()
     {
         $factories = parent::index();
-
-
-
-        return view('factory.index', compact('factories'));
+        $trashFactories = Factory::onlyTrashed()->get();
+        return view('factory.index', compact('factories', 'trashFactories'));
     }
 
     /**
@@ -64,35 +63,7 @@ class FactoryController extends \App\Http\Controllers\Main\FactoryController
     public function show($id)
     {
         $factory = parent::show($id);
-        $account_book =AccountBook::where('account_id',$factory->id)->where('account_type','factory')->latest()->first();
-        $purchases = Purchase::with('purchaseEntries.shoe')->where('account_book_id', $account_book->id)->get();
-        $qty = 0;
-        $purchases_amount = 0;
-        $qty = $purchases->flatMap(function ($item) {
-            return $item->purchaseEntries->pluck('count'); })->sum();
-        $payment_amount = $purchases->map(function ($item) {
-            return $item;
-        })->sum('payment_amount');
-        $purchases_amount = $purchases->flatMap(function ($item) {
-            return $item->purchaseEntries->map(function ($entry) {
-                return $entry->shoe->purchase_price * $entry->count / 12;
-            });
-        })->sum();
-        
-        $returns = ReturnToFactory::where('account_id', $factory->id)
-            ->with('returnentries.shoe')
-            ->get();
-        $returns_amount = $returns->flatMap(function ($item) {
-            return $item->returnentries->map(function ($entry) {
-                return $entry->shoe->purchase_price * $entry->count / 12;
-            });
-
-        })->sum();
-
-        $balance = $purchases_amount - $payment_amount - $returns_amount;
-
-
-        return view('factory.show', compact('factory', 'balance'));
+        return view('factory.show', compact('factory'));
     }
 
     /**
@@ -132,11 +103,39 @@ class FactoryController extends \App\Http\Controllers\Main\FactoryController
         return redirect()->route('factory.index')->with('success-alert', $message['success']);
     }
 
+    public function forceDelete($factory)
+    {
+        $message = parent::forceDelete($factory);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function restore($factory)
+    {
+        $message = parent::restore($factory);
+        return back()->with('success-alert', $message['success']);
+    }
+
+
     public function closingPage(Factory $factory)
     {
         $factory->append('current_book');
         $factory->current_book->appendClosingAttributes();
-        $bankAccounts = BankAccount::all();
+
+        $bankAccount = BankAccount::all();
+        $bankAccounts = new Collection();
+        foreach ($bankAccount as $item) {
+            if ($item->bank === 'ক্যাশ') {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => 'ক্যাশ' 
+                ]);
+            } else {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
+                ]);
+            }
+        }
         return view('factory.closing', compact('factory', 'bankAccounts'));
     }
 

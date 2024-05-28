@@ -12,9 +12,8 @@
 				<strong>{{ $bankAccount->bank }}, {{ $bankAccount->branch }} শাখা</strong><br>
 				অ্যাকাউন্ট নং: <strong>{{ $bankAccount->account_no }}</strong><br>
 				@endif
-				ব্যালেন্স: <strong>
-					{{-- {{ toFixed($bankAccount->current_book->balance) }} --}}
-				</strong>
+				ব্যালেন্স: <strong>{{ isset($bankAccount->current_balance[0]) ? number_format($bankAccount->current_balance[0], 2) : '0.00' }}</strong>
+
 			</td>
 			<td style="width:20%">
 				@include('layouts.crud-buttons', ['model' => 'bank-account',  'parameter' =>'bank_account'  ,   'object' => $bankAccount])
@@ -58,7 +57,7 @@
 			<td>-</td>
 			<td>{{ toFixed($entry->total_amount) }}</td>
 			@endif
-			<td>{{ toFixed($entry->balance) }}</td>
+			<td>{{ toFixed($bankAccount->current_balance[$i]) }}</td>
 		</tr>
 		@endforeach
 		{{-- @if($bankAccount->current_book->entries->currentPage() == $bankAccount->current_book->entries->lastPage()

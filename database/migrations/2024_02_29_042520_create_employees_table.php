@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('mobile_no');
             $table->string('image')->nullable();
             $table->double('limit')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

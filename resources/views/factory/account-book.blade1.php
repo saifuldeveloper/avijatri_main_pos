@@ -190,15 +190,12 @@
                         </td>
                         <td>-</td>
                         <td>
-                            {{ toFixed($entry->purchase->payment_amount) }}
+                            {{ toFixed($entry->total_amount) }}
                         </td>
                         <td>
-                            @php
-                            $sumprice = $entry->purchase->purchaseEntries->sum(function ($entry) {
-                                return ($entry->shoe->purchase_price * $entry->count) / 12;
-                            });
-                          @endphp
-                            {{ toFixed($sumprice - $entry->purchase->payment_amount) }}
+							{{ toFixed($entry->total_amount) }}
+							
+						
                         </td>
 
                     @else

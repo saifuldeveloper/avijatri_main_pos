@@ -28,6 +28,9 @@ class ReturnController extends Controller
         $returnfactory->account_book_id = $accountBook->id;
         $returnfactory->save();
 
+        $count =0;
+        $purchase_price = 0;
+        $retail_price   = 0;
         foreach ($request->input('returns') as $i => $row) {
             $returnEntry                  = new ReturnToFactoryEntry();
             $returnEntry->return_id       = $returnfactory->id;
@@ -36,11 +39,20 @@ class ReturnController extends Controller
             $returnEntry->count           = $row['count'];
             $returnEntry->save();
             $accountBook->returnToFactoryEntries()->save($returnEntry);
+
+            $shoe =Shoe::find($row['shoe_id']);
+            $purchase_price += $shoe->purchase_price *  $row['count'] / 12;
+            $retail_price   += $shoe->purchase_price *  $row['count'];
+            $count          +=$row['count'];
         }
         $accountEntries = new FactoryAccountEntry;
         $accountEntries->account_id      = $factory->id;
         $accountEntries->account_book_id = $accountBook->id;
         $accountEntries->entry_type      = 1;
+        $accountEntries->purchase_price  = $purchase_price;
+        $accountEntries->retail_price    = $retail_price;
+        $accountEntries->count           = $count;
+        $accountEntries->total_amount    = $purchase_price;
         $accountEntries->entry_id        = $returnfactory->id;
         $accountEntries->status          = 0;
         $accountEntries->save();
@@ -187,9 +199,17 @@ class ReturnController extends Controller
             $returnToFactory         = ReturnToFactory::find($returnEntry->return_id);
             $returnToFactory->status = 'accepted';
             $returnToFactory->save();
+
+
+            
+
+
             $accountEntries          = FactoryAccountEntry::where('entry_type', 1)->where('entry_id', $returnToFactory->id)->first();
             $accountEntries->status  = 1;
             $accountEntries->save();
+
+
+
             $inventory               = Inventory::find($returnEntry->shoe_id);
             $inventory->decrement('count', $returnEntry->count);
             $inventory->save();

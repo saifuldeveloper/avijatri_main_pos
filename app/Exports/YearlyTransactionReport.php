@@ -2,24 +2,24 @@
 
 namespace App\Exports;
 
-use App\Models\Expense;
-use App\Views\YearlyTransactionReportEntry;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 
 class YearlyTransactionReport implements FromView
 {
-	public function __construct($year) {
-		$this->year = $year;
-	}
+    protected $year, $month, $expenses;
+    public function __construct($year, $month, $expenses)
+    {
+        $this->year = $year;
+        $this->month = $month;
+        $this->expenses = $expenses;
+    }
 
     public function view(): View
     {
-        $expenses = Expense::all();
-        $entries = YearlyTransactionReportEntry::excelEntries($this->year);
-
-        return view('excel.transaction-report', compact('expenses', 'entries'));
+        $expenses = $this->expenses;
+        $month = $this->month;
+        $year = $this->year;
+        return view('excel.monthly-transaction-report', compact('expenses', 'year', 'month'));
     }
-
-    protected $year;
 }

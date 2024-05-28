@@ -20,7 +20,8 @@ class RetailStoreController extends Controller
     {
         $regular = RetailStore::where('onetime_buyer', false)->get();
         $onetime = RetailStore::where('onetime_buyer', true)->get();
-        return compact('regular', 'onetime');
+        $trashRetailStores = RetailStore::onlyTrashed()->get();
+        return compact('regular', 'onetime', 'trashRetailStores');
     }
 
     /**
@@ -36,16 +37,16 @@ class RetailStoreController extends Controller
         $retailStore->save();
 
         $account = new Account;
-        $account->id =$retailStore->id;
-        $account->type ='retail-store';
-        $account->name =$retailStore->shop_name;
+        $account->id = $retailStore->id;
+        $account->type = 'retail-store';
+        $account->name = $retailStore->shop_name;
         $account->save();
 
         $accountBook = new AccountBook;
-        $accountBook->account_id =$retailStore->id;
-        $accountBook->account_type ="retail-store";
+        $accountBook->account_id = $retailStore->id;
+        $accountBook->account_type = "retail-store";
         $accountBook->save();
-        
+
 
 
         // $retailStore->accountBooks()->save(new AccountBook());
@@ -92,7 +93,22 @@ class RetailStoreController extends Controller
         return collect(['success' => 'পার্টির তথ্য মুছে ফেলা হয়েছে।']);
     }
 
-    public function closing(Request $request, RetailStore $retailStore) {
+    public function forceDelete($id)
+    {
+        $color = RetailStore::withTrashed()->find($id);
+        $color->forceDelete();
+        return collect(['success' => 'পার্টির তথ্য স্থায়ীভাবে মুছে ফেলা হয়েছে।']);
+    }
+
+    public function restore($id)
+    {
+        $color = RetailStore::withTrashed()->find($id);
+        $color->restore();
+        return collect(['success' => 'পার্টির তথ্য পুনরুদ্ধার করা হয়েছে।']);
+    }
+
+    public function closing(Request $request, RetailStore $retailStore)
+    {
         $accountBook = $retailStore->getCurrentAccountBook();
         $balance = $accountBook->balance;
 
@@ -100,8 +116,8 @@ class RetailStoreController extends Controller
 
         $payments = $request->input('payment');
         $payment_sum = 0;
-        foreach($payments as $payment) {
-            if(empty($payment['amount'])) {
+        foreach ($payments as $payment) {
+            if (empty($payment['amount'])) {
                 continue;
             }
             $transaction = Transaction::createTransaction('retail-store', $retailStore->id, 'income', $payment['method'], $payment['amount'], '', null, $accountBook->id);
@@ -112,7 +128,7 @@ class RetailStoreController extends Controller
         $accountBook->open = false;
         $accountBook->save();
         $retailStore->accountBooks()->save(new AccountBook());
-        
+
         $retailStore->append('current_book');
         return $retailStore;
     }

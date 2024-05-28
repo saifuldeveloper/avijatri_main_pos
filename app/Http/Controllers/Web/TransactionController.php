@@ -6,12 +6,14 @@ use App\Models\Transaction;
 use App\Models\BankAccount;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Collection;
 
 class TransactionController extends \App\Http\Controllers\Main\TransactionController
 {
-    // public function __construct() {
-    //     $this->middleware(['permission:manage transactions']);
-    // }
+    public function __construct()
+    {
+        $this->middleware(['permission:manage transactions']);
+    }
 
     /**
      * Display a listing of the resource.
@@ -20,31 +22,45 @@ class TransactionController extends \App\Http\Controllers\Main\TransactionContro
      */
     public function index(Request $request)
     {
-        if($request->has('date')) {
+        if ($request->has('date')) {
             $date = \Carbon\CarbonImmutable::parse($request->input('date'));
         } else {
             $date = \Carbon\CarbonImmutable::today();
         }
         $data = parent::index($request);
         $accountTypes = [
-            (object)[ 'id' => 'withdraw',       'name' => 'ব্যাংক থেকে তোলা' ],
-            (object)[ 'id' => 'deposit',        'name' => 'ব্যাংক জমা' ],
-            (object)[ 'id' => 'factory',        'name' => 'মহাজন তাগাদা' ],
-            (object)[ 'id' => 'retail-store' ,  'name' => 'পার্টি জমা' ],
-            (object)[ 'id' => 'retail-closing', 'name' => 'পার্টি জমা (ক্লোজিং)' ],
-            (object)[ 'id' => 'gift-supplier',  'name' => 'গিফট মহাজন তাগাদা' ],
-            (object)[ 'id' => 'cheque',         'name' => 'চেক পরিশোধ' ],
-            (object)[ 'id' => 'employee',       'name' => 'স্টাফ' ],
-            (object)[ 'id' => 'loan-receipt',   'name' => 'হাওলাত আনা' ],
-            (object)[ 'id' => 'loan-payment',   'name' => 'হাওলাত ফেরত' ],
-            (object)[ 'id' => 'expense',        'name' => 'অন্যান্য খরচ' ],
+            (object)['id' => 'withdraw',       'name' => 'ব্যাংক থেকে তোলা'],
+            (object)['id' => 'deposit',        'name' => 'ব্যাংক জমা'],
+            (object)['id' => 'factory',        'name' => 'মহাজন তাগাদা'],
+            (object)['id' => 'retail-store',  'name' => 'পার্টি জমা'],
+            // (object)['id' => 'retail-closing', 'name' => 'পার্টি জমা (ক্লোজিং)'],
+            (object)['id' => 'gift-supplier',  'name' => 'গিফট মহাজন তাগাদা'],
+            (object)['id' => 'cheque',         'name' => 'চেক পরিশোধ'],
+            (object)['id' => 'employee',       'name' => 'স্টাফ'],
+            (object)['id' => 'loan-receipt',   'name' => 'হাওলাত আনা'],
+            (object)['id' => 'loan-payment',   'name' => 'হাওলাত ফেরত'],
+            (object)['id' => 'expense',        'name' => 'অন্যান্য খরচ'],
         ];
         $paymentTypes = [
-            (object)[ 'id' => 'income',  'name' => 'জমা' ],
-            (object)[ 'id' => 'expense', 'name' => 'খরচ' ],
+            (object)['id' => 'income',  'name' => 'জমা'],
+            (object)['id' => 'expense', 'name' => 'খরচ'],
         ];
-        $bankAccounts = BankAccount::all();
-        $bankAccounts->push((object)[ 'id' => 'cheque', 'name' => 'চেক' ]);
+        $bankAccount = BankAccount::all();
+        $bankAccounts = new Collection();
+        foreach ($bankAccount as $item) {
+            if ($item->bank === 'ক্যাশ') {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => 'ক্যাশ'
+                ]);
+            } else {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
+                ]);
+            }
+        }
+        $bankAccounts->push((object) ['id' => 'cheque', 'name' => 'চেক']);
         return view('transaction.index', compact('date', 'data', 'accountTypes', 'paymentTypes', 'bankAccounts'));
     }
 

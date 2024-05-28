@@ -34,28 +34,27 @@ class EmployeeController extends Controller
 
         $employee = new Employee;
         $employee->fill($request->all());
-        if($request->hasFile('image')) {
-                $image     = $request->file("image");
-                $extension = $image->getClientOriginalExtension();
-                $imageName = uniqid() . '.' . $extension;
-                $manager   = new ImageManager(new Driver());
-                $image     = $manager->read($image);
-                // $image->resize(300, 200);
-                $image->save('images/staff-image/' . $imageName);
-                $employee->image= $imageName;
-            
+        if ($request->hasFile('image')) {
+            $image     = $request->file("image");
+            $extension = $image->getClientOriginalExtension();
+            $imageName = uniqid() . '.' . $extension;
+            $manager   = new ImageManager(new Driver());
+            $image     = $manager->read($image);
+            // $image->resize(300, 200);
+            $image->save('images/staff-image/' . $imageName);
+            $employee->image = $imageName;
         }
         $employee->save();
 
-        $account       =new Account;
-        $account->id   =$employee->id;
-        $account->type ='employee';
-        $account->name =$employee->name;
+        $account       = new Account;
+        $account->id   = $employee->id;
+        $account->type = 'employee';
+        $account->name = $employee->name;
         $account->save();
 
-        $accountBook =new AccountBook;
-        $accountBook->account_id =$employee->id;
-        $accountBook->account_type ='employee';
+        $accountBook = new AccountBook;
+        $accountBook->account_id = $employee->id;
+        $accountBook->account_type = 'employee';
         $accountBook->save();
 
 
@@ -73,7 +72,6 @@ class EmployeeController extends Controller
     public function show(Employee $employee)
     {
         $employee->append('current_book');
-        // $employee->current_book->append('entries');
         $employee->load('entries');
         return $employee;
     }
@@ -88,7 +86,7 @@ class EmployeeController extends Controller
     public function update(Request $request, Employee $employee)
     {
         $employee->fill($request->all());
-        if($request->hasFile('image')) {
+        if ($request->hasFile('image')) {
             $filename = randomImageFileName();
             Image::make($request->file('image'))->save(imagePath($filename));
             $employee->image = $filename;
@@ -108,5 +106,19 @@ class EmployeeController extends Controller
     {
         $employee->delete();
         return collect(['success' => 'স্টাফের তথ্য মুছে ফেলা হয়েছে।']);
+    }
+
+    public function forceDelete($id)
+    {
+        $employee = Employee::onlyTrashed()->find($id);
+        $employee->forceDelete();
+        return collect(['success' => 'স্টাফের তথ্য স্থায়ীভাবে মুছে ফেলা হয়েছে।']);
+    }
+
+    public function restore($id)
+    {
+        $employee = Employee::onlyTrashed()->find($id);
+        $employee->restore();
+        return collect(['success' => 'স্টাফের তথ্য পুনরুদ্ধার করা হয়েছে।']);
     }
 }

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('gift_type_id');
             $table->integer('initial_count')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

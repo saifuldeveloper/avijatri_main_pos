@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     public function getCurrentAccountBook()
     {
@@ -15,11 +16,12 @@ class Employee extends Model
     }
     public function accountBooks()
     {
-        return $this->hasMany(AccountBook::class ,'account_id','id')->where('account_type','employee');
+        return $this->hasMany(AccountBook::class, 'account_id', 'id')->where('account_type', 'employee');
     }
 
-    public function entries(){
-        return $this->hasMany(EmployeeAccountEntry::class,'account_id','id');
+    public function entries()
+    {
+        return $this->hasMany(EmployeeAccountEntry::class, 'account_id', 'id');
     }
 
 

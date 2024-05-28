@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\GiftType;
 use App\Models\GiftTransaction;
 use App\Models\Shoe;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class Gift extends Model
 {
-        use HasFactory;
+    use HasFactory, SoftDeletes;
     public function giftType()
     {
         return $this->belongsTo(GiftType::class);

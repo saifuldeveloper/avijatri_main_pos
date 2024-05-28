@@ -99,6 +99,7 @@
                 </tfoot>
             </table>
         </div>
+
         <div class="col-lg-6">
             <h3>বিক্রি</h3>
             <table class="table table-striped">
@@ -116,16 +117,16 @@
                     @php
                         $total = 0;
                     @endphp
-                     
-					{{-- @dd($data->incomes) --}}
+
+                    {{-- @dd($data->incomes) --}}
 
                     @foreach ($data->incomes as $i => $income)
                         @if ($income->amount == 0)
                             @continue
                         @endif
                         <tr>
-                           
-							<td>
+
+                            <td>
                                 @php
                                     if ($income->fromAccount->account_type == 'bank-account') {
                                         $account = App\Models\BankAccount::find($income->fromAccount->account_id);
@@ -135,20 +136,19 @@
                                         $account = App\Models\Cheque::find($income->fromAccount->account_id);
                                     } elseif ($income->fromAccount->account_type == 'loan') {
                                         $account = App\Models\Loan::find($income->fromAccount->account_id);
-                                    } 
+                                    }
                                 @endphp
 
                                 @if ($income->fromAccount->account_type == 'bank-account')
                                     ব্যাংক তোলা - {{ @$account->bank }} ({{ @$account->account_no }})
                                 @elseif($income->fromAccount->account_type == 'retail-store')
-								     পার্টি জমা -{{ $account->shop_name }}
+                                    পার্টি জমা -{{ $account->shop_name }}
                                 @elseif ($income->fromAccount->account_type == 'gift-supplier')
                                     গিফট মহাজন তাগাদা - {{ $account->name }}
                                 @elseif ($income->fromAccount->account_type == 'Cheque')
                                     check
-                    
                                 @elseif ($income->fromAccount->account_type == 'loan')
-                                    হাওলাত {{ $account->name }}
+                                    হাওলাত আনা {{ $account->name }}
                                 @endif
                             </td>
                             <td class="text-right">{{ toFixed($income->amount) }}</td>
@@ -174,6 +174,7 @@
                 </tbody>
             </table>
         </div>
+
         <div class="col-lg-6">
             <h3>তাগাদা</h3>
             <table class="table table-striped">
@@ -215,11 +216,11 @@
                                 @elseif ($expense->toAccount->account_type == 'gift-supplier')
                                     গিফট মহাজন তাগাদা - {{ $account->name }}
                                 @elseif ($expense->toAccount->account_type == 'cheque')
-                                   {{ $account->name }}
+                                    {{ $account->name }}
                                 @elseif ($expense->toAccount->account_type == 'employee')
                                     স্টাফ -{{ $account->name }}
                                 @elseif ($expense->toAccount->account_type == 'loan')
-                                    হাওলাত {{ $account->name }}
+                                    হাওলাত ফেরত {{ $account->name }}
                                 @elseif ($expense->toAccount->account_type == 'expense')
                                     অন্যান্য খরচ-{{ $account->name }}
                                 @endif
@@ -255,5 +256,8 @@
 @endsection
 
 @section('page-script')
+    <script>
+        var employeeLimitUrl = "{{ route('datalist.employee.limit') }}";
+    </script>
     <script type="text/javascript" src="{{ asset('js/transaction/index.js') }}"></script>
 @endsection

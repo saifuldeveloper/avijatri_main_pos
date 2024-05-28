@@ -21,7 +21,8 @@ class GiftController extends \App\Http\Controllers\Main\GiftController
     public function index()
     {
         $gifts = parent::index();
-        return view('gift.index', compact('gifts'));
+        $trashGifts = Gift::onlyTrashed()->get();
+        return view('gift.index', compact('gifts', 'trashGifts'));
     }
 
     /**
@@ -95,6 +96,18 @@ class GiftController extends \App\Http\Controllers\Main\GiftController
     public function destroy(Gift $gift)
     {
         $message = parent::destroy($gift);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function forceDelete($color)
+    {
+        $message = parent::forceDelete($color);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function restore($color)
+    {
+        $message = parent::restore($color);
         return back()->with('success-alert', $message['success']);
     }
 }

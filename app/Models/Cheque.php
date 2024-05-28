@@ -24,11 +24,11 @@ class Cheque extends Model
 		$account_book->account_type ='cheque';
 		$account_book->save();
 
-		$entry                  =new ChequeAccountEntries;
-		$entry->entry_id        =$cheque->id;
-		$entry->account_book_id ==$cheque->account_book_id;
-		$entry->total_amount    =$amount;
-		$entry->save();
+		// $entry                  =new ChequeAccountEntries;
+		// $entry->entry_id        =$cheque->id;
+		// $entry->account_book_id =$cheque->account_book_id;
+		// $entry->total_amount    =$amount;
+		// $entry->save();
 		return $cheque;
 	}
 
@@ -46,26 +46,55 @@ class Cheque extends Model
 	public function accountBook() {
 		return $this->belongsTo(AccountBook::class);
 	}
+	
 
 	public function closingAccount() {
 		return $this->belongsTo(AccountBook::class, 'closing_id');
 	}
 
-	public function attachment() {
-		return $this->morphTo();
-	}
+	// public function attachment() {
+	// 	return $this->morphTo();
+	// }
+
+	public function entries()
+    {
+        return $this->hasMany(ChequeAccountEntries::class, 'entry_id', 'id')->orderBy('created_at', 'desc');
+    }
+
+	public function getCurrentBalanceAttribute()
+    {
+        $final_balance = 0;
+        $desired_balances = [];
+        foreach ($this->entries->reverse() as $entry) {
+            if ($entry->entry_type == 0) {
+                $final_balance += $entry->total_amount;
+            }
+            $desired_balances[] = $final_balance;
+        }
+
+        return array_reverse($desired_balances);
+    }
+
+
+
 
 	// Attributes
 	public function getNameAttribute() {
-		return 'চেক - ' . $this->accountBook->account->name;
+		 if($this->accountBook->account_type == 'factory'){
+			return 'চেক - ' . $this->accountBook->account->name;
+		 }
+		return 'চেক - ' . $this->accountBook->giftSupplierAccount->name;
 	}
 
 	public function getDueAmountAttribute() {
 		return $this->amount - $this->accountBooks()->first()->transactionsTo()->sum('amount');
 	}
 
+
+
+
+
 	public $incrementing = false;
-	
     protected $fillable = ['id', 'account_book_id', 'amount', 'due_date'];
     protected $appends = ['name', 'due_amount'];
 }

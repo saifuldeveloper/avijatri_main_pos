@@ -17,13 +17,14 @@ return new class extends Migration
             $table->integer('entry_type')->default(0);
             $table->bigInteger('account_book_id');
             $table->string('gift_purchase_id')->nullable();
-            $table->string('gift_name')->nullable();
+            $table->longText('gift_name')->nullable();
             $table->integer('count')->nullable();
             $table->double('unit_price')->nullable();
             $table->double('total_amount')->nullable();
             $table->string('description')->nullable();
-            $table->bigInteger('account_id');
+            $table->bigInteger('account_id')->nullable();
             $table->mediumText('account_name')->nullable();
+            $table->string('closing_id')->nullable();
             $table->timestamps();
         });
     }

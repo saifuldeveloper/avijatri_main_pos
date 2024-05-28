@@ -12,7 +12,13 @@ if(!isset($transaction)) $transaction = null;
 	<td>
 		<select name="payment[{{ $index }}][method]" class="form-control required-value">
 			@foreach($bankAccounts as $bankAccount)
-			<option value="{{ $bankAccount->id }}"{{ ($transaction->toAccount->account->id ?? 0) == $bankAccount->id ? ' selected' : '' }}>{{ $bankAccount->name }}</option>
+				<option value="{{ $bankAccount->id }}">
+					@if($bankAccount->account_no == 'cash')
+						{{ str_replace('cash-', '', $bankAccount->bank) }}
+					@else
+						{{ $bankAccount->account_no }}-{{ $bankAccount->bank }}-{{ $bankAccount->branch }}
+					@endif
+				</option>
 			@endforeach
 		</select>
 	</td>

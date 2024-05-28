@@ -57,11 +57,11 @@
 					<tr>
 						<?php $amount = $accountBook->balance_before_closing; ?>
 						<td><strong>মোট দেনা</strong></td>
-						<td><input type="text" class="form-control text-right font-weight-bold input-total-payable" value="{{ toFixed($accountBook->balance_before_closing) }}" disabled></td>
+						<td><input type="text" class="form-control text-right font-weight-bold input-total-payable" value="{{ toFixed($total_balance) }}" disabled></td>
 					</tr>
 					<tr>
 						<td>কমিশন</td>
-						<td><input type="text" name="commission" class="form-control text-right input-commission update-sum taka" value="{{ $accountBook->open ? '' : toFixed($accountBook->commission) }}"></td>
+						<td><input type="text" name="commission" class="form-control text-right input-commission update-sum taka" value="{{ $accountBook->open ? '0.00' : toFixed($accountBook->commission) }}"></td>
 					</tr>
 					<tr>
 						<?php if(!$accountBook->open) $amount -= $accountBook->commission; ?>
@@ -70,7 +70,7 @@
 					</tr>
 					<tr>
 						<td>স্টাফ</td>
-						<td><input type="text" name="staff" class="form-control text-right input-staff update-sum taka" value="{{ $accountBook->open ? '' : toFixed($accountBook->staff) }}"></td>
+						<td><input type="text" name="staff" class="form-control text-right input-staff update-sum taka" value="{{ $accountBook->open ? '0.00' : toFixed($accountBook->staff) }}"></td>
 					</tr>
 					<tr>
 						<?php if(!$accountBook->open) $amount -= $accountBook->staff; ?>
@@ -153,7 +153,7 @@
 			<table class="table table-striped">
 				<tbody>
 					<tr>
-						<td width="80%">কারখানাদার {{ $accountBook->account->name }}-এর আর কোন পাওনা না থাকায় কারখানাদার খাতা ক্লোজ করা হলো।</td>
+						<td width="80%">মহাজন  {{ $accountBook->account->name }}-এর আর কোন পাওনা না থাকায় মহাজন  খাতা ক্লোজ করা হলো।</td>
 						<td width="20%"><button type="submit" class="btn btn-primary form-control disable-for-nonzero" disabled>ক্লোজ করুন</button></td>
 					</tr>
 				</tbody>

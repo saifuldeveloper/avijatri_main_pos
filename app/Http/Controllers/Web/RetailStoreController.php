@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\InvoiceEntry;
+use Illuminate\Support\Collection;
 
 class RetailStoreController extends \App\Http\Controllers\Main\RetailStoreController
 {
@@ -108,11 +109,37 @@ class RetailStoreController extends \App\Http\Controllers\Main\RetailStoreContro
         return redirect()->route('retail-store.index')->with('success-alert', $message['success']);
     }
 
+    public function forceDelete($factory)
+    {
+        $message = parent::forceDelete($factory);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function restore($factory)
+    {
+        $message = parent::restore($factory);
+        return back()->with('success-alert', $message['success']);
+    }
+
     public function closingPage(RetailStore $retailStore)
     {
         $retailStore->append('current_book');
         $retailStore->current_book->appendClosingAttributes();
-        $bankAccounts = BankAccount::all();
+        $bankAccount = BankAccount::all();
+        $bankAccounts = new Collection();
+        foreach ($bankAccount as $item) {
+            if ($item->bank === 'ক্যাশ') {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => 'ক্যাশ' 
+                ]);
+            } else {
+                $bankAccounts->push((object) [
+                    'id'   => $item->id,
+                    'name' => $item->bank . ' - ' . $item->branch . ' - (' . $item->account_no . ')'
+                ]);
+            }
+        }
         return view('retail-store.closing', compact('retailStore', 'bankAccounts'));
     }
 

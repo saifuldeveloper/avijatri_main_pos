@@ -12,20 +12,19 @@
 			</td>
 			<td style="width:50%">
 				মোট দেনা: <strong>
-					{{-- {{ toFixed($giftSupplier->current_book->balance) }} --}}
+					{{ isset($accountBook->giftSupplierAccount->current_balance[0]) ? toFixed($accountBook->giftSupplierAccount->current_balance[0]) : '0.00' }}
 				</strong><br>
 				তাগাদা: <strong>
-					{{-- {{ toFixed($giftSupplier->current_book->payment_percentage) }} --}}
-					%</strong>
+					@if ($purchase_amount != 0)
+		               	{{ toFixed($payment_amount / $purchase_amount * 100, 2) }} %
+		            @else 0.00 % @endif
 			</td>
 			<td style="width:20%">
-				{{-- @include('layouts.crud-buttons', ['model' => 'gift-supplier', 'parameter'=> 'gift_supplier','object' => $$accountBook->giftSupplierAccount]) --}}
-				<a href="#" class="btn btn-success btn-sm">ক্লোজিং</a>
+				<a href="{{ route('account-book.closing-page', compact('accountBook')) }}" class="btn btn-success btn-sm">ক্লোজিং</a>
 			</td>
 		</tr>
 	</tbody>
 </table>
-
 <table class="table table-striped table-bordered table-account-book text-center">
 	<thead>
 		<tr>
@@ -42,22 +41,37 @@
 		</tr>
 	</thead>
 	<tbody>
-		@foreach($accountBook->giftSupplierAccount->entries as $i => $entry)
+		@foreach($entries as $i => $entry)
 		<tr>
 			<td>{{ $i + 1 }}</td>
 			<td>{{ dateTimeFormat($entry->created_at) }}</td>
 			@if($entry->entry_type == 0)
 			<td>ক্রয়</td>
 			<td><a href="{{ route('gift-purchase.show', ['gift_purchase' => $entry->gift_purchase_id]) }}">{{ $entry->gift_purchase_id }}</a></td>
-			<td class="text-left">{{ $entry->gift_name }}</td>
+			<td class="text-left">
+				@foreach (json_decode($entry->gift_name) as $gift_name)
+					{{ $gift_name }}
+					@if (!$loop->last)
+						, 
+					@endif
+				@endforeach
+			</td>
+			
 			<td>{{ $entry->count }}</td>
 			<td>{{ $entry->unit_price > 0 ? toFixed($entry->unit_price) : 'পেন্ডিং' }}</td>
 			<td>{{ toFixed($entry->total_amount) }}</td>
 			<td>-</td>
 			@elseif($entry->entry_type == 2)
-			<td>তাগাদা</td>
+			<td>  
+				{{ isset($entry->closing_id) ? 'ক্লোজিং তাগাদা' : 'তাগাদা' }}
+
+
+			</td>
 			<td>-</td>
-			<td class="text-left" colspan="3">{{ $entry->account_name . ($entry->description === null ? '' : ' (' . $entry->description . ')') }}</td>
+			<td class="text-left" colspan="3">{{ $entry->account_name . ($entry->description === null ? '' : ' (' . $entry->description . ')') }}
+			 
+			
+			</td>
 			<td>-</td>
 			<td>{{ toFixed($entry->total_amount) }}</td>
 			@elseif($entry->entry_type == 3)
@@ -67,7 +81,7 @@
 			<td>{{ toFixed($entry->total_amount) }}</td>
 			<td>-</td>
 			@endif
-			<td>{{ toFixed($entry->balance) }}</td>
+			<td>{{ toFixed($total_balance[$i]) }}</td>
 		</tr>
 		@endforeach
 		{{-- @if($entries->currentPage() == $entries->lastPage()
@@ -81,9 +95,9 @@
 		@endif --}}
 	</tbody>
 </table>
-{{-- {{ $entries->links('pagination.default') }} --}}
+{{ $entries->links('pagination.default') }}
 
-<div id="gift-supplier-form" class="modal fade form-modal" tabindex="-1" role="dialog" aria-labelledby="form-modal-title" aria-hidden="true">
+{{-- <div id="gift-supplier-form" class="modal fade form-modal" tabindex="-1" role="dialog" aria-labelledby="form-modal-title" aria-hidden="true">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -93,5 +107,5 @@
 			<div class="modal-body"></div>
 		</div>
 	</div>
-</div>
+</div> --}}
 @endsection

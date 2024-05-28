@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('mobile_no');
             $table->boolean('onetime_buyer')->default(false);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

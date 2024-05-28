@@ -20,7 +20,9 @@ class CategoryController extends \App\Http\Controllers\Main\CategoryController
     public function index()
     {
         $parents = parent::index();
-        return view('category.index', compact('parents'));
+        $parentCategory = Category::where('parent_id', 0)->get();
+        $trashCategory = Category::onlyTrashed()->get();
+        return view('category.index', compact('parents', 'trashCategory', 'parentCategory'));
     }
 
     /**
@@ -97,7 +99,21 @@ class CategoryController extends \App\Http\Controllers\Main\CategoryController
         return back()->with('success-alert', $message['success']);
     }
 
-    public function datalist() {
+
+    public function forceDelete($color)
+    {
+        $message = parent::forceDelete($color);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function restore($color)
+    {
+        $message = parent::restore($color);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function datalist()
+    {
 
         preventHttp();
         $model = 'category';

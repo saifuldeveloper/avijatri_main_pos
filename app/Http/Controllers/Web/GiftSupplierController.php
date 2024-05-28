@@ -20,8 +20,9 @@ class GiftSupplierController extends \App\Http\Controllers\Main\GiftSupplierCont
     public function index()
     {
         $giftSuppliers = parent::index();
+        $trashGiftSuppliers = GiftSupplier::onlyTrashed()->get();
 
-        return view('gift-supplier.index', compact('giftSuppliers'));
+        return view('gift-supplier.index', compact('giftSuppliers', 'trashGiftSuppliers'));
     }
 
     /**
@@ -59,7 +60,7 @@ class GiftSupplierController extends \App\Http\Controllers\Main\GiftSupplierCont
 
         $giftSupplier = parent::show($giftSupplier);
         $entries = $giftSupplier->entries()->paginate(10);
-        return view('gift-supplier.show', compact('giftSupplier','entries'));
+        return view('gift-supplier.show', compact('giftSupplier', 'entries'));
     }
 
     /**
@@ -99,7 +100,20 @@ class GiftSupplierController extends \App\Http\Controllers\Main\GiftSupplierCont
         return redirect()->route('gift-supplier.index')->with('success-alert', $message['success']);
     }
 
-    public function datalist() {
+    public function forceDelete($giftSupplier)
+    {
+        $message = parent::forceDelete($giftSupplier);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function restore($giftSupplier)
+    {
+        $message = parent::restore($giftSupplier);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function datalist()
+    {
         preventHttp();
         $model = 'gift-supplier';
         $list = GiftSupplier::all();

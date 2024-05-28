@@ -20,7 +20,8 @@ class ColorController extends \App\Http\Controllers\Main\ColorController
     public function index()
     {
         $colors = parent::index();
-        return view('color.index', compact('colors'));
+        $trashColor = Color::onlyTrashed()->get();
+        return view('color.index', compact('colors', 'trashColor'));
     }
 
     /**
@@ -95,7 +96,21 @@ class ColorController extends \App\Http\Controllers\Main\ColorController
         return back()->with('success-alert', $message['success']);
     }
 
-    public function datalist() {
+
+    public function forceDelete($color)
+    {
+        $message = parent::forceDelete($color);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function restore($color)
+    {
+        $message = parent::restore($color);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function datalist()
+    {
         preventHttp();
         $model = 'color';
         $list = Color::all();

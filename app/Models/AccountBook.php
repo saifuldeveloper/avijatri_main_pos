@@ -118,12 +118,6 @@ class AccountBook extends Model
         if($this->account_type == 'employee') {
             return $this->hasMany(EmployeeAccountEntry::class);
         }
-        if($this->account_type == 'loan') {
-            return $this->hasMany('App\Views\LoanAccountEntry');
-        }
-        if($this->account_type == 'expense') {
-            return $this->hasMany('App\Views\ExpenseAccountEntry');
-        }
         return null;
     }
 
@@ -166,26 +160,6 @@ class AccountBook extends Model
         return $this->closing_balance;
     }
 
-    // public function getOpeningBalanceAttribute() {
-    //     if($this->account_type == 'retail-store') {
-    //         $previous_book = $this->account->accountBooks()->where('created_at', '<', $this->created_at)->latest()->first();
-    //         if($previous_book === null) {
-    //             return $this->previous_balance;
-    //         }
-    //         /*$deadline = \Carbon\Carbon::parse($previous_book->deadline);
-    //         if(\Carbon\Carbon::now()->gt($deadline)) {
-    //             return $this->previous_balance + $previous_book->closing_balance;
-    //         } else {
-    //             return $this->previous_balance;
-    //         }*/
-    //         if($previous_book->balance_carry_forward) {
-    //             return $this->previous_balance + $previous_book->closing_balance;
-    //         } else {
-    //             return $this->previous_balance;
-    //         }
-    //     }
-    //     return $this->previous_balance;
-    // }
     public function getOpeningBalanceAttribute() {
         if ($this->account_type == 'retail-store') {
             if ($this->account !== null) {

@@ -70,4 +70,18 @@ class ColorController extends Controller
         $color->delete();
         return collect(['success' => 'রং মুছে ফেলা হয়েছে।']);
     }
+
+    public function forceDelete($id)
+    {
+        $color = Color::withTrashed()->find($id);
+        $color->forceDelete();
+        return collect(['success' => 'রং স্থায়ীভাবে মুছে ফেলা হয়েছে।']);
+    }
+
+    public function restore($id)
+    {
+        $color = Color::withTrashed()->find($id);
+        $color->restore();
+        return collect(['success' => 'রং পুনরুদ্ধার করা হয়েছে।']);
+    }
 }

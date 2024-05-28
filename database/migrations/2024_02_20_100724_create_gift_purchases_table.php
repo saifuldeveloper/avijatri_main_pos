@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('gift_purchases', function (Blueprint $table) {
             $table->id();
             $table->integer('account_book_id');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

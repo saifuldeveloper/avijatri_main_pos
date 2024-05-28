@@ -124,9 +124,9 @@ class GiftPurchaseController extends \App\Http\Controllers\Main\GiftPurchaseCont
     public function update(GiftPurchaseRequest $request, GiftPurchase $giftPurchase)
     {
         $giftPurchase = parent::update($request, $giftPurchase);
-        return redirect()->route('gift-purchase.show', ['gift-purchase' => $giftPurchase])->with('success-alert', 'মেমো এডিট সম্পন্ন হয়েছে।');
-    }
+        return redirect()->route('gift-purchase.show', ['gift_purchase' => $giftPurchase->id])->with('success-alert', 'মেমো এডিট সম্পন্ন হয়েছে।');
 
+    }
     /**
      * Remove the specified resource from storage.
      *

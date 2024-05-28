@@ -31,14 +31,14 @@ class LoanController extends Controller
         $loan = new Loan;
         $loan->fill($request->all());
         $loan->save();
-        $account       =new Account;
-        $account->id   =$loan->id;
-        $account->type ='loan';
-        $account->name =$loan->name;
+        $account       = new Account;
+        $account->id   = $loan->id;
+        $account->type = 'loan';
+        $account->name = $loan->name;
         $account->save();
-        $accountBook               =new AccountBook;
-        $accountBook->account_id   =$loan->id;
-        $accountBook->account_type ='loan';
+        $accountBook               = new AccountBook;
+        $accountBook->account_id   = $loan->id;
+        $accountBook->account_type = 'loan';
         $accountBook->save();
 
         return $loan;
@@ -52,8 +52,8 @@ class LoanController extends Controller
      */
     public function show(Loan $loan)
     {
-        $loan->append('current_book');
-        $loan->current_book->append('entries');
+        $loan->getCurrentAccountBook();
+        $loan->load('entries');
         return $loan;
     }
 
@@ -82,5 +82,19 @@ class LoanController extends Controller
     {
         $loan->delete();
         return collect(['success' => 'হাওলাত খাতা মুছে ফেলা হয়েছে।']);
+    }
+
+    public function forceDelete($id)
+    {
+        $loan = Loan::onlyTrashed()->find($id);
+        $loan->forceDelete();
+        return collect(['success' => 'হাওলাত খাতা স্থায়ীভাবে মুছে ফেলা হয়েছে।']);
+    }
+
+    public function restore($id)
+    {
+        $loan = Loan::onlyTrashed()->find($id);
+        $loan->restore();
+        return collect(['success' => 'হাওলাত খাতা পুনরুদ্ধার করা হয়েছে।']);
     }
 }

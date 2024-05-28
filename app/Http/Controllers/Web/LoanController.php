@@ -20,7 +20,8 @@ class LoanController extends \App\Http\Controllers\Main\LoanController
     public function index()
     {
         $loans = parent::index();
-        return view('loan.index', compact('loans'));
+        $trashLoans = Loan::onlyTrashed()->get();
+        return view('loan.index', compact('loans', 'trashLoans'));
     }
 
     /**
@@ -55,7 +56,9 @@ class LoanController extends \App\Http\Controllers\Main\LoanController
      */
     public function show(Loan $loan)
     {
-        return view('loan.show', compact('loan'));
+        $loan = parent::show($loan);
+        $entries = $loan->entries()->paginate(10);
+        return view('loan.show', compact('loan', 'entries'));
     }
 
     /**
@@ -95,10 +98,33 @@ class LoanController extends \App\Http\Controllers\Main\LoanController
         return back()->with('success-alert', $message['success']);
     }
 
-    public function datalist() {
-        preventHttp();
-        $model = 'loan';
+    public function forceDelete($expense)
+    {
+        $message = parent::forceDelete($expense);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function restore($expense)
+    {
+        $message = parent::restore($expense);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function loanReceipt()
+    {
+        // preventHttp();
+        $model = 'loan-receipt';
         $list = Loan::all();
+
+        return view('layouts.datalist', compact('model', 'list'));
+    }
+
+    public function loanPayment()
+    {
+        // preventHttp();
+        $model = 'loan-payment';
+        $list = Loan::all();
+
         return view('layouts.datalist', compact('model', 'list'));
     }
 }

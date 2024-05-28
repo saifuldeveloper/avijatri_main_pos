@@ -16,7 +16,7 @@ class GiftController extends Controller
      */
     public function index()
     {
-        return Gift::with('giftType','giftTransactions')->get();
+        return Gift::with('giftType', 'giftTransactions')->get();
     }
 
     /**
@@ -70,5 +70,19 @@ class GiftController extends Controller
     {
         $gift->delete();
         return collect(['success' => 'গিফট মুছে ফেলা হয়েছে।']);
+    }
+
+    public function forceDelete($id)
+    {
+        $color = Gift::withTrashed()->find($id);
+        $color->forceDelete();
+        return collect(['success' => 'গিফট স্থায়ীভাবে মুছে ফেলা হয়েছে।']);
+    }
+
+    public function restore($id)
+    {
+        $color = Gift::withTrashed()->find($id);
+        $color->restore();
+        return collect(['success' => 'গিফট পুনরুদ্ধার করা হয়েছে।']);
     }
 }

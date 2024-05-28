@@ -33,7 +33,15 @@
                                     href="{{ route('account-book.show', ['account_book' => $accountBook->id]) }}">{{ $accountBook->description }}</a>
                             </td>
                             <td class="text-right">
-                                {{-- {{ toFixed($balance) }} --}}
+                                @php
+                                $entries_data =  App\Models\GiftSupplierAccountEntry::where('account_book_id', $accountBook->id)->get();
+                                $payment_amount = $entries_data->where('entry_type', '2')->sum('total_amount');
+                                $purchase_amount = $entries_data->where('entry_type', '0')->sum('total_amount');
+                                $total_balance = $purchase_amount - $payment_amount ;
+                                @endphp
+                                {{ toFixed($total_balance) }}
+                                {{-- {{ isset($giftSupplier->current_balance[0]) ? toFixed($giftSupplier->current_balance[0]) : '0.00' }} --}}
+
                             </td>
                         </tr>
                     @endforeach

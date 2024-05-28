@@ -20,7 +20,8 @@ class EmployeeController extends \App\Http\Controllers\Main\EmployeeController
     public function index()
     {
         $employees = parent::index();
-        return view('employee.index', compact('employees'));
+        $trashEmployees = Employee::onlyTrashed()->get();
+        return view('employee.index', compact('employees', 'trashEmployees'));
     }
 
     /**
@@ -59,7 +60,7 @@ class EmployeeController extends \App\Http\Controllers\Main\EmployeeController
         $employee = parent::show($employee);
         $entries  = $employee->entries()->paginate(10);
         $total    = $entries->sum('total_amount');
-        return view('employee.show', compact('employee','entries','total'));
+        return view('employee.show', compact('employee', 'entries', 'total'));
     }
 
     /**
@@ -99,7 +100,43 @@ class EmployeeController extends \App\Http\Controllers\Main\EmployeeController
         return back()->with('success-alert', $message['success']);
     }
 
-    public function datalist() {
+    public function forceDelete($expense)
+    {
+        $message = parent::forceDelete($expense);
+        return back()->with('success-alert', $message['success']);
+    }
+
+    public function restore($expense)
+    {
+        $message = parent::restore($expense);
+        return back()->with('success-alert', $message['success']);
+    }
+
+
+    public function EmployPaymentLimit(Request $request)
+    {
+        $employee = Employee::find($request->id);
+        if ($request->amount <= $employee->limit) {
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'limit' => $employee->limit,
+                    'status' => 1
+                ]
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data' => [
+                    'limit' => $employee->limit,
+                    'status' => 0
+                ]
+            ]);
+        }
+    }
+
+    public function datalist()
+    {
         preventHttp();
         $model = 'employee';
         $list = Employee::all();

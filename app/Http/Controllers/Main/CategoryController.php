@@ -70,4 +70,18 @@ class CategoryController extends Controller
         $category->delete();
         return collect(['success' => 'জুতার ধরণ মুছে ফেলা হয়েছে।']);
     }
+
+    public function forceDelete($id)
+    {
+        $color = Category::withTrashed()->find($id);
+        $color->forceDelete();
+        return collect(['success' => 'জুতার ধরণ স্থায়ীভাবে মুছে ফেলা হয়েছে।']);
+    }
+
+    public function restore($id)
+    {
+        $color = Category::withTrashed()->find($id);
+        $color->restore();
+        return collect(['success' => 'জুতার ধরণ পুনরুদ্ধার হয়েছে।']);
+    }
 }

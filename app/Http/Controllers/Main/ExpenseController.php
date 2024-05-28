@@ -32,15 +32,15 @@ class ExpenseController extends Controller
         $expense->fill($request->all());
         $expense->save();
 
-        $account       =new Account;
-        $account->id   =$expense->id;
-        $account->type ='expense';
-        $account->name =$expense->name;
+        $account       = new Account;
+        $account->id   = $expense->id;
+        $account->type = 'expense';
+        $account->name = $expense->name;
         $account->save();
 
-        $accountBook               =new AccountBook;
-        $accountBook->account_id   =$expense->id;
-        $accountBook->account_type ='expense';
+        $accountBook               = new AccountBook;
+        $accountBook->account_id   = $expense->id;
+        $accountBook->account_type = 'expense';
         $accountBook->save();
 
         // $expense->accountBooks()->save(new AccountBook());
@@ -57,7 +57,6 @@ class ExpenseController extends Controller
     public function show(Expense $expense)
     {
         $expense->append('current_book');
-        // $expense->current_book->append('entries');
         $expense->load('entries');
         return $expense;
     }
@@ -87,5 +86,19 @@ class ExpenseController extends Controller
     {
         $expense->delete();
         return collect(['success' => 'খরচের খাত মুছে ফেলা হয়েছে।']);
+    }
+
+    public function forceDelete($id)
+    {
+        $giftSupplier = Expense::onlyTrashed()->find($id);
+        $giftSupplier->forceDelete();
+        return collect(['success' => 'খরচের খাত স্থায়ীভাবে মুছে ফেলা হয়েছে।']);
+    }
+
+    public function restore($id)
+    {
+        $giftSupplier = Expense::onlyTrashed()->find($id);
+        $giftSupplier->restore();
+        return collect(['success' => 'খরচের খাত পুনরুদ্ধার করা হয়েছে।']);
     }
 }

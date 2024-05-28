@@ -79,7 +79,7 @@
 					</tr>
 					<tr>
 						<td colspan="2">কমিশন</td>
-						<td><input type="text" name="commission" class="form-control text-right input-commission update-sum taka" value="{{ $accountBook->open ? '' : toFixed($accountBook->commission) }}"></td>
+						<td><input type="text" name="commission" class="form-control text-right input-commission update-sum taka" value="{{ $accountBook->open ? '0.00' : toFixed($accountBook->commission) }}"></td>
 					</tr>
 					<tr>
 						<?php if(!$accountBook->open) $amount -= $accountBook->commission; ?>
@@ -88,7 +88,7 @@
 					</tr>
 					<tr>
 						<td colspan="2">স্টাফ</td>
-						<td><input type="text" name="staff" class="form-control text-right update-sum taka input-staff" value="{{ $accountBook->open ? '' : toFixed($accountBook->staff) }}"></td>
+						<td><input type="text" name="staff" class="form-control text-right update-sum taka input-staff" value="{{ $accountBook->open ? '0.00' : toFixed($accountBook->staff) }}"></td>
 					</tr>
 					<tr>
 						<?php if(!$accountBook->open) $amount -= $accountBook->staff; ?>
