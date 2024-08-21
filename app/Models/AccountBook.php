@@ -280,7 +280,8 @@ class AccountBook extends Model
 
     public function getTotalExpenseAttribute() {
         if($this->account_type == 'retail-store') {
-            return $this->entriesQuery()->where('entry_type', 0)->orWhere('entry_type', 2)->sum('expense_amount');
+            return $this->entriesQuery()->where('entry_type', 0)->orWhere('entry_type', 2)
+            ->sum('expense_amount');
         }
         return 0;
     }

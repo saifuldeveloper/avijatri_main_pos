@@ -46,6 +46,9 @@ class PurchaseController extends Controller
      */
     public function store(Request $request)
     {
+
+        
+
         $factory     = Factory::find($request->input('factory_id'));
         $accountBook = $factory->getCurrentAccountBook();
         $purchase    = new Purchase;

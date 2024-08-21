@@ -34,7 +34,8 @@
 			<th style="width:5%">মেমো</th>
 			<th class="text-left" style="width:28%">গিফট</th>
 			<th style="width:10%">পরিমাণ</th>
-			<th style="width:10%">দর</th>
+			{{-- <th></th> --}}
+			{{-- <th style="width:10%">দর</th> --}}
 			<th style="width:10%">মোট দাম</th>
 			<th style="width:10%">তাগাদা</th>
 			<th style="width:10%">ব্যালেন্স</th>
@@ -58,7 +59,9 @@
 			</td>
 			
 			<td>{{ $entry->count }}</td>
-			<td>{{ $entry->unit_price > 0 ? toFixed($entry->unit_price) : 'পেন্ডিং' }}</td>
+			{{-- <td></td> --}}
+			
+			{{-- <td>{{ $entry->unit_price > 0 ? toFixed($entry->unit_price) : 'পেন্ডিং' }}</td> --}}
 			<td>{{ toFixed($entry->total_amount) }}</td>
 			<td>-</td>
 			@elseif($entry->entry_type == 2)
@@ -67,7 +70,7 @@
 
 
 			</td>
-			<td>-</td>
+			{{-- <td>-</td> --}}
 			<td class="text-left" colspan="3">{{ $entry->account_name . ($entry->description === null ? '' : ' (' . $entry->description . ')') }}
 			 
 			

@@ -18,6 +18,7 @@ use App\Models\View\BankAccountEntry;
 use App\Models\ExpenseAccountEntry;
 use App\Models\GiftSupplier;
 use App\Models\GiftSupplierAccountEntry;
+use App\Models\GiftTransaction;
 use App\Models\Loan;
 use App\Models\LoanAccountEntry;
 use App\Models\RetailStore;
@@ -38,8 +39,14 @@ class TransactionController extends Controller
         } else {
             $date = \Carbon\Carbon::today();
         }
+       
 
         $purchases = PurchaseEntry::getPurchasesOn($date);
+      
+        $giftTransaction = GiftTransaction::getGiftPurchasesOn($date);
+
+   
+  
         $purchaseSummary = PurchaseEntry::getPurchaseSummaryOn($date);
         $incomes = Transaction::getIncomesOn($date);
         $expenses = Transaction::getExpensesOn($date);;
@@ -47,7 +54,7 @@ class TransactionController extends Controller
         $expensesSum = Transaction::sumExpensesOn($date);
         $initialCashBalance = BankAccount::getCashAccount()->getCurrentAccountBook()->getBalanceBefore($date);
         $finalCashBalance = BankAccount::getCashAccount()->getCurrentAccountBook()->getBalanceBefore($date->addDay());
-        return (object)compact('purchases', 'purchaseSummary','incomes','expenses','expensesSum','incomesSum','initialCashBalance','finalCashBalance');
+        return (object)compact('purchases', 'purchaseSummary','incomes','expenses','expensesSum','incomesSum','initialCashBalance','finalCashBalance','giftTransaction');
     }
 
     /**
@@ -73,6 +80,7 @@ class TransactionController extends Controller
                 $request->input('cheque_no'),
                 $factory->getCurrentAccountBook(),
                 $request->input('amount'),
+                $request->input('account_type'),
                 $request->input('due_date')
             );
         }
@@ -122,6 +130,7 @@ class TransactionController extends Controller
                 $request->input('cheque_no'),
                 $account->getCurrentAccountBook(),
                 $request->input('amount'),
+                $request->input('account_type'),
                 $request->input('due_date')
             ); 
         } else if($request->input('account_type') == 'cheque') {
@@ -176,6 +185,7 @@ class TransactionController extends Controller
             $accountBook->closing_balance -= $transaction->amount;
             $accountBook->save();
         }else if($request->input('account_type') == 'employee'){
+            $employe =Employee::find($request->account_id);
             $transaction = Transaction::createTransaction(
                 $request->input('account_type'),
                 $request->input('account_id'),
@@ -184,7 +194,7 @@ class TransactionController extends Controller
                 $request->input('amount'),
                 $request->input('description')
             );
-            $employe =Employee::find($request->account_id);
+           
             $entry = new EmployeeAccountEntry;
             $entry->entry_id        =$employe->id;
             $entry->entry_type      ='0';

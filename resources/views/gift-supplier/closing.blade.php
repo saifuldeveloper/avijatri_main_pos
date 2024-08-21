@@ -154,7 +154,7 @@
 			<table class="table table-striped">
 				<tbody>
 					<tr>
-						<td width="80%">গিফট মহাজন {{ $accountBook->account->name }}-এর আর কোন পাওনা না থাকায় মহাজন  খাতা ক্লোজ করা হলো।</td>
+						<td width="80%">গিফট মহাজন {{ $accountBook->giftSupplierAccount->name }}-এর আর কোন পাওনা না থাকায় মহাজন  খাতা ক্লোজ করা হলো।</td>
 						<td width="20%"><button type="submit" class="btn btn-primary form-control disable-for-nonzero" disabled>ক্লোজ করুন</button></td>
 					</tr>
 				</tbody>

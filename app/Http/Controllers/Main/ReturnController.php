@@ -62,6 +62,7 @@ class ReturnController extends Controller
     public function retailStore(Request $request)
     {
 
+
         $retailStore   = RetailStore::find($request->input('retail_store_id'));
         $accountBook   = $retailStore->getCurrentAccountBook();
         $count         = 0;
@@ -91,32 +92,13 @@ class ReturnController extends Controller
             }
             $returnEntry = new ReturnFromRetailEntry();
             $returnEntry->fill($row);
+            
             if ($row['destination'] == 'pending') {
                 $returnEntry->status = 'pending';
-            } else if ($row['destination'] == 'factory-return') {
-                // $shoe = Shoe::find($row['shoe_id']);
-                // $factory = Factory::find($shoe->factory_id);
-                // $accountBook = $factory->getCurrentAccountBook();
-                // $returnfactory = new ReturnToFactory;
-                // $returnfactory->account_id = $factory->id;
-                // $returnfactory->account_book_id = $accountBook->id;
-                // $returnfactory->save();
-                // $returnFactoryEntry = new ReturnToFactoryEntry();
-                // $returnFactoryEntry->return_id = $returnfactory->id;
-                // $returnFactoryEntry->account_book_id = $returnfactory->account_book_id;
-                // $returnFactoryEntry->shoe_id = $row['shoe_id'];
-                // $returnFactoryEntry->count = $row['count'];
-                // $returnFactoryEntry->save();
-                // $accountEntries = new FactoryAccountEntry;
-                // $accountEntries->account_id = $factory->id;
-                // $accountEntries->account_book_id = $accountBook->id;
-                // $accountEntries->entry_type = 1;
-                // $accountEntries->entry_id = $returnfactory->id;
-                // $accountEntries->status = 0;
-                // $accountEntries->save();
+           
+            }  else if ($row['destination'] == 'waste') {
 
- 
-            } else if ($row['destination'] == 'waste') {
+            
                 $wasteEntry = new WasteEntry();
                 $wasteEntry->shoe_id = $row['shoe_id'];
                 $wasteEntry->count = $row['count'];
@@ -137,7 +119,7 @@ class ReturnController extends Controller
                 $entry->paid_amount     = $return_amount;
                 $entry->save();
             } else {
-                if (isset($row['category_id'])) {
+                if (isset($row['category_id'])) { 
                     $inventory                 =  new Inventory;
                     $inventory->id             = $row['shoe_id'];
                     $inventory->category       = $row['category'];
@@ -151,6 +133,8 @@ class ReturnController extends Controller
                 $inventory = Inventory::find($returnEntry->shoe_id);
                 $inventory->increment('count', $returnEntry->count);
                 $returnEntry->status = 'accepted';
+                $returnEntry->account_book_id = $accountBook->id;
+                $returnEntry->save();
 
                 $shoe          =Shoe::find($row['shoe_id']);
                 $count         +=$row['count'];
@@ -161,13 +145,15 @@ class ReturnController extends Controller
                 $entry->entry_type      = '1';
                 $entry->account_book_id = $accountBook->id;
                 $entry->return_count    = $count;
+                $entry->return_id       = $returnEntry->id;
                 $entry->return_amount   = $return_amount;
-                $entry->paid_amount     = $return_amount;
                 $entry->save();
 
             }
             $returnEntry->account_book_id = $accountBook->id;
             $returnEntry->save();
+            
+         
             // $accountBook->returnFromRetailEntries()->save($returnEntry);
                
         }

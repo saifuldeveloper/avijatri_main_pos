@@ -9,9 +9,11 @@ class Cheque extends Model
 {
     use HasFactory;
     // Static functions
-	public static function issue($id, $account_book, $amount, $due_date, $attachment = null, $closing = null) {
+	public static function issue($id, $account_book, $amount, $attachment_type, $due_date, $attachment = null, $closing = null) {
+
 		$cheque = new Cheque();
 		$cheque->fill(compact( 'id', 'amount', 'due_date'));
+		$cheque->attachment_type = $attachment_type;
 		if($attachment !== null) {
 			$cheque->attachment()->associate($attachment);
 		}

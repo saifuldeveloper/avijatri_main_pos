@@ -5,10 +5,10 @@ namespace App\Models;
 use App\Models\View\InventoryEntry;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Shoe extends Model
 {
-	use HasFactory;
+	use HasFactory,SoftDeletes;
 	// Queries
 	public static function getNextId()
 	{

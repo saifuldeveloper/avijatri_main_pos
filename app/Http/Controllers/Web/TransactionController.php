@@ -7,6 +7,8 @@ use App\Models\BankAccount;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Collection;
+use App\Models\Employee;
+use PhpParser\Node\Expr\Cast\Double;
 
 class TransactionController extends \App\Http\Controllers\Main\TransactionController
 {
@@ -82,8 +84,19 @@ class TransactionController extends \App\Http\Controllers\Main\TransactionContro
      */
     public function store(Request $request)
     {
+
+
+        if($request->input('account_type') == 'employee'){
+            $input =floatval($request->amount);
+           $employe =Employee::find($request->account_id);
+            if($input > $employe->limit){
+                return redirect()->back()->with('error-alert', $employe->name . ' এই স্টাফ এর টাকা তোলার লিমিট ' . $employe->limit);
+            }
+        }
         $transaction = parent::store($request);
+        
         return redirect()->back()->with('success-alert', 'টাকার হিসাব সংরক্ষণ করা হয়েছে।');
+        
     }
 
     /**

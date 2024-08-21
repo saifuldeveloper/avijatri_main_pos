@@ -98,6 +98,53 @@
                     </tr>
                 </tfoot>
             </table>
+
+
+
+
+            <h3>গিফট মাল</h3>
+            <table class="table table-striped text-center">
+                <thead>
+                    <tr>
+                        <th class="text-left">#</th>
+                        <th class="text-center" style="width:40%" >মহাজন</th>
+                        <th style="width:10%">নাম </th>
+                        <th style="width:10%">টাইপ</th>
+                        <th style="width:15%">পরিমান </th>
+                        <th style="width:15%">মোট দাম</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $totol_price =0;
+                    @endphp
+                    @foreach ($data->giftTransaction as $i => $purchase)
+                        <tr>
+                          <td class="text-left"> {{ $i + 1 }}</td>
+                            <td>{{ $purchase->giftPurchase->accountBook->giftSupplierAccount->name }}</td>
+                            <td>{{ $purchase->gift->name }}</td>
+                            <td>{{ $purchase->gift->giftType->name }}</td>
+                            <td>{{ $purchase->count }}</td>
+
+                            <td>{{ toFixed($purchase->count * $purchase->unit_price) }}</td> 
+
+                            @php
+                                   $totol_price +=$purchase->count * $purchase->unit_price
+
+                            @endphp
+                        </tr>
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr class="border-bottom">
+                        <td colspan="3"></td>
+                         <td><strong>মোট</strong></td> 
+                        <td><strong>{{ $data->giftTransaction->sum('count') ?? 0 }}</strong></td>
+                        <td><strong> {{ $totol_price }}</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+         
         </div>
 
         <div class="col-lg-6">
@@ -105,6 +152,7 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
+                        <th style="width:50%">নাম</th>
                         <th>বিবরণ</th>
                         <th class="text-right">টাকা</th>
                     </tr>
@@ -112,22 +160,18 @@
                 <tbody>
                     <tr>
                         <td>সাবেক</td>
+                        <td></td>
                         <td class="text-right">{{ toFixed($data->initialCashBalance) }}</td>
                     </tr>
                     @php
                         $total = 0;
                     @endphp
-
-                    {{-- @dd($data->incomes) --}}
-
                     @foreach ($data->incomes as $i => $income)
                         @if ($income->amount == 0)
                             @continue
                         @endif
                         <tr>
-
-                            <td>
-                                @php
+                            @php
                                     if ($income->fromAccount->account_type == 'bank-account') {
                                         $account = App\Models\BankAccount::find($income->fromAccount->account_id);
                                     } elseif ($income->fromAccount->account_type == 'retail-store') {
@@ -138,17 +182,31 @@
                                         $account = App\Models\Loan::find($income->fromAccount->account_id);
                                     }
                                 @endphp
-
+                            <td>
+                               @if ($income->fromAccount->account_type == 'bank-account')
+                               {{ @$account->bank }} ({{ @$account->account_no }})
+                              @elseif($income->fromAccount->account_type == 'retail-store')
+                                {{ $account->shop_name }}- {{ $account->address }}
+                              @elseif ($income->fromAccount->account_type == 'gift-supplier')
+                               {{ $account->name }}
+                              @elseif ($income->fromAccount->account_type == 'Cheque')
+                           
+                              @elseif ($income->fromAccount->account_type == 'loan')
+                                  {{ $account->name }}
+                              @endif
+                            </td>
+                            <td>
+                            
                                 @if ($income->fromAccount->account_type == 'bank-account')
-                                    ব্যাংক তোলা - {{ @$account->bank }} ({{ @$account->account_no }})
+                                    ব্যাংক তোলা 
                                 @elseif($income->fromAccount->account_type == 'retail-store')
-                                    পার্টি জমা -{{ $account->shop_name }}
+                                    পার্টি জমা
                                 @elseif ($income->fromAccount->account_type == 'gift-supplier')
-                                    গিফট মহাজন তাগাদা - {{ $account->name }}
+                                    গিফট মহাজন তাগাদা 
                                 @elseif ($income->fromAccount->account_type == 'Cheque')
                                     check
                                 @elseif ($income->fromAccount->account_type == 'loan')
-                                    হাওলাত আনা {{ $account->name }}
+                                    হাওলাত আনা 
                                 @endif
                             </td>
                             <td class="text-right">{{ toFixed($income->amount) }}</td>
@@ -159,15 +217,22 @@
                     @endforeach
                     <tr>
                         <td><strong>মোট</strong></td>
+                        <td></td>
                         <td class="text-right"><strong>{{ toFixed($data->incomesSum) }}</strong></td>
                     </tr>
                     @if ($data->expenses->sum('amount') > 0)
                         <tr>
+                           
+                          
                             <td>খরচ বাদ</td>
+                            <td></td>
                             <td class="text-right">{{ toFixed($data->expensesSum) }}</td>
                         </tr>
                         <tr>
+                            
+                          
                             <td><strong>ক্যাশ</strong></td>
+                            <td></td>
                             <td class="text-right"><strong>{{ toFixed($data->finalCashBalance) }}</strong></td>
                         </tr>
                     @endif
@@ -180,6 +245,7 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
+                        <th style="width:50%">নাম</th>
                         <th>বিবরণ</th>
                         <th class="text-right">টাকা</th>
                     </tr>
@@ -189,47 +255,69 @@
                         @if ($expense->amount == 0)
                             @continue
                         @endif
+
                         <tr>
+                            @php
+                            if ($expense->toAccount->account_type == 'bank-account') {
+                                $account = App\Models\BankAccount::find($expense->toAccount->account_id);
+                            } elseif ($expense->toAccount->account_type == 'factory') {
+                                $account = App\Models\Factory::find($expense->toAccount->account_id);
+                            } elseif ($expense->toAccount->account_type == 'gift-supplier') {
+                                $account = App\Models\GiftSupplier::find($expense->toAccount->account_id);
+                            } elseif ($expense->toAccount->account_type == 'cheque') {
+                                $account = App\Models\Cheque::find($expense->toAccount->account_id);
+                            } elseif ($expense->toAccount->account_type == 'employee') {
+                                $account = App\Models\Employee::find($expense->toAccount->account_id);
+                            } elseif ($expense->toAccount->account_type == 'loan') {
+                                $account = App\Models\Loan::find($expense->toAccount->account_id);
+                            } elseif ($expense->toAccount->account_type == 'expense') {
+                                $account = App\Models\Expense::find($expense->toAccount->account_id);
+                            }
+                        @endphp
                             <td>
-                                @php
-                                    if ($expense->toAccount->account_type == 'bank-account') {
-                                        $account = App\Models\BankAccount::find($expense->toAccount->account_id);
-                                    } elseif ($expense->toAccount->account_type == 'factory') {
-                                        $account = App\Models\Factory::find($expense->toAccount->account_id);
-                                    } elseif ($expense->toAccount->account_type == 'gift-supplier') {
-                                        $account = App\Models\GiftSupplier::find($expense->toAccount->account_id);
-                                    } elseif ($expense->toAccount->account_type == 'cheque') {
-                                        $account = App\Models\Cheque::find($expense->toAccount->account_id);
-                                    } elseif ($expense->toAccount->account_type == 'employee') {
-                                        $account = App\Models\Employee::find($expense->toAccount->account_id);
-                                    } elseif ($expense->toAccount->account_type == 'loan') {
-                                        $account = App\Models\Loan::find($expense->toAccount->account_id);
-                                    } elseif ($expense->toAccount->account_type == 'expense') {
-                                        $account = App\Models\Expense::find($expense->toAccount->account_id);
-                                    }
-                                @endphp
+                               
 
                                 @if ($expense->toAccount->account_type == 'bank-account')
-                                    ব্যাংক জমা - {{ $account->bank }} ({{ $account->account_no }})
+                                    {{ $account->bank }} ({{ $account->account_no }})
                                 @elseif($expense->toAccount->account_type == 'factory')
-                                    মহাজন তাগাদা -{{ $account->name }}
+                                  {{ $account->name }} - {{  $account->address }}
                                 @elseif ($expense->toAccount->account_type == 'gift-supplier')
-                                    গিফট মহাজন তাগাদা - {{ $account->name }}
+                                   {{ $account->name }} - {{  $account->address }}
                                 @elseif ($expense->toAccount->account_type == 'cheque')
                                     {{ $account->name }}
                                 @elseif ($expense->toAccount->account_type == 'employee')
-                                    স্টাফ -{{ $account->name }}
+                                   {{ $account->name }} -{{  $account->address }}
                                 @elseif ($expense->toAccount->account_type == 'loan')
-                                    হাওলাত ফেরত {{ $account->name }}
+                                   {{ $account->name }}
                                 @elseif ($expense->toAccount->account_type == 'expense')
-                                    অন্যান্য খরচ-{{ $account->name }}
+                                    {{ $account->name }}
                                 @endif
+                            </td>
+
+                            <td>
+                                @if ($expense->toAccount->account_type == 'bank-account')
+                                ব্যাংক জমা 
+                            @elseif($expense->toAccount->account_type == 'factory')
+                                মহাজন তাগাদা 
+                            @elseif ($expense->toAccount->account_type == 'gift-supplier')
+                                গিফট মহাজন তাগাদা 
+                            @elseif ($expense->toAccount->account_type == 'cheque')
+                                {{ $account->name }}
+                            @elseif ($expense->toAccount->account_type == 'employee')
+                                স্টাফ 
+                            @elseif ($expense->toAccount->account_type == 'loan')
+                                হাওলাত ফেরত
+                            @elseif ($expense->toAccount->account_type == 'expense')
+                                অন্যান্য খরচ
+                            @endif
                             </td>
                             <td class="text-right">{{ toFixed($expense->amount) }}</td>
                         </tr>
                     @endforeach
                     <tr>
+                       
                         <td><strong>মোট</strong></td>
+                        <td></td>
                         <td class="text-right"><strong>{{ toFixed($data->expensesSum) }}</strong></td>
                     </tr>
                 </tbody>
@@ -258,6 +346,41 @@
 @section('page-script')
     <script>
         var employeeLimitUrl = "{{ route('datalist.employee.limit') }}";
+
+
+        $(document).ready(function () {
+        $("#transaction-amount").change(function (e) {
+            var type = $("#transaction-account-type").val();
+            if (type == "employee") {
+                var id = $("#transaction-account-id").val();
+                var url = employeeLimitUrl;
+                var amount = $(this).val();
+                var postData = {
+                    id: id,
+                    amount: amount,
+                    _token: $('meta[name="csrf-token"]').attr("content"),
+                };
+                $.ajax({
+                    url: url,
+                    method: "POST",
+                    data: postData,
+                    success: function (data) {
+                        if (data.data.status == 0) {
+                            alert(
+                                "এই স্টাফ এর টাকা তোলার লিমিট " +
+                                    data.data.limit
+                            );
+                            $("#transaction-amount").val("");
+                           
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                    },
+                });
+            }
+        });
+    });
     </script>
     <script type="text/javascript" src="{{ asset('js/transaction/index.js') }}"></script>
 @endsection

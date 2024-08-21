@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Expense;
 use App\Models\BankAccount;
+use App\Models\GiftTransaction;
+use App\Models\PurchaseEntry;
 
 use Illuminate\Support\Facades\DB;
 
@@ -27,7 +29,21 @@ class ReportController extends \App\Http\Controllers\Main\TransactionController
 
     public function dailyTransactionReport(Request $request)
     {
-        $data = parent::index($request);
+
+        if($request->date == null){
+            return redirect()->back();
+        }
+        $date= $request->date;
+        $data['date'] =$date;
+        $data['purchases'] = PurchaseEntry::getPurchasesOn($date);
+        $data['giftTransaction'] = GiftTransaction::getGiftPurchasesOn($date);
+        $data['purchaseSummary'] = PurchaseEntry::getPurchaseSummaryOn($date);
+        $data['incomes'] = Transaction::getIncomesOn($date);
+        $data['expenses'] = Transaction::getExpensesOn($date);
+        $data['incomesSum'] = Transaction::sumIncomesWithPreviousBalanceOn($date);
+        $data['expensesSum'] = Transaction::sumExpensesOn($date);
+        $data['initialCashBalance'] = BankAccount::getCashAccount()->getCurrentAccountBook()->getBalanceBefore($date);
+        $data['finalCashBalance'] = BankAccount::getCashAccount()->getCurrentAccountBook()->getBalanceBefore($date);
 
         $defaultConfig = (new \Mpdf\Config\ConfigVariables())->getDefaults();
         $fontDirs = $defaultConfig['fontDir'];
@@ -49,11 +65,12 @@ class ReportController extends \App\Http\Controllers\Main\TransactionController
             ],
             'default_font' => 'solaimanlipi',
         ]);
-        $mpdf->SetWatermarkText(new \Mpdf\WatermarkText('অভিযাত্রী '));
+        // $mpdf->SetWatermarkText(new \Mpdf\WatermarkText('অভিযাত্রী '));
         $mpdf->showWatermarkText = true;
 
-        // return view('excel.daily-transaction-report', compact('data'));
-        $mpdf->WriteHTML(view('excel.daily-transaction-report', compact('data'))->render());
+        // return view('excel.daily-transaction-report', $data);
+      
+        $mpdf->WriteHTML(view('excel.daily-transaction-report', $data)->render());
 
         $pdf = $mpdf->Output('daily-report.pdf', 'D');
     }
@@ -78,7 +95,7 @@ class ReportController extends \App\Http\Controllers\Main\TransactionController
 
         $expenses = Expense::all();
 
-        return Excel::download(new YearlyTransactionReport($year, $month, $expenses), "report-{$year}.pdf");
+        return Excel::download(new YearlyTransactionReport($year, $month, $expenses), "report-{$year}.xlsx");
     }
 
 

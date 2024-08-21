@@ -9,7 +9,11 @@
             <th style="text-align: center; font-weight: bold; width: 120px; background:#c7c7c7">ব্যাংক জমা</th>
             <th style="text-align: center; font-weight: bold; width: 120px; background:#c7c7c7">তাগাদা</th>
             <th style="text-align: center; font-weight: bold; width: 120px; background:#c7c7c7">স্টাফ খরচ</th>
-            <th style="text-align: center; font-weight: bold; width: 120px; background:#c7c7c7">অন্যান্য খরচ</th>
+            {{-- <th style="text-align: center; font-weight: bold; width: 120px; background:#c7c7c7">অন্যান্য খরচ</th> --}}
+            @foreach ($expenses as $expense)
+                <th style="text-align: center; font-weight: bold; width: 120px; background:#c7c7c7">{{ $expense->name }}
+                </th>
+            @endforeach 
         </tr>
     </thead>
     <tbody>
@@ -72,6 +76,8 @@
                     ->where('transaction_type', 'expense')
                     ->where('payment_type', 'expense')
                     ->sum('amount');
+                    $expensesEntries = \App\Models\ExpenseAccountEntry::query()->whereYear('created_at', $year)
+                    ->whereMonth('created_at', $month)->get();
 
             @endphp
 
@@ -82,8 +88,7 @@
                     $loan_entries_out == 0 &&
                     $bank_entries_income == 0 &&
                     $factory == 0 &&
-                    $employee_entries_expense == 0 &&
-                    $expensesEntries == 0)
+                    $employee_entries_expense == 0)
                 @continue
             @endif
             <tr>
@@ -96,7 +101,13 @@
                 <td style="text-align: center">{{ $bank_entries_income }}</td>
                 <td style="text-align: center">{{ $factory }}</td>
                 <td style="text-align: center">{{ $employee_entries_expense }}</td>
-                <td style="text-align: center">{{ $expensesEntries }}</td>
+                {{-- <td style="text-align: center">{{ $expensesEntries }}</td>
+                 --}}
+                 @foreach ($expenses as $expense)
+                 <td style="text-align: center">
+                     {{ $expensesEntries->where('entry_id', $expense->id)->sum('total_amount') }}
+                 </td>
+                @endforeach
 
             </tr>
         @endforeach

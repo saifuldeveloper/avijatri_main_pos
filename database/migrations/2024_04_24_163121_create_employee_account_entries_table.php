@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('account_name')->nullable();
             $table->integer('account_id');
             $table->string('account_type');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->double('total_amount');
             $table->timestamps();
         });

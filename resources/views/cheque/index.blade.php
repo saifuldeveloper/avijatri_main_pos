@@ -26,42 +26,21 @@
         </thead>
         <tbody>
             @foreach ($cheques as $i => $cheque)
-                {{-- @dd($cheque->current_balance); --}}
-
-                {{-- {{ $cheque->entries->sum('total_amount') }} --}}
-
                 <tr>
                     <td>{{ $i + 1 }}</td>
                     <td>{{ dateTimeFormat($cheque->created_at) }}</td>
                     <td>{{ $cheque->id }}</td>
-                    <td class="text-left">{{ $cheque->accountBook->account->name }}</td>
+                    <td class="text-left">
+                        @if($cheque->attachment_type =='factory')
+                        {{ $cheque->accountBook->account->name }}
+                        @elseif ($cheque->attachment_type =='gift-supplier')
+                        {{ @$cheque->accountBook->giftSupplierAccount->name }}
+                        @endif
+                    </td>
                     <td>{{ toFixed($cheque->amount) }}</td>
                     <td>{{ dateFormat($cheque->due_date, 'd/m/Y', 'Y-m-d') }}</td>
                     <td class="p-0">
                         <table class="table m-0">
-                            {{-- <tbody>
-						@php
-							$size = 0;
-
-							if ($cheque !== null && $cheque->getCurrentAccountBook() !== null && $cheque->entries !== null) {
-								$size = $cheque->getCurrentAccountBook()->entries->count();
-							}
-						@endphp
-
-						@if ($size > 0)
-						@foreach ($cheque->current_book->entries as $j => $entry)
-						<tr>
-							<td style="width:30%" class="border-left-0{{ $j == 0 ? ' border-top-0' : '' }}{{ $j == $size - 1 ? ' border-bottom-0' : '' }}">{{ dateFormat($entry->created_at) }}</td>
-							<td style="width:30%" class="{{ $j == 0 ? ' border-top-0' : '' }}{{ $j == $size - 1 ? ' border-bottom-0' : '' }}">{{ toFixed($entry->total_amount) }}</td>
-							<td style="width:40%" class="border-right-0{{ $j == 0 ? ' border-top-0' : '' }}{{ $j == $size - 1 ? ' border-bottom-0' : '' }}">{{ $entry->balance > 0 ? 'বাকী: ' . toFixed($entry->balance) : 'পরিশোধ' }}</td>
-						</tr>
-						@endforeach
-						@else
-						<tr>
-							<td class="border-0">-</td>
-						</tr>
-						@endif
-					</tbody> --}}
                             <tbody>
                                 @php
                                     $size = $cheque->getCurrentAccountBook() ? $cheque->entries->count() : 0;

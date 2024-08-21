@@ -109,6 +109,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('invoice', InvoiceController::class)->except(['index']);
 
     Route::resource('gift', GiftController::class)->except(['show']);
+    Route::get('gift-transaction/{id}', [GiftController::class, 'transactionShow'])->name('gift.transaction');
+
 
     Route::get('gift/{gift}/force-delete', [GiftController::class, 'forceDelete'])->name('gift.forceDelete');
     Route::get('gift/{gift}/restore', [GiftController::class, 'restore'])->name('gift.restore');

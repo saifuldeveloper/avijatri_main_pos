@@ -46,7 +46,7 @@ class Invoice extends Model
 
     public function transactions()
     {
-        return $this->morphMany(Transaction::class, 'attachment');
+        return $this->hasMany(Transaction::class, 'attachment_id' ,'id')->where('attachment_type','App\Models\Invoice');
     }
 
     public function giftTransactions()
@@ -123,6 +123,9 @@ class Invoice extends Model
 
     public function getAccountBookPreviousBalanceAttribute()
     {
+
+
+
         return $this->account_book_balance - $this->total_receivable + $this->total_payment;
     }
 

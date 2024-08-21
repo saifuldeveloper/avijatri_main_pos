@@ -33,8 +33,8 @@
 
                 <thead>
                     <tr>
-                        <th style="width:60%">স্টাফ</th>
-                        <th style="width:40%">অপশন</th>
+                        <th style="width:40%">স্টাফ</th>
+                        <th style="width:20%">অপশন</th>
                     </tr>
                 </thead>
 

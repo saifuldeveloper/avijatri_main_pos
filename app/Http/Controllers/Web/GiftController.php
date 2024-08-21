@@ -60,6 +60,24 @@ class GiftController extends \App\Http\Controllers\Main\GiftController
     {
         //
     }
+    public function transactionShow($id){
+
+       
+    
+        $gift =Gift::with('giftTransactions')->find($id);
+        
+
+        return view('gift.show', compact('gift'));
+
+ 
+        
+        
+
+    }
+
+
+
+    
 
     /**
      * Show the form for editing the specified resource.

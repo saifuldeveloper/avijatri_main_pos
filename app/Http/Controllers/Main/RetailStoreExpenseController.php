@@ -32,10 +32,10 @@ class RetailStoreExpenseController extends Controller
         $entry                      = new RetailStoreAccountEntry;
         $entry->account_book_id     = $request->account_book_id;
         $entry->entry_type          = '2';
+        $entry->expense_id          = $retailStoreExpense->id;
         $entry->amount              = $request->total_amount;
         $entry->expense_description = $request->description;
         $entry->expense_amount      = $request->amount;
-        $entry->paid_amount         = $request->amount;
         $entry->save();
         return $retailStoreExpense;
     }

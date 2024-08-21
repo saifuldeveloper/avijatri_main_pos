@@ -15,6 +15,7 @@
 				ঠিকানা: <strong>{{ $employee->address }}</strong><br>
 				মোবাইল নং: <strong>{{ $employee->mobile_no }}</strong><br>
 				বর্তমান লিমিট: <strong>{{ $employee->limit }}</strong><br>
+				বেতন : <strong>{{ $employee->salary }}</strong><br>
 				মোট খরচ: <strong>{{ toFixed($total) }}</strong>
 			</td>
 			<td style="width:30%">

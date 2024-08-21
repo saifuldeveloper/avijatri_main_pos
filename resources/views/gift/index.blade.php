@@ -16,7 +16,9 @@
             <tbody>
                 @foreach ($gifts as $gift)
                     <tr>
-                        <td>{{ $gift->name }}</td>
+                        <td>
+                            <a href="{{ route('gift.transaction',$gift->id)  }}"> {{ $gift->name }}</a>
+                        </td>
                         <td>{{ $gift->giftType->name }}</td>
                         <td>
                             {{ $gift->giftTransactions->where('type', 'purchase')->sum('count') - $gift->giftTransactions->where('type', 'sale')->sum('count') - $gift->giftTransactions->where('type', 'waste')->sum('count') }}

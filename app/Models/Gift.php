@@ -20,7 +20,7 @@ class Gift extends Model
     }
     public function giftTransactions()
     {
-        return $this->hasMany(GiftTransaction::class);
+        return $this->hasMany(GiftTransaction::class,'gift_id','id');
     }
 
     public function shoes()

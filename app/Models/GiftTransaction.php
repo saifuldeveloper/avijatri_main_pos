@@ -17,6 +17,18 @@ class GiftTransaction extends Model
     	return $this->morphTo();
     }
 
+    public function giftPurchase() {
+    	return $this->belongsTo(GiftPurchase::class,'attachment_id','id');
+    }
+
+
+    public static function getGiftPurchasesOn($date){
+        $current = new \Carbon\CarbonImmutable($date);
+        $next = $current->addDay();
+        return GiftTransaction::with('gift.giftType','giftPurchase.accountBook.giftSupplierAccount')->whereBetween('created_at', [$current, $next])->where('type', 'purchase')->get();
+
+    }
+
     // Attributes
     public function getAmountAttribute() {
     	return $this->count * $this->unit_price;

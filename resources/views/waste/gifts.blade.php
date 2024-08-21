@@ -14,7 +14,7 @@
 	</div>
 	<div class="col-md-2 form-group">
 		<label for="waste-count">সংখ্যা</label>
-		<input type="text" name="count" id="waste-count" class="form-control" required>
+		<input type="text" name="count" id="waste-count" class="form-control numericInput number" required>
 	</div>
 	<div class="col-md-2 form-group">
 		<label>&nbsp;</label>
@@ -44,4 +44,27 @@
 </table>
 
 {{ $wasteEntries->links('pagination.default') }}
+
+<script>
+    const numericInputs = document.querySelectorAll('.numericInput');
+
+    numericInputs.forEach(input => {
+        input.addEventListener('input', function(event) {
+            const bengaliDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+            const englishDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+            if (this.value.match(/[0-9]/)) {
+                englishDigits.forEach((digit, index) => {
+                    const regex = new RegExp(digit, 'g');
+                    this.value = this.value.replace(regex, bengaliDigits[index]);
+                });
+            }
+            if (this.value.match(/[০-৯]/)) {
+                bengaliDigits.forEach((digit, index) => {
+                    const regex = new RegExp(digit, 'g');
+                    this.value = this.value.replace(regex, englishDigits[index]);
+                });
+            }
+        });
+    });
+</script>
 @endsection

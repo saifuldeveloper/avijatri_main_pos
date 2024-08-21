@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('bag_id');
             $table->string('image');
             $table->integer('initial_count')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

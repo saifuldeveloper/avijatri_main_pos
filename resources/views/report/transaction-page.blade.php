@@ -6,6 +6,7 @@
 
     <form action="{{ route('report.transaction.daily') }}" method="get" class="form-inline mb-4">
         <span>প্রতিদিনের হিসাব </span>
+        <input type="date" class="form-control mx-3" name="date">
         <button type="submit" class="btn btn-primary ml-3">ডাউনলোড</button>
     </form>
 

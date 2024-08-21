@@ -44,6 +44,7 @@ class EmployeeController extends Controller
             $image->save('images/staff-image/' . $imageName);
             $employee->image = $imageName;
         }
+        $employee->salary =$request->salary;
         $employee->save();
 
         $account       = new Account;
@@ -87,10 +88,15 @@ class EmployeeController extends Controller
     {
         $employee->fill($request->all());
         if ($request->hasFile('image')) {
-            $filename = randomImageFileName();
-            Image::make($request->file('image'))->save(imagePath($filename));
-            $employee->image = $filename;
+            $image     = $request->file("image");
+            $extension = $image->getClientOriginalExtension();
+            $imageName = uniqid() . '.' . $extension;
+            $manager   = new ImageManager(new Driver());
+            $image     = $manager->read($image);
+            $image->save('images/staff-image/' . $imageName);
+            $employee->image = $imageName;
         }
+        $employee->salary =$request->salary;
         $employee->save();
 
         return $employee;

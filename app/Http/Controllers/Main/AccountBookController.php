@@ -116,7 +116,7 @@ class AccountBookController extends Controller
                     if(empty($cheque_entry['id'])) {
                         continue;
                     }
-                    $cheque = Cheque::issue($cheque_entry['id'], $accountBook, $cheque_entry['amount'], $cheque_entry['due_date'], null, $accountBook->id);
+                    $cheque = Cheque::issue($cheque_entry['id'], $accountBook, $cheque_entry['amount'], 'factory', $cheque_entry['due_date'], null, $accountBook->id);
 
                 }  
            }
@@ -171,7 +171,7 @@ class AccountBookController extends Controller
                         if(empty($cheque_entry['id'])) {
                             continue;
                         }
-                        $cheque = Cheque::issue($cheque_entry['id'], $accountBook, $cheque_entry['amount'], $cheque_entry['due_date'], null, $accountBook->id);
+                        $cheque = Cheque::issue($cheque_entry['id'], $accountBook, $cheque_entry['amount'], 'factory', $cheque_entry['due_date'], null, $accountBook->id);
     
                     }  
                }

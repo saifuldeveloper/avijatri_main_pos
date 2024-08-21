@@ -89,16 +89,30 @@
 				@php
 					$purchaeEntry =App\Models\PurchaseEntry::with('shoe')->where('purchase_id' ,$entry->purchase_id)->get();
 				@endphp
-				@foreach ($purchaeEntry as $item)
-					{{ $item->shoe->category->name }}
-					@if (!$loop->last)<br>@endif
-				@endforeach
+				 @php
+				 $shownCategories = [];
+			     @endphp
+			 
+			  @foreach ($purchaeEntry as $item)
+				 @if (!in_array($item->shoe->category->name, $shownCategories))
+					 {{ $item->shoe->category->name }}
+					 @php $shownCategories[] = $item->shoe->category->name; @endphp
+					 @if (!$loop->last)<br>@endif
+				 @endif
+			  @endforeach
 			</td>
 			<td>
-				@foreach ($purchaeEntry as $item)
+				@php
+				$shownColors = [];
+			@endphp
+			
+			@foreach ($purchaeEntry as $item)
+				@if (!in_array($item->shoe->color->name, $shownColors))
 					{{ $item->shoe->color->name }}
+					@php $shownColors[] = $item->shoe->color->name; @endphp
 					@if (!$loop->last)<br>@endif
-				@endforeach
+				@endif
+			@endforeach
 			</td>
 			<td>{{ $entry->count }}</td>
 			<td>{{ toFixed($entry->retail_price) }}</td>

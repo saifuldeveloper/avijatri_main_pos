@@ -19,10 +19,12 @@ return new class extends Migration
             $table->integer('invoice_id')->nullable();
             $table->decimal('count')->nullable();
             $table->double('total_retail_price')->nullable();
+            $table->bigInteger('return_id')->nullable();
             $table->decimal('return_count')->nullable();
             $table->double('return_amount')->nullable();
             $table->double('return_amount_without_commission')->nullable();
             $table->mediumText('expense_description')->nullable();
+            $table->bigInteger('expense_id')->nullable();
             $table->double('expense_amount')->nullable();
             $table->double('total_commission')->nullable();
             $table->double('transport')->nullable();
@@ -32,6 +34,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->mediumText('account_name')->nullable();
             $table->string('closing_id')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

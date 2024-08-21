@@ -138,17 +138,17 @@
 			<td>-</td>
 			<td>-</td>
 			<td>-</td>
-			<td>{{ toFixed($entry->paid_amount) }}</td>
-			<td>-</td>
+			<td>{{ $entry->paid_amount == null ? 'পেন্ডিং' : number_format($entry->paid_amount, 2) }}</td>
+			<td></td>
 			@elseif($entry->entry_type == 2)
 			<td>-</td>
 			<td>-</td>
 			<td>-</td>
 			<td>{{ $entry->expense_description }}</td>
-			<td>{{ toFixed($entry->expense_amount) }}</td>
+			<td>        {{ toFixed($entry->expense_amount) }}</td>
 			<td>-</td>
 			<td>-</td>
-			<td>{{ toFixed($entry->paid_amount) }}</td>
+			<td>{{ $entry->expense_amount == null ? 'পেন্ডিং' : number_format($entry->paid_amount, 2) }}</td>
 			<td>-</td>
 			@elseif($entry->entry_type == 3)
 			<td>-</td>

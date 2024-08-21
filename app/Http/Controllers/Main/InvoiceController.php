@@ -28,6 +28,8 @@ class InvoiceController extends Controller
 
     public function store(Request $request)
     {
+
+
         $retailStore = RetailStore::find($request->input('retail_store_id'));
         $accountBook = $retailStore->getCurrentAccountBook();
         $invoice = new Invoice;
@@ -72,13 +74,28 @@ class InvoiceController extends Controller
 
         $returns = $retailStore->unlistedReturns()->get();
 
+    
+
+
         foreach ($returns as $return) {
             $invoice->returns()->save($return);
+            $entry = RetailStoreAccountEntry::where('return_id', $return->id)->first();
+            if ($entry !== null) {
+                $entry->paid_amount = $entry->return_amount;
+                $entry->save();
+            }
+            
+          
         }
 
         $expenses = $retailStore->unlistedExpenses()->get();
         foreach ($expenses as $expense) {
             $invoice->retailStoreExpenses()->save($expense);
+            $entry = RetailStoreAccountEntry::where('expense_id', $expense->id)->first();
+            if($entry !== null) {
+            $entry->paid_amount =$entry->expense_amount;
+            $entry->save();
+            }
         }
         foreach ($request->input('gifts') as $row) {
             if (empty($row['gift_id'])) {

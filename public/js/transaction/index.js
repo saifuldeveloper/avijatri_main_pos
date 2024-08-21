@@ -79,6 +79,7 @@ $(document).ready(function () {
                                     data.data.limit
                             );
                             $("#transaction-amount").val("");
+                            $('.locked').attr(disabled);
                         }
                     },
                     error: function (xhr, status, error) {
